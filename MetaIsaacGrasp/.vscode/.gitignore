@@ -1,0 +1,6 @@
+# Note: These files are kept for development purposes only.
+
+# Ignore all other files
+.python.env
+
+logs/*
