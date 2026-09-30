@@ -60,7 +60,7 @@ gt_gpu_procs() {
 
 # Isaac Sim при старте открывает все карты, которые видит Vulkan, а CUDA_VISIBLE_DEVICES
 # на Vulkan не действует. Поэтому свой слой (server/vk_filter) оставляет процессу одну карту по UUID.
-# vulkaninfo — из отдельного окружения envs/vk (conda-forge vulkan-tools)
+# заголовки и loader Vulkan — из отдельного окружения envs/vk (conda-forge)
 GT_VK_LAYER_DIR="$GT_ROOT/vk_filter"
 GT_VK_LAYER=VK_LAYER_GT_gpu_filter
 
@@ -70,11 +70,12 @@ gt_vk_uuid() {
     tr -d ' -' <<<"${u#GPU-}" | tr 'A-F' 'a-f'
 }
 
-# UUID карт, которые видит Vulkan с нашим слоем (GT_VK_UUID должен быть задан)
+# UUID карт, которые видит Vulkan с нашим слоем (GT_VK_UUID должен быть задан).
+# Только gt_vk_list: vulkaninfo создаёт logical device на каждой карте, т.е. лезет на чужие
 gt_vk_visible() {
-    [[ -x "$GT_ROOT/envs/vk/bin/vulkaninfo" && -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" ]] || return 1
-    VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER"         "$GT_ROOT/envs/vk/bin/vulkaninfo" --summary 2>/dev/null |
-        awk '/deviceUUID/ {x=$3; gsub(/-/, "", x); print tolower(x)}'
+    [[ -x "$GT_VK_LAYER_DIR/gt_vk_list" && -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" ]] || return 1
+    VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER" \
+        "$GT_VK_LAYER_DIR/gt_vk_list" 2>/dev/null | awk '{print $1}'
 }
 
 # что появилось в $HOME после установки (сравнение со снимком)
