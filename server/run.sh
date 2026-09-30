@@ -122,7 +122,7 @@ GT_VK_UUID=$(gt_vk_uuid "$GPU") || gt_die "нет UUID для GPU $GPU"
 export GT_VK_UUID
 vis=$(gt_vk_visible) || gt_die "слой не собран: bash server/vk_filter/build.sh"
 [[ $vis == "$GT_VK_UUID" ]] || gt_die "со слоем Vulkan видит не только GPU $GPU: [$vis]"
-export VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER"
+export GT_VK_FILTER=1
 # для Isaac Sim наша карта — единственная, номер 0
 export GT_KIT_GPU=0
 [[ $VKDEBUG -eq 1 ]] && export VK_LOADER_DEBUG=layer

@@ -63,6 +63,8 @@ gt_gpu_procs() {
 # заголовки и loader Vulkan — из отдельного окружения envs/vk (conda-forge)
 GT_VK_LAYER_DIR="$GT_ROOT/vk_filter"
 GT_VK_LAYER=VK_LAYER_GT_gpu_filter
+# implicit-слой (Isaac Sim обнуляет VK_INSTANCE_LAYERS), включается переменной GT_VK_FILTER=1
+GT_VK_IMPLICIT_DIR="$XDG_DATA_HOME/vulkan/implicit_layer.d"
 
 gt_vk_uuid() {
     local u
@@ -73,9 +75,9 @@ gt_vk_uuid() {
 # UUID карт, которые видит Vulkan с нашим слоем (GT_VK_UUID должен быть задан).
 # Только gt_vk_list: vulkaninfo создаёт logical device на каждой карте, т.е. лезет на чужие
 gt_vk_visible() {
-    [[ -x "$GT_VK_LAYER_DIR/gt_vk_list" && -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" ]] || return 1
-    VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER" \
-        "$GT_VK_LAYER_DIR/gt_vk_list" 2>/dev/null | awk '{print $1}'
+    [[ -x "$GT_VK_LAYER_DIR/gt_vk_list" && -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" \
+        && -f "$GT_VK_IMPLICIT_DIR/gt_gpu_filter.json" ]] || return 1
+    GT_VK_FILTER=1 "$GT_VK_LAYER_DIR/gt_vk_list" 2>/dev/null | awk '{print $1}'
 }
 
 # что появилось в $HOME после установки (сравнение со снимком)

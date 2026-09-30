@@ -16,5 +16,10 @@ nice -n 19 taskset -c "$GT_CPUS" gcc -O2 -Wall -shared -fPIC -fvisibility=hidden
     "$HERE/gt_gpu_filter.c" -o "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" -lpthread
 nice -n 19 taskset -c "$GT_CPUS" gcc -O2 -Wall -I"$INC" "$HERE/gt_vk_list.c" \
     -o "$GT_VK_LAYER_DIR/gt_vk_list" -L"$LIB" -Wl,-rpath,"$LIB" -lvulkan
-cp "$HERE/gt_gpu_filter.json" "$GT_VK_LAYER_DIR/"
-echo "собрано: $GT_VK_LAYER_DIR"
+# неявный слой: Isaac Sim обнуляет VK_LAYER_PATH/VK_INSTANCE_LAYERS, но ищет implicit-слои
+# в $XDG_DATA_HOME (у нас внутри $GT_ROOT). Включается только при GT_VK_FILTER=1
+rm -f "$GT_VK_LAYER_DIR/gt_gpu_filter.json"
+mkdir -p "$GT_VK_IMPLICIT_DIR"
+sed "s|@LIB@|$GT_VK_LAYER_DIR/libgt_gpu_filter.so|" "$HERE/gt_gpu_filter.json" \
+    > "$GT_VK_IMPLICIT_DIR/gt_gpu_filter.json"
+echo "собрано: $GT_VK_LAYER_DIR, манифест: $GT_VK_IMPLICIT_DIR/gt_gpu_filter.json"

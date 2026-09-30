@@ -3,9 +3,11 @@
     "layer": {
         "name": "VK_LAYER_GT_gpu_filter",
         "type": "GLOBAL",
-        "library_path": "./libgt_gpu_filter.so",
+        "library_path": "@LIB@",
         "api_version": "1.3.0",
         "implementation_version": "1",
-        "description": "Expose only the GPU whose UUID is in GT_VK_UUID"
+        "description": "Expose only the GPU whose UUID is in GT_VK_UUID",
+        "enable_environment": {"GT_VK_FILTER": "1"},
+        "disable_environment": {"GT_VK_FILTER_DISABLE": "1"}
     }
 }
