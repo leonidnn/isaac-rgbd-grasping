@@ -12,13 +12,18 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HERE/env.sh"
 
-usage() { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 
 FG=0 SHARED=0 NONRTX=0 VKDEBUG=0 TIMEOUT=40m NAME=""
 MIN_FREE_MB=${GT_MIN_FREE_MB:-7000}
 SHARED_MAX_MB=${GT_SHARED_MAX_MB:-2500}
 STALL_SEC=${GT_STALL_SEC:-1200}
 MIN_DISK_GB=${GT_MIN_DISK_GB:-5}
+# Драйвер NVIDIA при подключении к Vulkan сам создаёт графический клиент (G, ~6 МиБ) на GPU 0,
+# слоем это не убрать. Решение пользователя (30.09.2026): терпим только это — GPU 0, тип G,
+# не больше 16 МиБ, без вычислений. Всё остальное на чужих картах — SIGKILL. Не через env,
+# чтобы нельзя было случайно расширить.
+STUB_GPU=0 STUB_TYPE=G STUB_MAX_MB=16
 ORIG_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
@@ -72,6 +77,14 @@ check_gpu() {
     echo "GPU $GPU: $name, занято ${used}/${total} MiB — ок"
 }
 
+# на карте с «заглушкой» драйвера не должно быть exclusive-режима: там наш клиент мешал бы владельцу
+check_stub_gpu() {
+    local mode
+    mode=$(nvidia-smi -i "$STUB_GPU" --query-gpu=compute_mode --format=csv,noheader 2>/dev/null) \
+        || gt_die "не удалось прочитать режим GPU $STUB_GPU"
+    [[ $mode == Default ]] || gt_die "GPU $STUB_GPU в режиме '$mode', наш клиент драйвера там недопустим"
+}
+
 check_disk() {
     local avail_gb
     avail_gb=$(( $(df -Pk "$GT_ROOT" | awk 'NR==2 {print $4}') / 1024 / 1024 ))
@@ -84,6 +97,7 @@ lock_free() { ( flock -n 9 ) 9>"$LOCK"; }
 if [[ $FG -eq 0 ]]; then
     lock_free || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
     check_gpu
+    check_stub_gpu
     check_disk
     SESSION="gt-$NAME"
     tmux has-session -t "$SESSION" 2>/dev/null && gt_die "tmux-сессия $SESSION уже есть"
@@ -99,6 +113,7 @@ fi
 exec 9>"$LOCK"
 flock -n 9 || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
 check_gpu
+check_stub_gpu
 check_disk
 # Vulkan видит только нашу карту (слой server/vk_filter), иначе не запускаемся
 GT_VK_UUID=$(gt_vk_uuid "$GPU") || gt_die "нет UUID для GPU $GPU"
@@ -182,15 +197,19 @@ tail -n +1 -f "$LOG" &
 TAILPID=$!
 
 # watchdog: наш процесс на чужом GPU или завис
-PEAK=0 T0=$(date +%s)
+PEAK=0 STUB_PEAK=0 T0=$(date +%s)
 while kill -0 "$PID" 2>/dev/null; do
     elapsed=$(( $(date +%s) - T0 ))
     # на старте (инициализация рендера) проверяем каждую секунду
     if (( elapsed < 300 )); then sleep 1; else sleep 5; fi
     while read -r g p t m; do
         [[ -n $p ]] && in_our_group "$p" || continue
+        if [[ $g == "$STUB_GPU" && $g != "$GPU" && $t == "$STUB_TYPE" ]] && (( m <= STUB_MAX_MB )); then
+            if (( m > STUB_PEAK )); then STUB_PEAK=$m; fi
+            continue
+        fi
         if [[ $g != "$GPU" ]]; then
-            log "СТОП: наш процесс $p появился на GPU $g (разрешён только $GPU), SIGKILL"
+            log "СТОП: наш процесс $p на GPU $g (тип $t, ${m} MiB; разрешены только GPU $GPU и клиент драйвера на GPU $STUB_GPU), SIGKILL"
             stop_group now
             break 2
         fi
@@ -207,5 +226,5 @@ done
 rc=0
 wait "$PID" || rc=$?
 [[ $rc -eq 124 ]] && log "СТОП: превышен лимит времени $TIMEOUT"
-log "код выхода $rc, время $(( $(date +%s) - T0 )) с, пик памяти на GPU ${PEAK} MiB"
+log "код выхода $rc, время $(( $(date +%s) - T0 )) с, пик памяти на GPU $GPU ${PEAK} MiB, клиент драйвера на GPU $STUB_GPU ${STUB_PEAK} MiB"
 exit $rc
