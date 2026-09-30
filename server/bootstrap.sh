@@ -2,6 +2,7 @@
 # Установка окружения в ~/grasp_task (один раз, внутри tmux).
 #   bash bootstrap.sh             Miniforge, env, torch, Isaac Sim 4.5, проверки
 #   bash bootstrap.sh --isaaclab  то же + Isaac Lab 2.0 и skrl
+#   bash bootstrap.sh --isaaclab-dry  только показать, что pip поставит/обновит для Isaac Lab
 #   bash bootstrap.sh --check     только проверки
 # Повторный запуск пропускает уже сделанные шаги. GPU не используется.
 set -euo pipefail
@@ -14,10 +15,11 @@ if [[ -z "${GT_NICED:-}" ]]; then
     exec nice -n 19 ionice -c3 taskset -c "$GT_CPUS" bash "$0" "$@"
 fi
 
-WITH_LAB=0 CHECK_ONLY=0 NO_TMUX=0
+WITH_LAB=0 CHECK_ONLY=0 NO_TMUX=0 DRY=0
 for a in "$@"; do
     case $a in
         --isaaclab) WITH_LAB=1 ;;
+        --isaaclab-dry) WITH_LAB=1 DRY=1 NO_TMUX=1 ;;
         --check) CHECK_ONLY=1 ;;
         --no-tmux) NO_TMUX=1 ;;
         *) gt_die "неизвестный аргумент $a" ;;
@@ -73,6 +75,10 @@ print('ok')"
             | awk '/=> not found/ {print $1}' | sort -u > "$TMPDIR/notfound_so.txt" || true
         comm -23 "$TMPDIR/notfound_so.txt" "$TMPDIR/have_so.txt"
     fi
+    echo "--- фильтр GPU и libGLU"
+    [[ -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" && -x "$GT_VK_LAYER_DIR/gt_vk_list" \
+        && -f "$GT_VK_IMPLICIT_DIR/gt_gpu_filter.json" ]] && echo "vk_filter ok" || echo "vk_filter НЕ собран"
+    [[ -e "$GT_ROOT/extlib/libGLU.so.1" ]] && echo "libGLU ok" || echo "libGLU НЕТ"
     echo "--- место"
     du -sh "$GT_ROOT"
     df -h "$GT_ROOT" | tail -1
@@ -119,16 +125,31 @@ if ! have_isaacsim; then
     pip_i "isaacsim[all,extscache]==4.5.0" --extra-index-url https://pypi.nvidia.com
 fi
 
+# envs/vk: loader и заголовки Vulkan для слоя-фильтра GPU и libGLU для iray/MDL.
+# Отдельно от envs/isaac, чтобы conda не тронула перешитый python
+if [[ ! -f "$GT_ROOT/envs/vk/include/vulkan/vk_layer.h" || ! -e "$GT_ROOT/envs/vk/lib/libGLU.so.1" ]]; then
+    echo "[$(date +%T)] envs/vk"
+    "$GT_CONDA/bin/conda" create -y -p "$GT_ROOT/envs/vk" -c conda-forge --override-channels \
+        libvulkan-loader libvulkan-headers libglu
+fi
+mkdir -p "$GT_ROOT/extlib"
+ln -sfn "$GT_ROOT/envs/vk/lib/libGLU.so.1" "$GT_ROOT/extlib/libGLU.so.1"
+bash "$HERE/vk_filter/build.sh"
+
 if [[ $WITH_LAB -eq 1 ]]; then
     LAB="$GT_ROOT/IsaacLab"
     if [[ ! -d "$LAB" ]]; then
         echo "[$(date +%T)] Isaac Lab $ISAACLAB_TAG"
         git clone --depth 1 --branch "$ISAACLAB_TAG" https://github.com/isaac-sim/IsaacLab.git "$LAB"
     fi
-    for p in isaaclab isaaclab_assets isaaclab_tasks; do
-        pip_i -e "$LAB/source/$p"
-    done
-    pip_i -e "$LAB/source/isaaclab_rl[skrl]"
+    LAB_PKGS=(-e "$LAB/source/isaaclab" -e "$LAB/source/isaaclab_assets"
+              -e "$LAB/source/isaaclab_tasks" -e "$LAB/source/isaaclab_rl[skrl]")
+    if [[ $DRY -eq 1 ]]; then
+        echo "[$(date +%T)] pip --dry-run: что поставится и что изменится"
+        pip_i --dry-run "${LAB_PKGS[@]}" | grep -E "^Would install|^ERROR" || true
+        exit 0
+    fi
+    pip_i "${LAB_PKGS[@]}"
 fi
 
 echo "[$(date +%T)] проверки"
