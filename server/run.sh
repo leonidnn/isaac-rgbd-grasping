@@ -7,13 +7,14 @@
 #   --non-rtx       разрешить не-RTX карту (A100) — только по явному решению
 #   --timeout T     лимит времени, формат timeout (по умолчанию 40m)
 #   --name N        имя запуска (по умолчанию имя скрипта)
+#   --vk-debug      писать в лог, какие Vulkan-слои загрузились (проверка фильтра GPU)
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HERE/env.sh"
 
 usage() { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 
-FG=0 SHARED=0 NONRTX=0 TIMEOUT=40m NAME=""
+FG=0 SHARED=0 NONRTX=0 VKDEBUG=0 TIMEOUT=40m NAME=""
 MIN_FREE_MB=${GT_MIN_FREE_MB:-7000}
 SHARED_MAX_MB=${GT_SHARED_MAX_MB:-2500}
 STALL_SEC=${GT_STALL_SEC:-1200}
@@ -25,6 +26,7 @@ while [[ $# -gt 0 ]]; do
         --fg) FG=1 ;;
         --allow-shared) SHARED=1 ;;
         --non-rtx) NONRTX=1 ;;
+        --vk-debug) VKDEBUG=1 ;;
         --timeout) TIMEOUT=$2; shift ;;
         --name) NAME=$2; shift ;;
         -h|--help) usage ;;
@@ -106,6 +108,7 @@ vis=$(gt_vk_visible) || gt_die "слой не собран: bash server/vk_filte
 export VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER"
 # для Isaac Sim наша карта — единственная, номер 0
 export GT_KIT_GPU=0
+[[ $VKDEBUG -eq 1 ]] && export VK_LOADER_DEBUG=layer
 
 RUN_DIR="$GT_RUNS/${NAME}_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RUN_DIR"

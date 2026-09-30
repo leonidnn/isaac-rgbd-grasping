@@ -1,10 +1,12 @@
 // Lists Vulkan physical devices as "<uuid> <name>" without creating any logical device
 // (unlike vulkaninfo, which opens a context on every GPU).
+// Optional argument: seconds to hold the instance before exit (to catch it in nvidia-smi).
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <vulkan/vulkan.h>
 
-int main(void) {
+int main(int argc, char **argv) {
     VkApplicationInfo app = {VK_STRUCTURE_TYPE_APPLICATION_INFO};
     app.pApplicationName = "gt_vk_list";
     app.apiVersion = VK_API_VERSION_1_1;
@@ -30,6 +32,8 @@ int main(void) {
         printf(" %s\n", p.properties.deviceName);
     }
     free(pd);
+    fflush(stdout);
+    if (argc > 1) sleep((unsigned)atoi(argv[1]));
     vkDestroyInstance(inst, NULL);
     return 0;
 }
