@@ -1,0 +1,24 @@
+{
+  "rgb_shape": [
+    480,
+    640,
+    4
+  ],
+  "rgb_mean": 235.4033908420139,
+  "rgb_std": 22.714036611868778,
+  "depth_shape": [
+    480,
+    640
+  ],
+  "depth_finite_frac": 1.0,
+  "depth_min": 1.099999189376831,
+  "depth_median": 1.1999999284744263,
+  "total_time_s": 1160.8,
+  "checks": {
+    "rgb_not_black": true,
+    "depth_valid": true,
+    "ground_depth": true,
+    "cube_visible": true
+  },
+  "physics_cube_landed": true
+}

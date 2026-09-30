@@ -65,11 +65,12 @@ print('ok')"
         local sp
         sp=$(gt_python -c "import site; print(site.getsitepackages()[0])")
         echo "--- .so, которым нужна glibc новее 2.34 (должно быть пусто)"
-        find "$sp" -name '*.so*' -type f -print0 \
+        # Isaac Sim создаёт в окружении папки без прав (напр. .../Kit/shared/screenshots) — ошибки find не важны
+        find "$sp" -name '*.so*' -type f -print0 2>/dev/null \
             | xargs -0 -r grep -l -a -E 'GLIBC_2\.(3[5-9]|[4-9][0-9])' 2>/dev/null | head -20 || true
 
         echo "--- зависимости .so, которых нет ни в системе, ни в окружении (должно быть пусто)"
-        find "$sp" -name '*.so*' -type f -printf '%f\n' | sort -u > "$TMPDIR/have_so.txt"
+        { find "$sp" -name '*.so*' -type f -printf '%f\n' 2>/dev/null || true; } | sort -u > "$TMPDIR/have_so.txt"
         find "$sp"/isaacsim* "$sp"/omni* -name '*.so*' -type f -print0 2>/dev/null \
             | LD_LIBRARY_PATH="$(gt_libpath)" xargs -0 -r ldd 2>/dev/null \
             | awk '/=> not found/ {print $1}' | sort -u > "$TMPDIR/notfound_so.txt" || true
@@ -80,7 +81,7 @@ print('ok')"
         && -f "$GT_VK_IMPLICIT_DIR/gt_gpu_filter.json" ]] && echo "vk_filter ok" || echo "vk_filter НЕ собран"
     [[ -e "$GT_ROOT/extlib/libGLU.so.1" ]] && echo "libGLU ok" || echo "libGLU НЕТ"
     echo "--- место"
-    du -sh "$GT_ROOT"
+    du -sh "$GT_ROOT" 2>/dev/null || true
     df -h "$GT_ROOT" | tail -1
     echo "--- новое в \$HOME вне grasp_task"
     gt_home_new | grep -vx grasp_task || true
