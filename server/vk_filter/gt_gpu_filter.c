@@ -105,6 +105,10 @@ static VkPhysicalDevice our_device(inst_t *in, VkInstance instance) {
 static VKAPI_ATTR VkResult VKAPI_CALL gt_CreateInstance(const VkInstanceCreateInfo *ci,
                                                         const VkAllocationCallbacks *alloc,
                                                         VkInstance *out) {
+    // no valid UUID -> do not even reach the driver
+    uint8_t want[VK_UUID_SIZE];
+    if (!want_uuid(want)) return VK_ERROR_INITIALIZATION_FAILED;
+
     VkLayerInstanceCreateInfo *link = (VkLayerInstanceCreateInfo *)ci->pNext;
     while (link && !(link->sType == VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO &&
                      link->function == VK_LAYER_LINK_INFO))
@@ -131,8 +135,16 @@ static VKAPI_ATTR VkResult VKAPI_CALL gt_CreateInstance(const VkInstanceCreateIn
     inst_t *slot = find_inst(NULL);
     if (slot) *slot = in;
     pthread_mutex_unlock(&lock);
+    // our GPU is not visible -> fail instead of an empty device list
+    if (slot && !our_device(slot, *out)) {
+        pthread_mutex_lock(&lock);
+        memset(slot, 0, sizeof(*slot));
+        pthread_mutex_unlock(&lock);
+        slot = NULL;
+    }
     if (!slot) {
         in.destroy(*out, alloc);
+        *out = VK_NULL_HANDLE;
         return VK_ERROR_INITIALIZATION_FAILED;
     }
     return VK_SUCCESS;
