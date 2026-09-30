@@ -58,17 +58,23 @@ gt_gpu_procs() {
         p && $1=="|" && $2 ~ /^[0-9]+$/ && $5 ~ /^[0-9]+$/ {m=$(NF-1); sub(/MiB/, "", m); print $2, $5, $6, m}'
 }
 
-# номер карты в нумерации Vulkan (её использует рендер Isaac Sim) по номеру из nvidia-smi.
-# CUDA_VISIBLE_DEVICES на Vulkan не действует, поэтому сопоставляем по UUID.
+# Isaac Sim при старте открывает все карты, которые видит Vulkan, а CUDA_VISIBLE_DEVICES
+# на Vulkan не действует. Поэтому свой слой (server/vk_filter) оставляет процессу одну карту по UUID.
 # vulkaninfo — из отдельного окружения envs/vk (conda-forge vulkan-tools)
-gt_kit_gpu() {
-    local uuid
-    uuid=$(nvidia-smi -i "$1" --query-gpu=uuid --format=csv,noheader 2>/dev/null) || return 1
-    uuid=$(tr -d ' -' <<<"${uuid#GPU-}" | tr 'A-F' 'a-f')
-    [[ -x "$GT_ROOT/envs/vk/bin/vulkaninfo" && -f "$GT_VK_ICD" ]] || return 1
-    "$GT_ROOT/envs/vk/bin/vulkaninfo" --summary 2>/dev/null | awk -v u="$uuid" '
-        /^GPU[0-9]+:/ {g=substr($1, 4); sub(/:/, "", g)}
-        /deviceUUID/ {x=$3; gsub(/-/, "", x); if (tolower(x)==u) {print g; exit}}'
+GT_VK_LAYER_DIR="$GT_ROOT/vk_filter"
+GT_VK_LAYER=VK_LAYER_GT_gpu_filter
+
+gt_vk_uuid() {
+    local u
+    u=$(nvidia-smi -i "$1" --query-gpu=uuid --format=csv,noheader 2>/dev/null) || return 1
+    tr -d ' -' <<<"${u#GPU-}" | tr 'A-F' 'a-f'
+}
+
+# UUID карт, которые видит Vulkan с нашим слоем (GT_VK_UUID должен быть задан)
+gt_vk_visible() {
+    [[ -x "$GT_ROOT/envs/vk/bin/vulkaninfo" && -f "$GT_VK_LAYER_DIR/libgt_gpu_filter.so" ]] || return 1
+    VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER"         "$GT_ROOT/envs/vk/bin/vulkaninfo" --summary 2>/dev/null |
+        awk '/deviceUUID/ {x=$3; gsub(/-/, "", x); print tolower(x)}'
 }
 
 # что появилось в $HOME после установки (сравнение со снимком)

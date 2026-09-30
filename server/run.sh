@@ -98,9 +98,14 @@ exec 9>"$LOCK"
 flock -n 9 || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
 check_gpu
 check_disk
-GT_KIT_GPU=$(gt_kit_gpu "$GPU") || true
-[[ -n $GT_KIT_GPU ]] || gt_die "не удалось найти GPU $GPU в vulkaninfo (нужен для рендера Isaac Sim)"
-export GT_KIT_GPU
+# Vulkan видит только нашу карту (слой server/vk_filter), иначе не запускаемся
+GT_VK_UUID=$(gt_vk_uuid "$GPU") || gt_die "нет UUID для GPU $GPU"
+export GT_VK_UUID
+vis=$(gt_vk_visible) || gt_die "слой не собран: bash server/vk_filter/build.sh"
+[[ $vis == "$GT_VK_UUID" ]] || gt_die "со слоем Vulkan видит не только GPU $GPU: [$vis]"
+export VK_LAYER_PATH="$GT_VK_LAYER_DIR" VK_INSTANCE_LAYERS="$GT_VK_LAYER"
+# для Isaac Sim наша карта — единственная, номер 0
+export GT_KIT_GPU=0
 
 RUN_DIR="$GT_RUNS/${NAME}_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RUN_DIR"
@@ -158,7 +163,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT TERM HUP
 
-log "user=$USER gpu=$GPU kit_gpu=$GT_KIT_GPU cpus=$GT_CPUS timeout=$TIMEOUT"
+log "user=$USER gpu=$GPU vk_uuid=$GT_VK_UUID cpus=$GT_CPUS timeout=$TIMEOUT"
 log "cmd: $SCRIPT $*"
 
 # отдельная группа процессов, чтобы потом убить всё дерево
