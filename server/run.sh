@@ -8,11 +8,12 @@
 #   --timeout T     лимит времени, формат timeout (по умолчанию 40m)
 #   --name N        имя запуска (по умолчанию имя скрипта)
 #   --vk-debug      писать в лог, какие Vulkan-слои загрузились (проверка фильтра GPU)
+#   --stall M       остановить, если лог молчит M минут (по умолчанию 20; первый запуск Isaac — 60)
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HERE/env.sh"
 
-usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+usage() { sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 
 FG=0 SHARED=0 NONRTX=0 VKDEBUG=0 TIMEOUT=40m NAME=""
 MIN_FREE_MB=${GT_MIN_FREE_MB:-7000}
@@ -35,6 +36,7 @@ while [[ $# -gt 0 ]]; do
         --non-rtx) NONRTX=1 ;;
         --vk-debug) VKDEBUG=1 ;;
         --timeout) TIMEOUT=$2; shift ;;
+        --stall) [[ ${2:-} =~ ^[0-9]+$ ]] || gt_die "--stall: минуты числом"; STALL_SEC=$(( $2 * 60 )); shift ;;
         --name) NAME=$2; shift ;;
         -h|--help) usage ;;
         --*) gt_die "неизвестная опция $1" ;;
@@ -183,7 +185,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT TERM HUP
 
-log "user=$USER gpu=$GPU vk_uuid=$GT_VK_UUID cpus=$GT_CPUS timeout=$TIMEOUT"
+log "user=$USER gpu=$GPU vk_uuid=$GT_VK_UUID cpus=$GT_CPUS timeout=$TIMEOUT stall=$(( STALL_SEC / 60 ))m"
 log "cmd: $SCRIPT $*"
 
 # отдельная группа процессов, чтобы потом убить всё дерево
