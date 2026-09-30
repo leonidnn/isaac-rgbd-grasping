@@ -35,6 +35,10 @@ export MAX_JOBS=2 MAKEFLAGS=-j2
 # номера GPU как в nvidia-smi
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 
+# Vulkan только через драйвер NVIDIA: без этого виден llvmpipe (рендер на CPU)
+GT_VK_ICD=/usr/share/vulkan/icd.d/nvidia_icd.json
+export VK_DRIVER_FILES="$GT_VK_ICD" VK_ICD_FILENAMES="$GT_VK_ICD"
+
 # принятие NVIDIA Omniverse EULA (иначе isaacsim ждёт ввода)
 export OMNI_KIT_ACCEPT_EULA=YES
 
@@ -55,13 +59,14 @@ gt_gpu_procs() {
 }
 
 # номер карты в нумерации Vulkan (её использует рендер Isaac Sim) по номеру из nvidia-smi.
-# CUDA_VISIBLE_DEVICES на Vulkan не действует, поэтому сопоставляем по UUID
+# CUDA_VISIBLE_DEVICES на Vulkan не действует, поэтому сопоставляем по UUID.
+# vulkaninfo — из отдельного окружения envs/vk (conda-forge vulkan-tools)
 gt_kit_gpu() {
     local uuid
     uuid=$(nvidia-smi -i "$1" --query-gpu=uuid --format=csv,noheader 2>/dev/null) || return 1
     uuid=$(tr -d ' -' <<<"${uuid#GPU-}" | tr 'A-F' 'a-f')
-    command -v vulkaninfo >/dev/null || return 1
-    vulkaninfo --summary 2>/dev/null | awk -v u="$uuid" '
+    [[ -x "$GT_ROOT/envs/vk/bin/vulkaninfo" && -f "$GT_VK_ICD" ]] || return 1
+    "$GT_ROOT/envs/vk/bin/vulkaninfo" --summary 2>/dev/null | awk -v u="$uuid" '
         /^GPU[0-9]+:/ {g=substr($1, 4); sub(/:/, "", g)}
         /deviceUUID/ {x=$3; gsub(/-/, "", x); if (tolower(x)==u) {print g; exit}}'
 }
