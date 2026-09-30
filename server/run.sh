@@ -128,6 +128,7 @@ export GT_VK_FILTER=1
 # для Isaac Sim наша карта — единственная, номер 0
 export GT_KIT_GPU=0
 [[ $VKDEBUG -eq 1 ]] && export VK_LOADER_DEBUG=layer
+gt_load_secrets || echo "ВНИМАНИЕ: нет ключей W&B/HF в $GT_ROOT/.config, логирование и загрузка работать не будут"
 
 RUN_DIR="$GT_RUNS/${NAME}_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RUN_DIR"
@@ -178,6 +179,15 @@ cleanup() {
         log "ВНИМАНИЕ: на GPU остались наши процессы: $left — проверить вручную"
     else
         log "наших процессов на GPU нет"
+    fi
+    # чекпоинты удаляем только если скрипт подтвердил загрузку на HF и wandb.finish()
+    if [[ -d $RUN_DIR/ckpt ]]; then
+        if [[ -f $RUN_DIR/UPLOAD_CONFIRMED ]]; then
+            rm -rf "$RUN_DIR/ckpt"
+            log "загрузка подтверждена, локальные чекпоинты удалены"
+        else
+            log "ВНИМАНИЕ: загрузка на HF не подтверждена, чекпоинты оставлены в $RUN_DIR/ckpt"
+        fi
     fi
     log "результаты: $RUN_DIR"
     exit $rc

@@ -151,6 +151,8 @@ if [[ $WITH_LAB -eq 1 ]]; then
         exit 0
     fi
     pip_i "${LAB_PKGS[@]}"
+    # wandb без фиксации тянет protobuf 7.x, а tensorboard/onnx из Isaac Lab сидят на 4.x
+    pip_i wandb "protobuf==4.25.9"
 fi
 
 echo "[$(date +%T)] проверки"
