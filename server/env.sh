@@ -49,7 +49,9 @@ mkdir -p "$GT_ROOT" "$XDG_CACHE_HOME" "$XDG_DATA_HOME" "$TMPDIR" "$GT_RUNS" "$GT
 gt_die() { echo "ОШИБКА: $*" >&2; exit 1; }
 
 # python окружения запускается с glibc 2.34 (patchelf), системные драйверы берём из /lib
-gt_libpath() { echo "$GT_ENV/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu"; }
+# extlib — отдельные библиотеки, которых нет в системе (libGLU.so.1 из envs/vk для iray/MDL),
+# ссылками по одной, чтобы не подмешивать в Isaac Sim весь envs/vk
+gt_libpath() { echo "$GT_ENV/lib:$GT_ROOT/extlib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu"; }
 gt_python() { LD_LIBRARY_PATH="$(gt_libpath)" PYTHONNOUSERSITE=1 "$GT_ENV/bin/python" "$@"; }
 
 # все процессы на всех GPU (compute и graphics): "<gpu> <pid> <type> <MiB>"
