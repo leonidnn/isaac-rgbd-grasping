@@ -45,9 +45,11 @@ run_checks() {
     echo "--- glibc"
     gt_python -c "import os; print(os.confstr('CS_GNU_LIBC_VERSION'))"
     echo "--- системные библиотеки драйвера"
+    # libGLX_nvidia/libEGL_nvidia напрямую вместе не грузить: падают при выходе (double free),
+    # их подгружает libglvnd через libGL/libEGL
     gt_python -c "
 import ctypes
-for n in ('libcuda.so.1', 'libvulkan.so.1', 'libGLX_nvidia.so.0', 'libEGL_nvidia.so.0'):
+for n in ('libcuda.so.1', 'libvulkan.so.1', 'libGL.so.1', 'libEGL.so.1'):
     ctypes.CDLL(n)
 print('ok')"
     if gt_python -c "import torch" 2>/dev/null; then
