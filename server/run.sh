@@ -24,6 +24,8 @@ MIN_DISK_GB=${GT_MIN_DISK_GB:-5}
 # не больше 16 МиБ, без вычислений. Всё остальное на чужих картах — SIGKILL. Не через env,
 # чтобы нельзя было случайно расширить.
 STUB_GPU=0 STUB_TYPE=G STUB_MAX_MB=16
+# при чужом процессе на нашей карте: оставляем ему запас свободной памяти и ограничиваем себя
+RESERVE_MB=1536 OUR_MAX_MB=6144
 ORIG_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
@@ -196,14 +198,43 @@ PGID=$(ps -o pgid= -p "$PID" | tr -d ' ')
 tail -n +1 -f "$LOG" &
 TAILPID=$!
 
-# watchdog: наш процесс на чужом GPU или завис
+# чужие процессы на нашей карте на старте (при --allow-shared)
+FOREIGN0=""
+while read -r g p t m; do
+    [[ $g == "$GPU" ]] && ! in_our_group "$p" && FOREIGN0+="$p "
+done < <(gt_gpu_procs)
+[[ -n $FOREIGN0 ]] && log "на GPU $GPU чужие процессы: $(echo $FOREIGN0); запас памяти ${RESERVE_MB} MiB, наш потолок ${OUR_MAX_MB} MiB"
+
+# watchdog: наш процесс на чужом GPU, съели память соседа, сосед пропал, зависли
 PEAK=0 STUB_PEAK=0 T0=$(date +%s)
 while kill -0 "$PID" 2>/dev/null; do
     elapsed=$(( $(date +%s) - T0 ))
     # на старте (инициализация рендера) проверяем каждую секунду
     if (( elapsed < 300 )); then sleep 1; else sleep 5; fi
+    procs=$(gt_gpu_procs)
+    mtotal="" mused=""
+    IFS=, read -r mtotal mused < <(nvidia-smi -i "$GPU" --query-gpu=memory.total,memory.used --format=csv,noheader,nounits) || true
+    mtotal=${mtotal// /} mused=${mused// /}
+    mfree=$(( ${mtotal:-0} - ${mused:-0} ))
+    if [[ -n $FOREIGN0 && -n $mtotal ]] && (( mfree < RESERVE_MB )); then
+        log "СТОП: на GPU $GPU свободно ${mfree} MiB < запаса ${RESERVE_MB} MiB для соседа, SIGKILL"
+        stop_group now
+        break
+    fi
+    for fp in $FOREIGN0; do
+        if ! awk -v g="$GPU" -v p="$fp" '$1==g && $2==p {f=1} END {exit !f}' <<<"$procs"; then
+            log "СТОП: чужой процесс $fp пропал с GPU $GPU во время нашего запуска — проверить, не мы ли причина"
+            stop_group now
+            break 2
+        fi
+    done
     while read -r g p t m; do
         [[ -n $p ]] && in_our_group "$p" || continue
+        if [[ $g == "$GPU" ]] && (( m > OUR_MAX_MB )); then
+            log "СТОП: наш процесс $p занял ${m} MiB > потолка ${OUR_MAX_MB} MiB, SIGKILL"
+            stop_group now
+            break 2
+        fi
         if [[ $g == "$STUB_GPU" && $g != "$GPU" && $t == "$STUB_TYPE" ]] && (( m <= STUB_MAX_MB )); then
             if (( m > STUB_PEAK )); then STUB_PEAK=$m; fi
             continue
@@ -214,7 +245,7 @@ while kill -0 "$PID" 2>/dev/null; do
             break 2
         fi
         if (( m > PEAK )); then PEAK=$m; fi
-    done < <(gt_gpu_procs)
+    done <<<"$procs"
     age=$(( $(date +%s) - $(stat -c %Y "$LOG") ))
     if (( age > STALL_SEC )); then
         log "СТОП: лог не обновлялся ${age} с"
