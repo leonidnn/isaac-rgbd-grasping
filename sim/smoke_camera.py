@@ -18,29 +18,12 @@ parser.add_argument("--steps", type=int, default=120)
 parser.add_argument("--out", default=os.environ.get("GT_RUN_DIR", "."))
 args = parser.parse_args()
 
-if "CUDA_VISIBLE_DEVICES" not in os.environ:
-    sys.exit("CUDA_VISIBLE_DEVICES is not set, use server/run.sh")
-
 t_start = time.time()
 
-from isaacsim import SimulationApp
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from gt_app import make_app
 
-app = SimulationApp(
-    {
-        "headless": True,
-        "renderer": "RayTracedLighting",
-        "width": args.width,
-        "height": args.height,
-        "multi_gpu": False,
-        "active_gpu": 0,
-        "physics_gpu": 0,
-        "extra_args": [
-            "--/renderer/multiGpu/enabled=false",
-            "--/renderer/multiGpu/autoEnable=false",
-            "--/plugins/carb.tasking.plugin/threadCount=4",
-        ],
-    }
-)
+app = make_app(args.width, args.height)
 print(f"[smoke] app started in {time.time() - t_start:.1f}s", flush=True)
 
 import carb
@@ -113,7 +96,7 @@ def main():
         physics_dt=1 / 60,
         rendering_dt=1 / 60,
         backend="torch",
-        device="cuda:0",
+        device="cuda",
     )
     cam_path = build_scene(omni.usd.get_context().get_stage())
 

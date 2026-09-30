@@ -41,6 +41,11 @@ shift 2
 SCRIPT=$(readlink -f "$SCRIPT")
 [[ -x "$GT_ENV/bin/python" ]] || gt_die "нет окружения $GT_ENV, сначала bootstrap.sh"
 NAME=${NAME:-$(basename "$SCRIPT" .py)}
+
+# выбор карты только через sim/gt_app.py: никаких своих SimulationApp/AppLauncher и номеров GPU в коде
+if grep -nE 'SimulationApp\(|AppLauncher\(|active_gpu|activeGpu|physics_gpu|cuda:[1-9]|--device' "$SCRIPT"; then
+    gt_die "в $SCRIPT выбор GPU в обход sim/gt_app.py (строки выше)"
+fi
 LOCK="$GT_ROOT/locks/run.lock"
 
 check_gpu() {
@@ -80,7 +85,8 @@ if [[ $FG -eq 0 ]]; then
     check_disk
     SESSION="gt-$NAME"
     tmux has-session -t "$SESSION" 2>/dev/null && gt_die "tmux-сессия $SESSION уже есть"
-    tmux new-session -d -s "$SESSION" "$(printf '%q ' bash "$HERE/run.sh" --fg "${ORIG_ARGS[@]}")"
+    # env tmux-сервера может быть старым, поэтому GT_CPUS передаём явно
+    tmux new-session -d -s "$SESSION" "$(printf '%q ' env GT_CPUS="$GT_CPUS" bash "$HERE/run.sh" --fg "${ORIG_ARGS[@]}")"
     echo "Запущено в tmux-сессии $SESSION (закроется сама по завершении)"
     echo "  смотреть: tmux attach -t $SESSION   (отключиться: Ctrl+b, затем d)"
     echo "  логи:     ls -t $GT_RUNS | head -1"
@@ -92,6 +98,9 @@ exec 9>"$LOCK"
 flock -n 9 || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
 check_gpu
 check_disk
+GT_KIT_GPU=$(gt_kit_gpu "$GPU") || true
+[[ -n $GT_KIT_GPU ]] || gt_die "не удалось найти GPU $GPU в vulkaninfo (нужен для рендера Isaac Sim)"
+export GT_KIT_GPU
 
 RUN_DIR="$GT_RUNS/${NAME}_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RUN_DIR"
@@ -112,9 +121,15 @@ our_gpu_pids() {
     return 0
 }
 
+# stop_group now — сразу SIGKILL (наш процесс на чужой карте, ждать нельзя)
 stop_group() {
     [[ -n $PGID ]] || return 0
     pgrep -g "$PGID" >/dev/null || return 0
+    if [[ ${1:-} == now ]]; then
+        kill -KILL -- "-$PGID" 2>/dev/null || true
+        sleep 1
+        return 0
+    fi
     kill -TERM -- "-$PGID" 2>/dev/null || true
     for _ in $(seq 30); do
         pgrep -g "$PGID" >/dev/null || return 0
@@ -143,7 +158,7 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT TERM HUP
 
-log "user=$USER gpu=$GPU cpus=$GT_CPUS timeout=$TIMEOUT"
+log "user=$USER gpu=$GPU kit_gpu=$GT_KIT_GPU cpus=$GT_CPUS timeout=$TIMEOUT"
 log "cmd: $SCRIPT $*"
 
 # отдельная группа процессов, чтобы потом убить всё дерево
@@ -162,12 +177,13 @@ TAILPID=$!
 PEAK=0 T0=$(date +%s)
 while kill -0 "$PID" 2>/dev/null; do
     elapsed=$(( $(date +%s) - T0 ))
-    if (( elapsed < 180 )); then sleep 5; else sleep 15; fi
+    # на старте (инициализация рендера) проверяем каждую секунду
+    if (( elapsed < 300 )); then sleep 1; else sleep 5; fi
     while read -r g p t m; do
         [[ -n $p ]] && in_our_group "$p" || continue
         if [[ $g != "$GPU" ]]; then
-            log "СТОП: наш процесс $p появился на GPU $g (разрешён только $GPU)"
-            stop_group
+            log "СТОП: наш процесс $p появился на GPU $g (разрешён только $GPU), SIGKILL"
+            stop_group now
             break 2
         fi
         if (( m > PEAK )); then PEAK=$m; fi

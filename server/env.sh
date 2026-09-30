@@ -54,6 +54,18 @@ gt_gpu_procs() {
         p && $1=="|" && $2 ~ /^[0-9]+$/ && $5 ~ /^[0-9]+$/ {m=$(NF-1); sub(/MiB/, "", m); print $2, $5, $6, m}'
 }
 
+# номер карты в нумерации Vulkan (её использует рендер Isaac Sim) по номеру из nvidia-smi.
+# CUDA_VISIBLE_DEVICES на Vulkan не действует, поэтому сопоставляем по UUID
+gt_kit_gpu() {
+    local uuid
+    uuid=$(nvidia-smi -i "$1" --query-gpu=uuid --format=csv,noheader 2>/dev/null) || return 1
+    uuid=$(tr -d ' -' <<<"${uuid#GPU-}" | tr 'A-F' 'a-f')
+    command -v vulkaninfo >/dev/null || return 1
+    vulkaninfo --summary 2>/dev/null | awk -v u="$uuid" '
+        /^GPU[0-9]+:/ {g=substr($1, 4); sub(/:/, "", g)}
+        /deviceUUID/ {x=$3; gsub(/-/, "", x); if (tolower(x)==u) {print g; exit}}'
+}
+
 # что появилось в $HOME после установки (сравнение со снимком)
 gt_home_new() {
     [[ -f "$GT_ROOT/.home_before" ]] || return 0
