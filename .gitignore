@@ -2,3 +2,4 @@ report/
 plan.md
 __pycache__/
 *.pyc
+.vscode/

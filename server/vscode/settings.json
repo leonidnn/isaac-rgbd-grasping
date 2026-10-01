@@ -1,0 +1,36 @@
+{
+    // копия лежит в ~/grasp_task/code/.vscode/settings.json (gitignored)
+    "python.defaultInterpreterPath": "/home/Invader17/grasp_task/code/server/vscode/python",
+    "python.terminal.activateEnvironment": false,
+    "python.envFile": "",
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.indexing": false,
+    "python.analysis.extraPaths": [
+        "/home/Invader17/grasp_task/IsaacLab/source/isaaclab",
+        "/home/Invader17/grasp_task/IsaacLab/source/isaaclab_assets",
+        "/home/Invader17/grasp_task/IsaacLab/source/isaaclab_rl",
+        "/home/Invader17/grasp_task/IsaacLab/source/isaaclab_tasks"
+    ],
+    "python.analysis.exclude": ["**/__pycache__", "**/.git"],
+
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/__pycache__/**": true,
+        "**/results/**": true
+    },
+    "search.followSymlinks": false,
+
+    "terminal.integrated.profiles.linux": {
+        "gt": {
+            "path": "bash",
+            "args": ["--rcfile", "/home/Invader17/grasp_task/code/server/vscode/bashrc", "-i"]
+        }
+    },
+    "terminal.integrated.defaultProfile.linux": "gt",
+    "terminal.integrated.inheritEnv": false,
+    "terminal.integrated.env.linux": {
+        "CUDA_VISIBLE_DEVICES": "",
+        "VK_DRIVER_FILES": "/nonexistent",
+        "VK_ICD_FILENAMES": "/nonexistent"
+    }
+}

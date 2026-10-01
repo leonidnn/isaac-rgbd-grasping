@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Интерпретатор для VS Code (Pylance, кнопка Run, отладчик): python окружения без GPU.
+# Запуск на GPU — только gt run.
+exec "$(dirname "$(readlink -f "$0")")/../gt" py "$@"

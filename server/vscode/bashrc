@@ -1,0 +1,21 @@
+# Терминал VS Code на сервере. ~/.bashrc не подключаем: аккаунт чужой, его настройки нам не нужны.
+GT_CODE="$HOME/grasp_task/code"
+export PATH="$GT_CODE/server:$PATH"
+export HISTFILE="$HOME/grasp_task/.bash_history_vscode"
+PS1='\[\e[32m\]gt\[\e[0m\]:\w\$ '
+
+# случайный запуск из терминала не должен увидеть видеокарты и занять много ядер
+export CUDA_VISIBLE_DEVICES= VK_DRIVER_FILES=/nonexistent VK_ICD_FILENAMES=/nonexistent
+export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2
+
+_gt_blocked() {
+    echo "$1 здесь не запускается. На GPU: gt run <script.py> <gpu>, без GPU: gt py ..., список карт: gt gpus" >&2
+    return 1
+}
+python() { _gt_blocked python; }
+python3() { _gt_blocked python3; }
+pip() { _gt_blocked pip; }
+pip3() { _gt_blocked pip3; }
+conda() { _gt_blocked conda; }
+
+cd "$GT_CODE" 2>/dev/null || true

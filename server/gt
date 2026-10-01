@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Короткие команды для работы на сервере.
+#   gt run [опции run.sh] <script.py> <gpu> [аргументы]   запуск на GPU в этом терминале (run.sh --fg)
+#   gt bg  [опции run.sh] <script.py> <gpu> [аргументы]   то же в tmux, для долгих запусков
+#   gt gpus                                              кто занимает GPU
+#   gt py [аргументы python]                             python без GPU, 4 ядра, nice 19 (лёгкие проверки)
+set -euo pipefail
+HERE="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+
+usage() { sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+
+cmd=${1:-}
+[[ -n $cmd ]] || usage
+shift
+case $cmd in
+    run) exec bash "$HERE/run.sh" --fg "$@" ;;
+    bg) exec bash "$HERE/run.sh" "$@" ;;
+    gpus) exec bash "$HERE/gpus.sh" "$@" ;;
+    py)
+        source "$HERE/env.sh"
+        # ни одной видеокарты: ни CUDA, ни Vulkan
+        export CUDA_VISIBLE_DEVICES= VK_DRIVER_FILES=/nonexistent VK_ICD_FILENAMES=/nonexistent
+        exec nice -n 19 taskset -c "$GT_CPUS" env LD_LIBRARY_PATH="$(gt_libpath)" PYTHONNOUSERSITE=1 \
+            "$GT_ENV/bin/python" "$@"
+        ;;
+    -h|--help|help) usage ;;
+    *) echo "неизвестная команда: $cmd" >&2; usage ;;
+esac
