@@ -2,10 +2,12 @@
 
 import os
 import time
+import json
+import shutil
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import wandb
+# import wandb  # W&B с сервера недоступен (403), метрики пишем в jsonl на HF
 from pathlib import Path
 from huggingface_hub import HfApi, hf_hub_download
 from huggingface_hub.utils import EntryNotFoundError
@@ -17,6 +19,8 @@ HF_REPO = os.environ["GT_HF_REPO"]
 CKPT_DIR = RUN_DIR / "ckpt"
 LOCAL_CKPT_PATH = CKPT_DIR / "last.pt"
 HF_CKPT_PATH = "resume_test/last.pt"  # Для HF оставляем обычной строкой
+LOCAL_METRICS_PATH = CKPT_DIR / "metrics.jsonl"
+HF_METRICS_PATH = "resume_test/metrics.jsonl"
 UPLOAD_FLAG_PATH = RUN_DIR / "UPLOAD_CONFIRMED"
 
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
@@ -40,22 +44,33 @@ try:
     print(f"Проверяем чекпоинт {HF_REPO}...")
     downloaded_path = hf_hub_download(repo_id=HF_REPO, filename=HF_CKPT_PATH)
     ckpt = torch.load(downloaded_path, map_location=device)
-    
+
     model.load_state_dict(ckpt["model"])
     optimizer.load_state_dict(ckpt["optimizer"])
     start_step = ckpt["step"] + 1
     run_id = ckpt["run_id"]
     print(f"Продолжили с шага {start_step}, run_id: {run_id}")
+
+    # метрики до чекпоинта; шаги после него будут пройдены заново, их выкидываем
+    metrics_path = hf_hub_download(repo_id=HF_REPO, filename=HF_METRICS_PATH)
+    with open(metrics_path) as src, open(LOCAL_METRICS_PATH, "w") as dst:
+        for line in src:
+            if json.loads(line)["step"] < start_step:
+                dst.write(line)
 except (EntryNotFoundError, Exception) as e:
-    run_id = wandb.util.generate_id()
+    # run_id = wandb.util.generate_id()
+    run_id = time.strftime("%Y%m%d_%H%M%S")
+    start_step = 0
+    LOCAL_METRICS_PATH.unlink(missing_ok=True)
     print(f"Чекпоинт не найден ({e}). Начинаем с шага 0 новый run_id: {run_id}")
 
 # Инициализация WnB
-wandb.init(
-    project="grasp-rgbd",
-    id=run_id,
-    resume="allow"
-)
+# wandb.init(
+#     project="grasp-rgbd",
+#     id=run_id,
+#     resume="allow"
+# )
+metrics_file = open(LOCAL_METRICS_PATH, "a")
 
 def save_and_upload(current_step):
     ckpt_data = {
@@ -65,10 +80,19 @@ def save_and_upload(current_step):
         "run_id": run_id
     }
     torch.save(ckpt_data, LOCAL_CKPT_PATH)
-    api.upload_file(
-        path_or_fileobj=LOCAL_CKPT_PATH,
-        path_in_repo=HF_CKPT_PATH,
-        repo_id=HF_REPO
+    metrics_file.flush()
+    # api.upload_file(
+    #     path_or_fileobj=LOCAL_CKPT_PATH,
+    #     path_in_repo=HF_CKPT_PATH,
+    #     repo_id=HF_REPO
+    # )
+    # чекпоинт и метрики одним коммитом, чтобы они не разошлись
+    api.upload_folder(
+        folder_path=CKPT_DIR,
+        path_in_repo="resume_test",
+        repo_id=HF_REPO,
+        allow_patterns=["last.pt", "metrics.jsonl"],
+        commit_message=f"resume_test {run_id} step {current_step}"
     )
     print(f"[Step {current_step}] Checkpoint saved & uploaded.")
 
@@ -86,7 +110,8 @@ for step in range(start_step, total_steps):
     loss.backward()
     optimizer.step()
 
-    wandb.log({"loss": loss.item(), "step": step}, step=step)
+    # wandb.log({"loss": loss.item(), "step": step}, step=step)
+    metrics_file.write(json.dumps({"step": step, "loss": loss.item(), "time": time.time()}) + "\n")
     print(f"Шаг {step:03d} | Loss: {loss.item():.4f}")
 
     time.sleep(0.5)
@@ -96,14 +121,16 @@ for step in range(start_step, total_steps):
 
 
 save_and_upload(total_steps - 1)
+metrics_file.close()
 
 files = api.list_repo_files(repo_id=HF_REPO)
-if HF_CKPT_PATH in files:
-    print(f"Подтверждено: {HF_CKPT_PATH} в репозитории.")
+# if HF_CKPT_PATH in files:
+if HF_CKPT_PATH in files and HF_METRICS_PATH in files:
+    print(f"Подтверждено: {HF_CKPT_PATH} и {HF_METRICS_PATH} в репозитории.")
     with open(UPLOAD_FLAG_PATH, "w") as f:
         pass
     print("UPLOAD_CONFIRMED создан.")
 else:
     print("Error: Файл не найден в HF репозитории")
 
-wandb.finish()
+# wandb.finish()

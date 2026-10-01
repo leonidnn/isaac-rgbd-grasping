@@ -23,11 +23,8 @@ export WARP_CACHE_PATH="$XDG_CACHE_HOME/warp"
 export HF_HOME="$XDG_CACHE_HOME/huggingface"
 export TORCH_HOME="$XDG_CACHE_HOME/torch"
 export MPLCONFIGDIR="$XDG_CACHE_HOME/matplotlib"
-export WANDB_DIR="$GT_ROOT/wandb"
-export WANDB_CACHE_DIR="$XDG_CACHE_HOME/wandb"
-export WANDB_CONFIG_DIR="$GT_ROOT/.config/wandb"
-export WANDB_ERROR_REPORTING=false WANDB_DISABLE_GIT=true WANDB_DISABLE_CODE=true
-export WANDB_ENTITY=leonidnn WANDB_PROJECT=grasp-rgbd
+# W&B с сервера недоступен (403 по региону), метрики пишем на HF; wandb, если его кто-то импортирует, выключен
+export WANDB_MODE=disabled WANDB_DIR="$GT_ROOT/wandb" WANDB_CACHE_DIR="$XDG_CACHE_HOME/wandb" WANDB_CONFIG_DIR="$GT_ROOT/.config/wandb"
 export GT_HF_REPO=leonid-nn/grasp-rgbd-checkpoints
 export HF_HUB_DISABLE_PROGRESS_BARS=1 HF_HUB_DISABLE_TELEMETRY=1
 export TMPDIR="$GT_ROOT/tmp"
@@ -86,13 +83,13 @@ gt_vk_visible() {
     GT_VK_FILTER=1 "$GT_VK_LAYER_DIR/gt_vk_list" 2>/dev/null | awk '{print $1}'
 }
 
-# ключи W&B и HF (положены пользователем, chmod 600) — только в окружение запускаемого процесса,
+# токен HF (положен пользователем, chmod 600) — только в окружение запускаемого процесса,
 # никогда не печатать
 gt_load_secrets() {
     local d="$GT_ROOT/.config"
-    [[ -r $d/wandb_key && -r $d/hf_token ]] || return 1
-    WANDB_API_KEY=$(<"$d/wandb_key") HF_TOKEN=$(<"$d/hf_token")
-    export WANDB_API_KEY HF_TOKEN
+    [[ -r $d/hf_token ]] || return 1
+    HF_TOKEN=$(<"$d/hf_token")
+    export HF_TOKEN
 }
 
 # что появилось в $HOME после установки (сравнение со снимком)
