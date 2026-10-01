@@ -15,9 +15,9 @@ def _env_gpu():
     cvd = os.environ.get("CUDA_VISIBLE_DEVICES", "")
     kit = os.environ.get("GT_KIT_GPU", "")
     if not cvd.isdigit() or not kit.isdigit():
-        sys.exit("[gt_app] CUDA_VISIBLE_DEVICES and GT_KIT_GPU must be single numbers, use server/run.sh")
+        sys.exit("[isaac_app] CUDA_VISIBLE_DEVICES and GT_KIT_GPU must be single numbers, use server/run.sh")
     if os.environ.get("GT_VK_FILTER") != "1" or not os.environ.get("GT_VK_UUID"):
-        sys.exit("[gt_app] Vulkan GPU filter layer is not enabled, use server/run.sh")
+        sys.exit("[isaac_app] Vulkan GPU filter layer is not enabled, use server/run.sh")
     return int(kit)
 
 
@@ -50,8 +50,8 @@ def make_app(width=640, height=480, extra_args=()):
     s = carb.settings.get_settings()
     got = s.get("/renderer/activeGpu")
     multi = s.get("/renderer/multiGpu/enabled")
-    print(f"[gt_app] renderer activeGpu={got} (want {kit_gpu}), multiGpu={multi}", flush=True)
+    print(f"[isaac_app] renderer activeGpu={got} (want {kit_gpu}), multiGpu={multi}", flush=True)
     if got is None or int(got) != kit_gpu or multi:
-        print("[gt_app] renderer is not pinned to our GPU, exiting", flush=True)
+        print("[isaac_app] renderer is not pinned to our GPU, exiting", flush=True)
         os._exit(3)
     return app

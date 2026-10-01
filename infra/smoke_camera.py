@@ -1,7 +1,7 @@
 """Smoke test: headless Isaac Sim, one camera -> RGB + depth to files.
 
 Run only through server/run.sh:
-    bash server/run.sh sim/smoke_camera.py <gpu>
+    bash server/run.sh infra/smoke_camera.py <gpu>
 """
 
 import argparse
@@ -21,7 +21,7 @@ args = parser.parse_args()
 t_start = time.time()
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gt_app import make_app
+from isaac_app import make_app
 
 app = make_app(args.width, args.height)
 print(f"[smoke] app started in {time.time() - t_start:.1f}s", flush=True)

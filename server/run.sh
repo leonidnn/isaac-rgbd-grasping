@@ -53,9 +53,9 @@ SCRIPT=$(readlink -f "$SCRIPT")
 [[ -x "$GT_ENV/bin/python" ]] || gt_die "нет окружения $GT_ENV, сначала bootstrap.sh"
 NAME=${NAME:-$(basename "$SCRIPT" .py)}
 
-# выбор карты только через sim/gt_app.py: никаких своих SimulationApp/AppLauncher и номеров GPU в коде
+# выбор карты только через infra/isaac_app.py: никаких своих SimulationApp/AppLauncher и номеров GPU в коде
 if grep -nE 'SimulationApp\(|AppLauncher\(|active_gpu|activeGpu|physics_gpu|cuda:[1-9]|--device' "$SCRIPT"; then
-    gt_die "в $SCRIPT выбор GPU в обход sim/gt_app.py (строки выше)"
+    gt_die "в $SCRIPT выбор GPU в обход infra/isaac_app.py (строки выше)"
 fi
 LOCK="$GT_ROOT/locks/run.lock"
 
