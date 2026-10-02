@@ -24,7 +24,7 @@ MIN_DISK_GB=${GT_MIN_DISK_GB:-5}
 # слоем это не убрать. Решение пользователя (30.09.2026): терпим только это — GPU 0, тип G,
 # не больше 16 МиБ, без вычислений. Всё остальное на чужих картах — SIGKILL. Не через env,
 # чтобы нельзя было случайно расширить.
-STUB_GPU=0 STUB_TYPE=G STUB_MAX_MB=16
+STUB_GPU=0 STUB_TYPE=G STUB_MAX_MB=16 STUB_MIN_FREE_MB=100
 # при чужом процессе на нашей карте: оставляем ему запас свободной памяти и ограничиваем себя
 RESERVE_MB=1536 OUR_MAX_MB=6144
 ORIG_ARGS=("$@")
@@ -87,6 +87,12 @@ check_stub_gpu() {
     mode=$(nvidia-smi -i "$STUB_GPU" --query-gpu=compute_mode --format=csv,noheader 2>/dev/null) \
         || gt_die "не удалось прочитать режим GPU $STUB_GPU"
     [[ $mode == Default ]] || gt_die "GPU $STUB_GPU в режиме '$mode', наш клиент драйвера там недопустим"
+    local free
+    free=$(nvidia-smi -i "$STUB_GPU" --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null) \
+        || gt_die "не удалось прочитать свободную память GPU $STUB_GPU"
+    free=${free// /}
+    [[ $free =~ ^[0-9]+$ ]] || gt_die "непонятная свободная память GPU $STUB_GPU: '$free'"
+    (( free >= STUB_MIN_FREE_MB )) || gt_die "на GPU $STUB_GPU свободно ${free} MiB < ${STUB_MIN_FREE_MB}, клиент драйвера туда не влезет без ущерба соседу"
 }
 
 check_disk() {
