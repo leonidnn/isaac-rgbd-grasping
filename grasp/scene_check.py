@@ -58,6 +58,19 @@ import isaaclab.sim as sim_utils
 from isaaclab.sensors import CameraCfg
 from isaaclab.utils.math import quat_error_magnitude
 
+# пол и стол в оригинале с Nucleus, а у нас ISAAC_NUCLEUS_DIR = None, так что просто коробки
+GROUND_SPAWN = sim_utils.CuboidCfg(
+    size=(6.0, 6.0, 0.02),
+    collision_props=sim_utils.CollisionPropertiesCfg(),
+    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.3, 0.3, 0.3)),
+)
+# верх стола на z=0, робот стоит прямо на нём
+TABLE_SPAWN = sim_utils.CuboidCfg(
+    size=(1.4, 1.4, 1.05),
+    collision_props=sim_utils.CollisionPropertiesCfg(),
+    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.55, 0.45, 0.35)),
+)
+
 # висит над столом и смотрит вниз
 CAMERA_CFG = CameraCfg(
     prim_path="{ENV_REGEX_NS}/Camera",
@@ -178,7 +191,7 @@ class TableTopSceneCfg(InteractiveSceneCfg):
     # ground plane
     ground = AssetBaseCfg(
         prim_path="/World/defaultGroundPlane",
-        spawn=sim_utils.GroundPlaneCfg(),
+        spawn=GROUND_SPAWN,  # scene_check
         init_state=AssetBaseCfg.InitialStateCfg(pos=(0.0, 0.0, -1.05)),
     )
 
@@ -190,9 +203,8 @@ class TableTopSceneCfg(InteractiveSceneCfg):
     # mount
     table = AssetBaseCfg(
         prim_path="{ENV_REGEX_NS}/Table",
-        spawn=sim_utils.UsdFileCfg(
-            usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Mounts/SeattleLabTable/table_instanceable.usd", scale=(2.0, 2.0, 2.0)
-        ),
+        spawn=TABLE_SPAWN,  # scene_check
+        init_state=AssetBaseCfg.InitialStateCfg(pos=(0.0, 0.4, -0.525)),  # scene_check
     )
 
     #obj = RigidObjectCfg(
