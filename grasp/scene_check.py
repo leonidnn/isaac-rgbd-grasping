@@ -19,6 +19,7 @@ PhysX. This helps perform parallelized computation of the inverse kinematics.
 # Всё, что поменял относительно MetaIsaacGrasp/test_ur10cfg.py, тут. Ниже по коду правки помечены "# scene_check"
 import os
 import sys
+import time
 from types import SimpleNamespace
 
 import numpy as np
@@ -58,6 +59,14 @@ import isaaclab.sim as sim_utils
 from isaaclab.sensors import CameraCfg
 from isaaclab.utils.math import quat_error_magnitude
 
+# стол с Nucleus грузится криво (Table/Collisions не открывается) и долго, берём коробку.
+# верх на z=0, пол в оригинале на -1.05
+TABLE_SPAWN = sim_utils.CuboidCfg(
+    size=(1.4, 1.4, 1.05),
+    collision_props=sim_utils.CollisionPropertiesCfg(),
+    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.55, 0.45, 0.35)),
+)
+
 # висит над столом и смотрит вниз
 CAMERA_CFG = CameraCfg(
     prim_path="{ENV_REGEX_NS}/Camera",
@@ -83,6 +92,21 @@ def save_frame(camera):
     depth_img = (255 * depth / max(depth.max(), 1e-6)).astype(np.uint8)
     Image.fromarray(depth_img).save(os.path.join(OUT, "depth.png"))
     print(f"frame saved to {OUT}, depth {depth.min():.3f}..{depth.max():.3f} m", flush=True)
+
+
+_t_last = None
+
+
+def progress(count, every=50):
+    # чтобы было видно, идут ли шаги вообще и сколько стоит один
+    global _t_last
+    if count == 1:
+        print("first step done", flush=True)
+        _t_last = time.time()
+    elif count % every == 0:
+        now = time.time()
+        print(f"step {count}/{MAX_STEPS}, {(now - _t_last) / every:.2f} s/step", flush=True)
+        _t_last = now
 
 
 def check(count, scene, ee_pos_b, ee_quat_b, ik_commands):
@@ -190,9 +214,8 @@ class TableTopSceneCfg(InteractiveSceneCfg):
     # mount
     table = AssetBaseCfg(
         prim_path="{ENV_REGEX_NS}/Table",
-        spawn=sim_utils.UsdFileCfg(
-            usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Mounts/SeattleLabTable/table_instanceable.usd", scale=(2.0, 2.0, 2.0)
-        ),
+        spawn=TABLE_SPAWN,  # scene_check
+        init_state=AssetBaseCfg.InitialStateCfg(pos=(0.0, 0.4, -0.525)),  # scene_check
     )
 
     #obj = RigidObjectCfg(
@@ -406,6 +429,7 @@ def run_simulator(sim: sim_utils.SimulationContext, scene: InteractiveScene):
         sim.step()
         # update sim-time
         count += 1
+        progress(count)  # scene_check
         # update buffers
         scene.update(sim_dt)
         # obtain quantities from simulation
