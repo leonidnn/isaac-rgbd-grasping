@@ -60,4 +60,11 @@ def make_app(width=640, height=480, extra_args=()):
     if got is None or int(got) != kit_gpu or multi:
         print("[isaac_app] renderer is not pinned to our GPU, exiting", flush=True)
         os._exit(3)
+
+    # what AppLauncher does for --enable_cameras in headless mode (isaaclab app_launcher.py)
+    s.set_bool("/isaaclab/cameras_enabled", True)
+    s.set_bool("/isaaclab/render/offscreen", True)
+    s.set_bool("/isaaclab/render/active_viewport", False)
+    s.set_bool("/isaaclab/render/rtx_sensors", False)
+    s.set_bool("/physics/fabricUpdateTransformations", True)
     return app
