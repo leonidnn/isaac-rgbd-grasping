@@ -1,0 +1,26 @@
+[00:44:47] user=Invader17 gpu=7 vk_uuid=d9fc0582a134ded0909de88d902ecc0b cpus=46-47 timeout=40m stall=20m
+[00:44:47] cmd: /home/Invader17/grasp_task/code/grasp/scene_check.py 
+[47.086s] Simulation App Startup Complete
+[INFO]: Setup complete...
+first step done
+step 50/700, 0.09 s/step
+step 100/700, 0.05 s/step
+step 150/700, 0.09 s/step
+step 200/700, 0.07 s/step
+step 250/700, 0.10 s/step
+step 299: pos err 0.0 mm, rot err 0.0 deg, fingers [0.042500000447034836, 0.04214346408843994]
+step 300/700, 0.10 s/step
+step 350/700, 0.09 s/step
+step 400/700, 0.05 s/step
+step 450/700, 0.09 s/step
+step 499: pos err 0.0 mm, rot err 0.0 deg, fingers [0.04067155718803406, 0.040330562740564346]
+step 500/700, 0.10 s/step
+step 550/700, 0.06 s/step
+step 600/700, 0.09 s/step
+step 650/700, 0.09 s/step
+step 699: pos err 0.0 mm, rot err 0.0 deg, fingers [0.040749888867139816, 0.04026418924331665]
+frame saved to /home/Invader17/grasp_task/runs/scene_check_20261003_004447, depth 0.768..2.540 m
+step 700/700, 0.07 s/step
+[00:46:56] код выхода 0, время 126 с, пик памяти на GPU 7 3936 MiB, клиент драйвера на GPU 0 6 MiB
+[00:47:00] наших процессов на GPU нет
+[00:47:00] результаты: /home/Invader17/grasp_task/runs/scene_check_20261003_004447

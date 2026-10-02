@@ -59,6 +59,14 @@ import isaaclab.sim as sim_utils
 from isaaclab.sensors import CameraCfg
 from isaaclab.utils.math import quat_error_magnitude
 
+# пол с Nucleus тянет текстуру сетки с cloudfront, а он с сервера недоступен:
+# первый рендер в sim.reset() висит на таймаутах. Поэтому просто плита
+GROUND_SPAWN = sim_utils.CuboidCfg(
+    size=(6.0, 6.0, 0.02),
+    collision_props=sim_utils.CollisionPropertiesCfg(),
+    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.4, 0.4, 0.4)),
+)
+
 # стол с Nucleus грузится криво (Table/Collisions не открывается) и долго, берём коробку.
 # верх на z=0, пол в оригинале на -1.05
 TABLE_SPAWN = sim_utils.CuboidCfg(
@@ -202,7 +210,7 @@ class TableTopSceneCfg(InteractiveSceneCfg):
     # ground plane
     ground = AssetBaseCfg(
         prim_path="/World/defaultGroundPlane",
-        spawn=sim_utils.GroundPlaneCfg(),
+        spawn=GROUND_SPAWN,  # scene_check
         init_state=AssetBaseCfg.InitialStateCfg(pos=(0.0, 0.0, -1.05)),
     )
 
