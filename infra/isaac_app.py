@@ -10,6 +10,8 @@ run.sh sets:
 import os
 import sys
 
+ASSET_ROOT = "http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5"
+
 
 def _env_gpu():
     cvd = os.environ.get("CUDA_VISIBLE_DEVICES", "")
@@ -40,6 +42,10 @@ def make_app(width=640, height=480, extra_args=()):
                 "--/renderer/multiGpu/maxGpuCount=1",
                 f"--/renderer/activeGpu={kit_gpu}",
                 "--/plugins/carb.tasking.plugin/threadCount=4",
+                # as in isaaclab.python.headless.kit, otherwise ISAAC_NUCLEUS_DIR is None
+                f"--/persistent/isaac/asset_root/default={ASSET_ROOT}",
+                f"--/persistent/isaac/asset_root/cloud={ASSET_ROOT}",
+                f"--/persistent/isaac/asset_root/nvidia={ASSET_ROOT}",
                 *extra_args,
             ],
         }
