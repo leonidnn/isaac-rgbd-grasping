@@ -1,5 +1,5 @@
 """Пробуем один нормальный схват: рукой рулит IK, пальцами отдельно.
-Сначала щёлкаем захватом в воздухе и смотрим, насколько он реально раскрывается,
+Сначала щёлкаем захватом в воздухе (видно по суставам пальцев, что открывается и закрывается),
 потом подъезжаем к объекту, опускаемся, жмём, тащим вверх на 10+ см и держим 2 с.
 
     bash server/run.sh grasp/grasp_check.py <gpu> [--obj tetrapak|can|chips] [--side] [--video]
@@ -44,10 +44,11 @@ OBJ_TOP = {"tetrapak": 0.189, "can": 0.038, "chips": 0.044}
 OBJ_ROT = {"tetrapak": UP, "can": UP, "chips": SIDE}
 OBJ_Z0 = {"tetrapak": 0.005, "can": 0.005, "chips": 0.03}
 
-# схват смотрит вниз (его z в -z мира). Вывел руками, надо глянуть, правда ли
-QUAT_TOP = (0.0, 1.0, 0.0, 0.0)
-# схват боком, смотрит от робота (+y), такие же цели были в scene_check
-QUAT_SIDE = (0.70710678, -0.70710678, 0.0, 0.0)
+# пальцы у hande_end торчат по его оси y, а не z, как в URDF (проверил прогоном, results/3_grasp).
+# сверху: -90 вокруг X, y кисти уходит в -z мира
+QUAT_TOP = (0.70710678, -0.70710678, 0.0, 0.0)
+# сбоку: кисть как есть, y кисти смотрит от робота (+y мира)
+QUAT_SIDE = (1.0, 0.0, 0.0, 0.0)
 
 GRIP_DEPTH = 0.03  # насколько пальцы залезают на объект сверху
 PRE = 0.12  # с какого расстояния подъезжаем
@@ -90,7 +91,6 @@ def main():
     arm_ids, _ = robot.find_joints(list(ARM_JOINT), preserve_order=True)
     finger_ids, _ = robot.find_joints(FINGERS, preserve_order=True)
     ee_id = robot.find_bodies("hande_end")[0][0]
-    finger_bodies = robot.find_bodies(["hande_left_finger", "hande_right_finger"], preserve_order=True)[0]
     ee_jacobi_idx = ee_id - 1  # база прибита, поэтому -1
 
     limits = getattr(robot.data, "joint_pos_limits", None)
@@ -108,12 +108,7 @@ def main():
         ee = robot.data.body_state_w[:, ee_id, 0:7]
         return subtract_frame_transforms(root[:, 0:3], root[:, 3:7], ee[:, 0:3], ee[:, 3:7])
 
-    # дальше уже своё
-    def finger_gap():
-        p = robot.data.body_pos_w[0, finger_bodies]
-        return (p[0] - p[1]).norm().item() * 1000
-
-    # цели в координатах базы робота, но база стоит в нуле, так что это то же самое, что мир
+    # дальше уже своё. Цели в координатах базы робота, но база стоит в нуле, так что это то же самое, что мир
     top = OBJ_TOP[args.obj]
     if args.side:
         quat = torch.tensor(QUAT_SIDE, device=dev)
@@ -126,7 +121,7 @@ def main():
     lifted = grasp + torch.tensor([0.0, 0.0, LIFT], device=dev)
 
     fingers = torch.full((1, 2), OPEN, device=dev)
-    frames, obj_z0, gap_open, gap_closed = [], None, None, None
+    frames, obj_z0 = [], None
     count = 0
 
     for name, n in PHASES:
@@ -175,20 +170,14 @@ def main():
         err = (ee_pos[0] - target_to).norm().item() * 1000 if target_to is not None else float("nan")
         print(
             f"[{name:10s}] step {count:4d}  ee err {err:6.1f} mm  fingers {q[0]:.4f} {q[1]:.4f}  "
-            f"gap {finger_gap():6.1f} mm  obj z {oz:+.3f}",
+            f"obj z {oz:+.3f}",
             flush=True,
         )
         if name == "settle":
             save_frame(scene["camera_top"])
-        if name == "test_close":
-            gap_closed = finger_gap()
-        if name == "test_open":
-            gap_open = finger_gap()
 
     rise = obj.data.root_pos_w[0, 2].item() - obj_z0
     held = robot.data.joint_pos[0, finger_ids]
-    print(f"gripper stroke: gap open {gap_open:.1f} mm, closed {gap_closed:.1f} mm "
-          f"-> ход {abs(gap_open - gap_closed):.1f} mm", flush=True)
     print(f"object rise {rise * 100:.1f} cm, fingers at {held.tolist()}", flush=True)
 
     if frames:
