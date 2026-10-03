@@ -1,9 +1,12 @@
 """Ставим все три объекта на стол (стоя и лёжа), ждём 2 с физики и смотрим, что они не провалились,
 не улетели и успокоились. В конце кадр RGB-D сверху.
 
-    bash server/run.sh grasp/objects_check.py <gpu>
+    bash server/run.sh grasp/objects_check.py <gpu> [--video]
+
+--video: ещё и objects.gif, кадр каждые 2 шага, в 2 раза медленнее реального времени
 """
 
+import argparse
 import os
 import sys
 import time
@@ -13,6 +16,10 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.abspath(os.environ.get("GT_RUN_DIR", "."))
 USD_DIR = os.path.join(ROOT, "assets", "usd")
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--video", action="store_true")
+args = parser.parse_args()
 
 sys.path.insert(0, os.path.join(ROOT, "infra"))
 from isaac_app import make_app
@@ -111,6 +118,24 @@ def save_frame(camera):
     print(f"frame saved to {OUT}, depth {lo:.3f}..{depth.max():.3f} m", flush=True)
 
 
+VIDEO_EVERY = 2
+VIDEO_SIZE = (480, 360)
+
+
+def grab(camera):
+    from PIL import Image
+
+    rgb = camera.data.output["rgb"][0, ..., :3].cpu().numpy().astype(np.uint8)
+    return Image.fromarray(rgb).resize(VIDEO_SIZE)
+
+
+def save_video(frames):
+    # реальный шаг кадра 0.02 с, показываем по 0.04 -> замедление в 2 раза
+    path = os.path.join(OUT, "objects.gif")
+    frames[0].save(path, save_all=True, append_images=frames[1:], duration=40, loop=0)
+    print(f"video saved to {path}, {len(frames)} frames", flush=True)
+
+
 def main():
     sim = sim_utils.SimulationContext(sim_utils.SimulationCfg(dt=0.01, device="cuda"))
     scene = InteractiveScene(ObjectsSceneCfg(num_envs=1, env_spacing=2.0))
@@ -120,11 +145,14 @@ def main():
     objs = {n: scene[n] for n in NAMES}
     quat0 = {n: o.data.root_quat_w.clone() for n, o in objs.items()}
     pos_mid = {}
+    frames = []
 
     for count in range(1, STEPS + 1):
         scene.write_data_to_sim()
         sim.step()
         scene.update(sim.get_physics_dt())
+        if args.video and count % VIDEO_EVERY == 0:
+            frames.append(grab(scene["camera"]))
         if count == CHECK_FROM:
             pos_mid = {n: o.data.root_pos_w[0].clone() for n, o in objs.items()}
         if count % 50 == 0:
@@ -146,6 +174,8 @@ def main():
         )
 
     save_frame(scene["camera"])
+    if frames:
+        save_video(frames)
     print("PASS" if ok else "FAIL", flush=True)
 
 
