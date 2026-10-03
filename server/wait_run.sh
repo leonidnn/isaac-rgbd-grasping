@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Ждёт, пока освободится одна из указанных карт, и гоняет на ней по очереди скрипты через run.sh.
-#   bash wait_run.sh <имя> "<gpu> [gpu ...]" [опции run.sh] <script.py> [аргументы] [+ [опции run.sh] <script.py> [аргументы]] ...
+#   bash wait_run.sh [--after <очередь>] <имя> "<gpu> [gpu ...]" [опции run.sh] <script.py> [аргументы] [+ [опции run.sh] <script.py> [аргументы]] ...
 # Пример:
 #   bash wait_run.sh grasp "1 7" grasp/grasp_check.py --obj tetrapak --video + grasp/grasp_check.py --obj tetrapak --side --video
+# --after: не начинать, пока та очередь не кончилась (done/expired), чтобы шли строго друг за другом.
 # Сам уходит в tmux (gt-wait-<имя>). Свободной считается карта без процессов вообще.
 # Состояние: $GT_ROOT/queue/<имя>/status (state, gpu, шаг), steps (шаг, код выхода, папка запуска).
 # Ждёт не дольше GT_WAIT_HOURS (24 ч), опрос карт раз в 30 с. --allow-shared не пропускается.
@@ -13,9 +14,11 @@ source "$HERE/env.sh"
 POLL_SEC=30
 WAIT_HOURS=${GT_WAIT_HOURS:-24}
 INNER=0
+AFTER=""
 if [[ ${1:-} == --inner ]]; then INNER=1; shift; fi
+if [[ ${1:-} == --after ]]; then AFTER=${2:-}; shift 2; fi
 
-[[ $# -ge 3 ]] || { sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+[[ $# -ge 3 ]] || { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 NAME=$1 GPUS=$2
 shift 2
 [[ $NAME =~ ^[A-Za-z0-9_-]+$ ]] || gt_die "имя только из букв, цифр, _ и -"
@@ -42,14 +45,15 @@ set_status() {  # state [gpu] [step]
 if [[ $INNER -eq 0 ]]; then
     tmux has-session -t "gt-wait-$NAME" 2>/dev/null && gt_die "очередь $NAME уже ждёт (tmux gt-wait-$NAME)"
     [[ -e $Q ]] && gt_die "$Q уже есть — возьмите другое имя"
+    [[ -z $AFTER || -f $GT_ROOT/queue/$AFTER/status ]] || gt_die "нет очереди $AFTER"
     mkdir -p "$Q"
     date '+%F %T' >"$Q/queued_at"
     printf '%s\n' "${STEPS[@]}" >"$Q/commands"
     : >"$Q/steps"
     set_status waiting
     tmux new-session -d -s "gt-wait-$NAME" \
-        "$(printf '%q ' env GT_CPUS="$GT_CPUS" nice -n 19 bash "$0" --inner "$NAME" "$GPUS" "$@") 2>&1 | tee -a $(printf '%q' "$Q/wait.log")"
-    echo "Очередь $NAME: $N шаг(ов), жду свободную карту из [$GPUS]"
+        "$(printf '%q ' env GT_CPUS="$GT_CPUS" nice -n 19 bash "$0" --inner ${AFTER:+--after "$AFTER"} "$NAME" "$GPUS" "$@") 2>&1 | tee -a $(printf '%q' "$Q/wait.log")"
+    echo "Очередь $NAME: $N шаг(ов), жду свободную карту из [$GPUS]${AFTER:+, после очереди $AFTER}"
     echo "  статус: cat $STATUS"
     exit 0
 fi
@@ -58,6 +62,12 @@ fi
 gpu_free() {
     [[ -z $(gt_gpu_procs | awk -v g="$1" '$1==g') ]] || return 1
     ( flock -n 9 ) 9>"$GT_ROOT/locks/run.lock"
+}
+
+# та очередь, за которой стоим, уже всё
+after_done() {
+    [[ -z $AFTER ]] && return 0
+    grep -qE '^state=(done|expired)$' "$GT_ROOT/queue/$AFTER/status" 2>/dev/null
 }
 
 # папки запусков шага, новые сверху (пусто, если их нет)
@@ -69,9 +79,11 @@ while (( i <= N )); do
     gpu=""
     set_status waiting "" "$i/$N"
     while [[ -z $gpu ]]; do
-        for g in $GPUS; do
-            if gpu_free "$g"; then gpu=$g; break; fi
-        done
+        if after_done; then
+            for g in $GPUS; do
+                if gpu_free "$g"; then gpu=$g; break; fi
+            done
+        fi
         if [[ -z $gpu ]]; then
             (( $(date +%s) < deadline )) || { set_status expired "" "$i/$N"; echo "не дождался карты за $WAIT_HOURS ч"; exit 1; }
             sleep "$POLL_SEC"
