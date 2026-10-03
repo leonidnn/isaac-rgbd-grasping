@@ -1,0 +1,9 @@
+newmtl chips-bag-002
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.5 0.5 0.5
+illum 2
+map_Kd textures/chips-bag-002-col.png
+map_Pr textures/chips-bag-002-roughness.png
+map_Pm textures/chips-bag-002-metalness.png
+norm textures/chips-bag-002-nrm.png

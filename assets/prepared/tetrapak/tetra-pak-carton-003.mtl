@@ -1,0 +1,9 @@
+newmtl Material
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.5 0.5 0.5
+illum 2
+map_Kd textures/tetra-pak-carton-003-col.png
+map_Pr textures/tetra-pak-carton-003-roughness.png
+map_Pm textures/tetra-pak-carton-003-metalness.png
+norm textures/tetra-pak-carton-003-nrm.png

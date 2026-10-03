@@ -1,0 +1,9 @@
+newmtl tin-can-009.001
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.5 0.5 0.5
+illum 2
+map_Kd textures/tin-can-009-col.png
+map_Pr textures/tin-can-009-roughness.png
+map_Pm textures/tin-can-009-metalness.png
+norm textures/tin-can-009-nrm.png
