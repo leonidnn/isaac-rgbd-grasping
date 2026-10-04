@@ -11,6 +11,8 @@ v7: планировщик знает про стол и коробку объе
 v8: рука едет в 2 раза медленнее, и между движениями пауза 0.5 с, чтоб успевала доехать до точки.
 v9: суставы крутятся по одному (сначала один, потом другой), между ними микропауза. Плюс датчики контактов
 на всех телах робота - если что-то врежется, в логе будет видно, каким звеном.
+v10: в модель столкновений планировщика добавил всё, что висит на запястье (кронштейн камеры, камера,
+корпус захвата) - в v9 рука упиралась камерой в стол, а планировщик про камеру не знал.
 
     bash server/run.sh grasp/grasp_check.py <gpu> [--obj tetrapak|can|chips] [--side] [--video]
 """
@@ -175,6 +177,31 @@ def main():
     # симовский якобиан тоже, чтоб проверить, правда ли домашняя поза в сингулярности (в v3/v4 был минимум 0 за фазу)
     m_sim = torch.sqrt(torch.clamp(torch.det(jac_sim @ jac_sim.T), min=0)).item()
     print(f"домашняя поза: manip по симу {m_sim:.4f}, по моей кинематике {plan.manip(q_home.double().unsqueeze(0)).item():.4f}", flush=True)
+
+    # v10: железки на запястье в модель столкновений. Беру все тела робота, кроме звеньев самой руки UR и пальцев
+    # (пальцы двигаются, их и так покрывает отрезок захвата), и их габариты прямо из сцены, пока рука дома
+    import omni.usd
+    from pxr import Usd, UsdGeom
+
+    stage = omni.usd.get_context().get_stage()
+    root = stage.GetPrimAtPath(robot.cfg.prim_path.replace("{ENV_REGEX_NS}", "/World/envs/env_0"))
+    arm_links = ("base", "shoulder", "upper_arm", "forearm", "wrist_1", "wrist_2", "wrist_3", "world")
+    cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(), [UsdGeom.Tokens.default_, UsdGeom.Tokens.render])
+    for b in robot.body_names:
+        if any(b.startswith(a) for a in arm_links) or "finger" in b:
+            continue
+        prim = next((p for p in Usd.PrimRange(root) if p.GetName() == b), None)
+        if prim is None:
+            print(f"[wrist] {b}: не нашёл prim, пропускаю", flush=True)
+            continue
+        rng = cache.ComputeWorldBound(prim).ComputeAlignedRange()
+        if rng.IsEmpty():
+            print(f"[wrist] {b}: пустой габарит, пропускаю", flush=True)
+            continue
+        lo, hi = list(rng.GetMin()), list(rng.GetMax())
+        plan.add_wrist_box(q_home, lo, hi)
+        print(f"[wrist] {b}: габарит {[round(h - l, 3) for l, h in zip(lo, hi)]} м, низ на z={lo[2]:.3f}", flush=True)
+    print(f"[wrist] всего точек на запястье {len(plan.extra_r)}, запас домашней позы {plan.clearance(q_home.double().unsqueeze(0)).min().item() * 1000:.0f} мм", flush=True)
 
     gen = torch.Generator(device=dev).manual_seed(0)
     # объект для планировщика - коробка на столе

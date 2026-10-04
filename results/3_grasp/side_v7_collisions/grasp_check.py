@@ -8,15 +8,11 @@ v5: никакого IK по шажку. Планировщик сразу ре�
 v6: сбоку подходим не со стороны робота (туда рука не дотягивается), а слева или справа от объекта.
 v7: планировщик знает про стол и коробку объекта: если прямая в суставах во что-то врезается, берёт следующее
 по близости решение, а если чистых нет - едет костылём-проекцией вдоль препятствия.
-v8: рука едет в 2 раза медленнее, и между движениями пауза 0.5 с, чтоб успевала доехать до точки.
-v9: суставы крутятся по одному (сначала один, потом другой), между ними микропауза. Плюс датчики контактов
-на всех телах робота - если что-то врежется, в логе будет видно, каким звеном.
 
     bash server/run.sh grasp/grasp_check.py <gpu> [--obj tetrapak|can|chips] [--side] [--video]
 """
 
 import argparse
-import math
 import os
 import sys
 import time
@@ -27,8 +23,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--obj", default="tetrapak", choices=["tetrapak", "can", "chips"])
 parser.add_argument("--side", action="store_true", help="сбоку, а не сверху")
 parser.add_argument("--video", action="store_true")
-# без камер вообще - одна физика. Для A100, где рендера нет (RT-ядер нет). Кадров и гифки тогда не будет, только логи и csv
-parser.add_argument("--no-cam", action="store_true")
 args = parser.parse_args()
 
 sys.path.insert(0, os.path.join(ROOT, "infra"))
@@ -42,13 +36,12 @@ import torch
 
 import isaaclab.sim as sim_utils
 from isaaclab.scene import InteractiveScene, InteractiveSceneCfg
-from isaaclab.sensors import ContactSensorCfg
 from isaaclab.utils import configclass
 from isaaclab.utils.math import quat_apply, quat_mul, subtract_frame_transforms
 
 from common import (
     ARM_JOINT, CAMERA_SIDE, CAMERA_TOP, CLOSED, FINGERS, GROUND, LIGHT, OPEN, ROBOT, SIDE, TABLE, UP,
-    OUT, grab, obj_cfg, save_frame, save_gif,
+    grab, obj_cfg, save_frame, save_gif,
 )
 from planner import Planner, along
 
@@ -89,26 +82,14 @@ READY_GOOD = 0.7
 
 # фазы расписал сам, подсмотрел у стейт-машины MetaIsaacGrasp (air_env_base: reach/approach/grasp/lift),
 # только без warp и под один объект. (имя, сколько шагов), шаг 0.01 с
-# v8: всё движение в 2 раза медленнее (было 400/200/200), а после каждого движения пауза 0.5 с - цель стоит, рука
-# доезжает. По графику v7 видно, что больше всего рука отстаёт как раз на смене фазы: цель уже поехала дальше, а рука
-# ещё не доехала до прошлой точки
-PAUSE = 50
-# v9: в pregrasp/approach/lift суставы крутятся по одному. Сколько шагов фаза - уже не фиксировано, считается по пути:
-# каждый сустав едет со скоростью JOINT_SPEED, а после каждого сустава микропауза JOINT_PAUSE. Число в PHASES для этих
-# фаз больше не используется. Скорость взял как в v8 примерно (там самый быстрый сустав шёл ~0.7 рад/с)
-JOINT_SPEED = 0.7  # рад/с
-JOINT_PAUSE = 30  # 0.3 с
 PHASES = [
     ("settle", 50),
     ("test_close", 80),
     ("test_open", 80),
-    ("pregrasp", 800),
-    ("wait_pre", PAUSE),
-    ("approach", 400),
-    ("wait_grasp", PAUSE),
+    ("pregrasp", 400),
+    ("approach", 200),
     ("close", 100),
-    ("lift", 400),
-    ("wait_lift", PAUSE),
+    ("lift", 200),
     ("hold", 200),
 ]
 
@@ -119,15 +100,9 @@ class GraspSceneCfg(InteractiveSceneCfg):
     light = LIGHT
     table = TABLE
     obj = obj_cfg(args.obj, (*OBJ_XY, OBJ_Z0[args.obj]), OBJ_ROT[args.obj])
-    # v9: у робота включаю датчики контактов, чтоб видеть, каким звеном он задел коробку (в common они выключены)
-    robot = ROBOT.replace(spawn=ROBOT.spawn.replace(activate_contact_sensors=True))
-    if not args.no_cam:
-        camera_top = CAMERA_TOP
-        camera = CAMERA_SIDE
-    # контакты всех тел робота: общая сила (обо что угодно - стол, коробка, сам об себя) и отдельно сила об коробку
-    contacts = ContactSensorCfg(
-        prim_path="{ENV_REGEX_NS}/Robot/.*", update_period=0.0, history_length=1, filter_prim_paths_expr=["{ENV_REGEX_NS}/obj"]
-    )
+    robot = ROBOT
+    camera_top = CAMERA_TOP
+    camera = CAMERA_SIDE
 
 
 def main():
@@ -136,8 +111,7 @@ def main():
     sim.reset()
     print("setup done", flush=True)
 
-    robot, obj = scene["robot"], scene["obj"]
-    cam = None if args.no_cam else scene["camera"]
+    robot, obj, cam = scene["robot"], scene["obj"], scene["camera"]
     dev = sim.device
     arm_ids, _ = robot.find_joints(list(ARM_JOINT), preserve_order=True)
     finger_ids, _ = robot.find_joints(FINGERS, preserve_order=True)
@@ -259,34 +233,7 @@ def main():
     fingers = torch.full((1, 2), OPEN, device=dev)
     arm_cmd = q_ready.float().unsqueeze(0)
     frames, obj_z0 = [], None
-    # v7b: пишу каждый шаг план и факт по суставам, чтоб потом нарисовать, отстаёт рука или нет
-    rows = []
     count = 0
-
-    # v9 метрики: кто из тел робота чего касается. Пишу все шаги, где у какого-то тела сила > CONTACT_MIN
-    sens = scene["contacts"]
-    body_names = sens.body_names
-    CONTACT_MIN = 0.5  # Н, меньше - считаю шумом
-    contact_rows = []
-    first_obj_hit = None
-    obj_xy_start = obj.data.root_pos_w[0, :2].clone()
-    obj_moved_at = None
-
-    def expand(path):
-        """путь [M,6] -> список целей по шагам. Каждый кусок едет со скоростью JOINT_SPEED,
-        после куска - микропауза, если это лесенка (кусков мало). Путь от проекции едет без пауз"""
-        cmds = []
-        stairs = len(path) <= 7
-        for k in range(len(path) - 1):
-            d = (path[k + 1] - path[k]).abs().max().item()
-            if d < 1e-4:
-                continue  # этот сустав крутить не надо
-            m = max(5, math.ceil(d / JOINT_SPEED / 0.01))
-            for i in range(m):
-                cmds.append(path[k] + (i + 1) / m * (path[k + 1] - path[k]))
-            if stairs:
-                cmds += [path[k + 1]] * JOINT_PAUSE
-        return cmds
 
     for name, n in PHASES:
         seg = segs.get(name)
@@ -296,11 +243,12 @@ def main():
             fingers[:] = OPEN
         if name == "approach":
             obj_z0 = obj.data.root_pos_w[0, 2].item()
-        cmds = expand(seg[0]) if seg is not None else [None] * n
 
-        for cmd in cmds:
-            if cmd is not None:
-                arm_cmd = cmd.float().unsqueeze(0)
+        for i in range(n):
+            if seg is not None:
+                # по пути в углах суставов (обычно это просто прямая из двух точек), за 70% фазы, остальное время рука доезжает
+                a = min(1.0, (i + 1) / (0.7 * n))
+                arm_cmd = along(seg[0], a).float().unsqueeze(0)
             robot.set_joint_position_target(arm_cmd, joint_ids=arm_ids)
             robot.set_joint_position_target(fingers, joint_ids=finger_ids)
 
@@ -308,23 +256,7 @@ def main():
             sim.step()
             scene.update(sim.get_physics_dt())
             count += 1
-            q_act = robot.data.joint_pos[0, arm_ids]
-            # запас по моей модели для того, где рука реально сейчас (в подъёме коробку не смотрим, она в руке)
-            clr = plan.clearance(q_act.double().unsqueeze(0), obj=name not in ("lift", "wait_lift", "hold"), fingers_ok=name in ("approach", "wait_grasp", "close")).min().item()
-            rows.append([count * 0.01, name] + arm_cmd[0].tolist() + q_act.tolist() + [clr])
-            # контакты: общая сила по каждому телу и сила об коробку
-            f_net = sens.data.net_forces_w[0].norm(dim=-1)  # [тела]
-            f_obj = sens.data.force_matrix_w[0, :, 0].norm(dim=-1) if sens.data.force_matrix_w is not None else torch.zeros_like(f_net)
-            for b in torch.nonzero((f_net > CONTACT_MIN) | (f_obj > CONTACT_MIN)).flatten().tolist():
-                contact_rows.append((count * 0.01, name, body_names[b], f_net[b].item(), f_obj[b].item()))
-            if first_obj_hit is None and (f_obj > CONTACT_MIN).any() and name not in ("close", "lift", "wait_lift", "hold"):
-                b = int(f_obj.argmax())
-                first_obj_hit = (count * 0.01, name, body_names[b], f_obj[b].item())
-                print(f"!!! первый контакт с коробкой: t={count * 0.01:.2f} с, фаза {name}, тело {body_names[b]}, сила {f_obj[b].item():.1f} Н", flush=True)
-            if obj_moved_at is None and (obj.data.root_pos_w[0, :2] - obj_xy_start).norm().item() > 0.001 and name not in ("close", "lift", "wait_lift", "hold"):
-                obj_moved_at = (count * 0.01, name)
-                print(f"!!! коробка сдвинулась больше чем на 1 мм: t={count * 0.01:.2f} с, фаза {name}", flush=True)
-            if args.video and cam is not None and count % 5 == 0:
+            if args.video and count % 5 == 0:
                 frames.append(grab(cam))
 
         ee_pos, _ = ee_pose()
@@ -339,33 +271,11 @@ def main():
             flush=True,
         )
         if name == "settle":
-            if not args.no_cam:
-                save_frame(scene["camera_top"])
+            save_frame(scene["camera_top"])
 
     rise = obj.data.root_pos_w[0, 2].item() - obj_z0
     held = robot.data.joint_pos[0, finger_ids]
     print(f"object rise {rise * 100:.1f} cm, fingers at {held.tolist()}", flush=True)
-
-    with open(os.path.join(OUT, "joints.csv"), "w") as f:
-        f.write("t,phase," + ",".join(f"cmd{i}" for i in range(6)) + "," + ",".join(f"act{i}" for i in range(6)) + ",clearance\n")
-        for r in rows:
-            f.write(f"{r[0]:.2f},{r[1]}," + ",".join(f"{v:.5f}" for v in r[2:]) + "\n")
-    print(f"joints saved, {len(rows)} steps", flush=True)
-    with open(os.path.join(OUT, "contacts.csv"), "w") as f:
-        f.write("t,phase,body,force_total,force_obj\n")
-        for r in contact_rows:
-            f.write(f"{r[0]:.2f},{r[1]},{r[2]},{r[3]:.2f},{r[4]:.2f}\n")
-    # сводка: по каждому телу - когда первый раз чего-то коснулось (до схвата) и максимальная сила об коробку
-    print(f"contacts saved, {len(contact_rows)} строк", flush=True)
-    seen = {}
-    for t, ph, b, fn, fo in contact_rows:
-        if ph in ("close", "lift", "wait_lift", "hold"):
-            continue
-        s = seen.setdefault(b, [t, ph, 0.0, 0.0])
-        s[2], s[3] = max(s[2], fn), max(s[3], fo)
-    for b, (t, ph, fn, fo) in sorted(seen.items(), key=lambda x: x[1][0]):
-        print(f"[contact] {b:28s} первый раз t={t:.2f} ({ph}), макс сила всего {fn:.1f} Н, об коробку {fo:.1f} Н", flush=True)
-    print(f"итог: первый контакт с коробкой {first_obj_hit}, коробка сдвинулась {obj_moved_at}", flush=True)
 
     if frames:
         save_gif(frames, f"grasp_{args.obj}{'_side' if args.side else ''}.gif", ms=50)
