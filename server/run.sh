@@ -26,7 +26,8 @@ MIN_DISK_GB=${GT_MIN_DISK_GB:-5}
 # чтобы нельзя было случайно расширить.
 STUB_GPU=0 STUB_TYPE=G STUB_MAX_MB=16 STUB_MIN_FREE_MB=100
 # при чужом процессе на нашей карте: оставляем ему запас свободной памяти и ограничиваем себя
-RESERVE_MB=1536 OUR_MAX_MB=6144
+# потолок нашего процесса можно поднять на запуск через GT_OUR_MAX_MB (05.10: 640x480 камеры на 4 стола ~5.9 ГБ впритык к 6)
+RESERVE_MB=1536 OUR_MAX_MB=${GT_OUR_MAX_MB:-6144}
 ORIG_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
@@ -57,7 +58,8 @@ NAME=${NAME:-$(basename "$SCRIPT" .py)}
 if grep -nE 'SimulationApp\(|AppLauncher\(|active_gpu|activeGpu|physics_gpu|cuda:[1-9]|--device' "$SCRIPT"; then
     gt_die "в $SCRIPT выбор GPU в обход infra/isaac_app.py (строки выше)"
 fi
-LOCK="$GT_ROOT/locks/run.lock"
+# замок на карту (05.10): на одной карте - только один наш запуск, на разных можно параллельно
+LOCK="$GT_ROOT/locks/run_gpu$GPU.lock"
 
 check_gpu() {
     local info name used total procs
@@ -105,7 +107,7 @@ lock_free() { ( flock -n 9 ) 9>"$LOCK"; }
 
 # внешний вызов: проверки и уход в tmux
 if [[ $FG -eq 0 ]]; then
-    lock_free || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
+    lock_free || gt_die "уже идёт другой запуск run.sh на GPU $GPU (на одной карте — только один)"
     check_gpu
     check_stub_gpu
     check_disk
@@ -121,7 +123,7 @@ fi
 
 # внутренний вызов: сам запуск
 exec 9>"$LOCK"
-flock -n 9 || gt_die "уже идёт другой запуск run.sh (одновременно — только один)"
+flock -n 9 || gt_die "уже идёт другой запуск run.sh на GPU $GPU (на одной карте — только один)"
 check_gpu
 check_stub_gpu
 check_disk

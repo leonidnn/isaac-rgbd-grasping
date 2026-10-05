@@ -74,11 +74,11 @@ if [[ $INNER -eq 0 ]]; then
     exit 0
 fi
 
-# карта свободна: ни одного процесса на ней и никто из наших не держит run.lock.
+# карта свободна: ни одного процесса на ней и никто из наших не держит её замок run_gpuN.lock.
 # в режиме --max-mb/--max-util: занято < MAX_MB и загрузка < MAX_UTIL, и так STABLE проверок подряд
 declare -A OK_IN_ROW
 gpu_free() {
-    ( flock -n 9 ) 9>"$GT_ROOT/locks/run.lock" || return 1
+    ( flock -n 9 ) 9>"$GT_ROOT/locks/run_gpu$1.lock" || return 1
     if [[ -z $MAX_MB ]]; then
         [[ -z $(gt_gpu_procs | awk -v g="$1" '$1==g') ]]
         return
