@@ -1,2 +1,12 @@
 [eval] попытка 0: chips 0/13, can 6/8, tetrapak 3/11
 [eval] попытка 1720: chips 0/11, tetrapak 5/12, can 6/9
+[eval] попытка 3216: can 8/9, tetrapak 8/14, chips 0/9
+[eval] попытка 6912: can 8/9, tetrapak 12/12, chips 0/11
+[eval] попытка 9304: can 11/12, tetrapak 14/15, chips 0/5
+[eval] попытка 11816: can 13/13, tetrapak 12/12, chips 0/7
+[eval] попытка 14416: chips 0/10, can 11/13, tetrapak 8/9
+[eval] попытка 16768: tetrapak 9/10, chips 0/12, can 10/10
+[eval] попытка 20824: can 7/8, tetrapak 16/16, chips 0/8
+[eval] попытка 23576: can 8/9, chips 0/14, tetrapak 8/9
+[eval] попытка 26392: can 15/17, tetrapak 5/6, chips 0/9
+[eval] попытка 28488: tetrapak 8/8, chips 0/9, can 13/15

@@ -120,26 +120,54 @@ def evals_from_csv(path):
     return {o: (k[o], n[o]) for o in OBJS}
 
 
-def evals_from_log(path):
-    k, n, cnt = {o: 0 for o in OBJS}, {o: 0 for o in OBJS}, 0
+def evals_from_log(path, last=None):
+    """строки [eval] из лога; last=N - только последние N проверок"""
     with open(path, encoding="utf-8") as f:
-        for line in f:
-            cnt += 1
-            for o, a, b in re.findall(r"(tetrapak|can|chips) (\d+)/(\d+)", line):
-                k[o] += int(a)
-                n[o] += int(b)
-    return {o: (k[o], n[o]) for o in OBJS}, cnt
+        lines = [l for l in f if l.startswith("[eval]")]
+    if last:
+        lines = lines[-last:]
+    k, n = {o: 0 for o in OBJS}, {o: 0 for o in OBJS}
+    for line in lines:
+        for o, a, b in re.findall(r"(tetrapak|can|chips) (\d+)/(\d+)", line):
+            k[o] += int(a)
+            n[o] += int(b)
+    return {o: (k[o], n[o]) for o in OBJS}, len(lines)
+
+
+def train_from_csv(path, min_hours):
+    """успехи на обучении начиная с min_hours часов"""
+    k, n = {o: 0 for o in OBJS}, {o: 0 for o in OBJS}
+    for r in read(path):
+        if float(r["hours"]) >= min_hours:
+            k[r["obj"]] += int(r["reward"])
+            n[r["obj"]] += 1
+    return {o: (k[o], n[o]) for o in OBJS}
+
+
+def arm_from_json(path):
+    import json
+
+    with open(path, encoding="utf-8") as f:
+        eps = json.load(f)
+    k, n = {o: 0 for o in OBJS}, {o: 0 for o in OBJS}
+    for e in eps:
+        k[e["obj"]] += int(bool(e["success"]))
+        n[e["obj"]] += 1
+    return {o: ((k[o], n[o]) if n[o] else None) for o in OBJS}
 
 
 def summary_table():
-    q2, n_ev = evals_from_log(os.path.join(HERE, "data", "qmap_d_evals.txt"))
+    ev = os.path.join(HERE, "data", "qmap_d_evals.txt")
+    q2_last, n_last = evals_from_log(ev, last=6)
     rows = [
         ("Оракул, рука + IK (4_env/oracle_yaw0)", {"tetrapak": (10, 10), "can": (10, 10), "chips": (0, 10)}),
         ("Оракул, быстрая среда (fly_check 4+8 столов)", {"tetrapak": (9, 10), "can": (8, 8), "chips": (0, 10)}),
         ("Baseline: глубина + планировщик (5_baseline/plan_11x2)", {"tetrapak": (11, 11), "can": (11, 11), "chips": None}),
         ("Q-карта, попытка 1, RGB-D (жадные проверки за ночь)", evals_from_csv(os.path.join(RL, "1_rgbd", "night_qmap", "eval.csv"))),
         ("SAC, попытка 1, RGB-D (жадные проверки за ночь)", evals_from_csv(os.path.join(RL, "1_rgbd", "night_sac", "eval.csv"))),
-        (f"Q-карта, попытка 2, глубина (жадные, {n_ev} проверок, идёт)", q2),
+        ("Q-карта, попытка 2, обучение: последние 4 ч (eps 0.1)", train_from_csv(os.path.join(HERE, "data", "qmap_d_train.csv"), 8.0)),
+        (f"Q-карта, попытка 2, инференс: жадно, последние {n_last} проверок (после 7 ч)", q2_last),
+        ("Q-карта, попытка 2, инференс на настоящей руке (3_arm/eval_20x2)", arm_from_json(os.path.join(RL, "3_arm", "eval_20x2", "episodes.json"))),
     ]
     md = ["| метод | тетрапак | банка | чипсы |", "|---|---|---|---|"]
     cells = []
@@ -190,7 +218,7 @@ def rgb_bug():
     a1 = hourly(os.path.join(RL, "1_rgbd", "night_qmap", "train.csv"))
     a2 = hourly(os.path.join(HERE, "data", "qmap_d_train.csv"))
     fig, ax = plt.subplots(figsize=(9, 4.5))
-    for d, lab, c in ((a1, "попытка 1: RGB-D (RGB от прошлой сцены), с нуля", "tab:red"), (a2, "попытка 2: только глубина, точка только на объекте, с весов попытки 1", "tab:green")):
+    for d, lab, c in ((a1, "попытка 1: RGB-D (RGB от прошлой сцены), с нуля", "tab:red"), (a2, "попытка 2: только глубина, точка только на объекте, с весов попытки 1, eps 0.5->0.1 за 8 ч", "tab:green")):
         hs = [h for h in sorted(d) if d[h][1] >= 50]  # хвостовой час с парой попыток не рисую
         p = [d[h][0] / d[h][1] for h in hs]
         lo = [pp - wilson(*d[h])[0] for pp, h in zip(p, hs)]
@@ -198,8 +226,8 @@ def rgb_bug():
         ax.errorbar([h + 0.5 for h in hs], p, yerr=[lo, hi], marker="o", capsize=3, color=c, label=lab)
     ax.set_xlabel("часы обучения")
     ax.set_ylabel("доля успехов на обучении\n(тетрапак + банка, с исследованием)")
-    ax.set_title("Q-карта: что дала починка входа")
-    ax.set_ylim(0, 0.7)
+    ax.set_title("Q-карта: доля успехов на обучении по часам, попытка 1 и попытка 2")
+    ax.set_ylim(0, 1.0)
     ax.grid(alpha=0.3)
     ax.legend(fontsize=8)
     fig.savefig(os.path.join(HERE, "rgb_bug.png"), dpi=90, bbox_inches="tight")
