@@ -45,10 +45,16 @@ UP = (1.0, 0.0, 0.0, 0.0)
 SIDE = (0.70710678, 0.70710678, 0.0, 0.0)  # лёжа - это просто повернули на 90 вокруг X
 
 
+# чипсы ужал по просьбе научрука (узкая сторона 6 см вместо 15), лежат в отдельной папке.
+# старые assets/usd/chips не трогаю - на них учился агент из agent/
+USD_NAME = {"chips": "chips_small"}
+
+
 def obj_cfg(name, pos, rot=UP, prim="obj"):
+    usd = USD_NAME.get(name, name)
     return RigidObjectCfg(
         prim_path="{ENV_REGEX_NS}/" + prim,
-        spawn=sim_utils.UsdFileCfg(usd_path=os.path.join(USD_DIR, name, f"{name}.usd")),
+        spawn=sim_utils.UsdFileCfg(usd_path=os.path.join(USD_DIR, usd, f"{usd}.usd")),
         init_state=RigidObjectCfg.InitialStateCfg(pos=pos, rot=rot),
     )
 

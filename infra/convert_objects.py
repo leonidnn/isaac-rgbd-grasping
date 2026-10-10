@@ -4,7 +4,7 @@ Input:  assets/prepared/<name>/*.obj  (textures fixed and downscaled)
 Output: assets/usd/<name>/<name>.usd  + printed bounding boxes
 
 Run only through server/run.sh:
-    bash server/run.sh infra/convert_objects.py <gpu>
+    bash server/run.sh infra/convert_objects.py <gpu> [--only chips_small]
 """
 
 import argparse
@@ -17,17 +17,18 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # meshes are Y-up, Isaac is Z-up: +90 deg around X, quaternion (w, x, y, z)
 Y_UP_TO_Z_UP = (0.70710678, 0.70710678, 0.0, 0.0)
 
-# name: (obj file, scale, mass kg)
+# name: (prepared dir, obj file, scale, mass kg)
 OBJECTS = {
-    "tetrapak": ("tetra-pak-carton.obj", 1.0, 0.25),
-    "can": ("tin-can.obj", 1.0, 0.2),
-    "chips": ("chips-bag.obj", 1.8, 0.1),
+    "tetrapak": ("tetrapak", "tetra-pak-carton.obj", 1.0, 0.25),
+    "can": ("can", "tin-can.obj", 1.0, 0.2),
+    "chips": ("chips", "chips-bag.obj", 1.8, 0.1),
+    "chips_small": ("chips", "chips-bag.obj", 0.73, 0.1),  # narrow side 6 cm, 2.5 cm below gripper opening
 }
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--src", default=os.path.join(REPO, "assets", "prepared"))
 parser.add_argument("--dst", default=os.path.join(REPO, "assets", "usd"))
-parser.add_argument("--only", nargs="*", default=list(OBJECTS))
+parser.add_argument("--only", nargs="*", default=["chips_small"])  # the rest are done, do not overwrite
 parser.add_argument("--collision", default="convexHull")
 args = parser.parse_args()
 
@@ -52,8 +53,8 @@ def bbox(usd_path):
 
 ok = True
 for name in args.only:
-    obj, scale, mass = OBJECTS[name]
-    src = os.path.join(args.src, name, obj)
+    folder, obj, scale, mass = OBJECTS[name]
+    src = os.path.join(args.src, folder, obj)
     if not os.path.isfile(src):
         print(f"[convert] {name}: no file {src}", flush=True)
         ok = False
