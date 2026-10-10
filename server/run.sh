@@ -113,8 +113,10 @@ if [[ $FG -eq 0 ]]; then
     check_disk
     SESSION="gt-$NAME"
     tmux has-session -t "$SESSION" 2>/dev/null && gt_die "tmux-сессия $SESSION уже есть"
-    # env tmux-сервера может быть старым, поэтому GT_CPUS передаём явно
-    tmux new-session -d -s "$SESSION" "$(printf '%q ' env GT_CPUS="$GT_CPUS" bash "$HERE/run.sh" --fg "${ORIG_ARGS[@]}")"
+    # env tmux-сервера может быть старым, поэтому все GT_* (ядра, лимиты памяти на запуск) передаём явно.
+    # раньше передавал только GT_CPUS, и GT_MIN_FREE_MB/GT_OUR_MAX_MB/GT_SHARED_MAX_MB терялись (10.10)
+    mapfile -t GT_VARS < <(env | grep -E '^GT_[A-Z0-9_]+=' | grep -vE '^GT_(NICED|RUN_DIR)=')
+    tmux new-session -d -s "$SESSION" "$(printf '%q ' env "${GT_VARS[@]}" GT_CPUS="$GT_CPUS" bash "$HERE/run.sh" --fg "${ORIG_ARGS[@]}")"
     echo "Запущено в tmux-сессии $SESSION (закроется сама по завершении)"
     echo "  смотреть: tmux attach -t $SESSION   (отключиться: Ctrl+b, затем d)"
     echo "  логи:     ls -t $GT_RUNS | head -1"
