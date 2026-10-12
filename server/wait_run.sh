@@ -6,7 +6,10 @@
 # --after: не начинать, пока та очередь не кончилась (done/expired), чтобы шли строго друг за другом.
 # Сам уходит в tmux (gt-wait-<имя>). Свободной считается карта без процессов вообще.
 # Состояние: $GT_ROOT/queue/<имя>/status (state, gpu, шаг), steps (шаг, код выхода, папка запуска).
-# Ждёт не дольше GT_WAIT_HOURS (24 ч), опрос карт раз в 30 с. --allow-shared руками не пропускается.
+# Ждёт не дольше GT_WAIT_HOURS (24 ч) на каждый шаг, опрос карт раз в 30 с. --allow-shared руками не пропускается.
+# --until-done <имя> в опциях шага: обучение с бэкапом, шаг перезапускается (снова ждёт карту), пока нет
+#   ckpt/<имя>/DONE, не больше GT_MAX_CRASHES (20) раз. Следующий шаг идёт сразу после DONE.
+# --must-pass в опциях шага: шаг-смоук, код не 0 - очередь failed, очереди с --after на неё отменяются (cancelled).
 # --max-mb N --max-util P (только вместе, 04.10.2026): ждём не пустую карту, а такую, где занято < N МиБ и загрузка < P %
 #   три проверки подряд (~1.5 мин, загрузка скачет). Тогда run.sh идёт с --allow-shared и GT_SHARED_MAX_MB=N.
 #   Только по явному решению пользователя.
@@ -66,8 +69,10 @@ if [[ $INNER -eq 0 ]]; then
     printf '%s\n' "${STEPS[@]}" >"$Q/commands"
     : >"$Q/steps"
     set_status waiting
+    # как в run.sh (e92cf87): все GT_* явно, иначе GT_OUR_MAX_MB и др. из командной строки до шагов не доедут
+    mapfile -t GT_VARS < <(env | grep -E '^GT_[A-Z0-9_]+=' | grep -vE '^GT_(NICED|RUN_DIR)=')
     tmux new-session -d -s "gt-wait-$NAME" \
-        "$(printf '%q ' env GT_CPUS="$GT_CPUS" nice -n 19 bash "$0" --inner ${AFTER:+--after "$AFTER"} ${MAX_MB:+--max-mb "$MAX_MB" --max-util "$MAX_UTIL"} "$NAME" "$GPUS" "$@") 2>&1 | tee -a $(printf '%q' "$Q/wait.log")"
+        "$(printf '%q ' env "${GT_VARS[@]}" GT_CPUS="$GT_CPUS" nice -n 19 bash "$0" --inner ${AFTER:+--after "$AFTER"} ${MAX_MB:+--max-mb "$MAX_MB" --max-util "$MAX_UTIL"} "$NAME" "$GPUS" "$@") 2>&1 | tee -a $(printf '%q' "$Q/wait.log")"
     echo "Очередь $NAME: $N шаг(ов), жду свободную карту из [$GPUS]${AFTER:+, после очереди $AFTER}"
     [[ -n $MAX_MB ]] && echo "  свободной считаю карту, где занято < $MAX_MB МиБ и загрузка < $MAX_UTIL % $STABLE проверки подряд"
     echo "  статус: cat $STATUS"
@@ -99,6 +104,12 @@ gpu_free() {
 # та очередь, за которой стоим, уже всё
 after_done() {
     [[ -z $AFTER ]] && return 0
+    if grep -qE '^state=(failed|cancelled)$' "$GT_ROOT/queue/$AFTER/status" 2>/dev/null; then
+        # та очередь провалилась (смоук не прошёл) - эту не запускаем вообще
+        set_status cancelled "" "$i/$N"
+        echo "[$(date +%T)] очередь $AFTER провалилась, отменяюсь"
+        exit 1
+    fi
     grep -qE '^state=(done|expired)$' "$GT_ROOT/queue/$AFTER/status" 2>/dev/null
 }
 
@@ -106,6 +117,8 @@ after_done() {
 runs_of() { ls -td "$GT_RUNS/${NAME}_${1}_"* 2>/dev/null || true; }
 
 deadline=$(( $(date +%s) + WAIT_HOURS * 3600 ))
+MAX_CRASHES=${GT_MAX_CRASHES:-20}
+declare -A crashes
 i=1
 while (( i <= N )); do
     gpu=""
@@ -126,8 +139,12 @@ while (( i <= N )); do
     echo "[$(date +%T)] шаг $i/$N на GPU $gpu: ${STEPS[$((i - 1))]}"
     eval "set -- ${STEPS[$((i - 1))]}"
     # опции run.sh до скрипта, потом скрипт, номер карты и аргументы скрипта
-    opts=()
+    opts=() until_done="" must_pass=0
     while [[ ${1:-} == --* ]]; do
+        # --until-done <имя>: это обучение с бэкапом, гонять шаг заново, пока нет ckpt/<имя>/DONE (run.sh не отдаю)
+        if [[ $1 == --until-done ]]; then until_done=$2; shift 2; continue; fi
+        # --must-pass: смоук. Упал (код не 0) - вся очередь failed, и очереди с --after на неё отменяются
+        if [[ $1 == --must-pass ]]; then must_pass=1; shift; continue; fi
         opts+=("$1")
         [[ $1 == --timeout || $1 == --stall || $1 == --name ]] && { shift; opts+=("$1"); }
         shift
@@ -150,7 +167,26 @@ while (( i <= N )); do
         continue
     fi
     echo "$i $rc $run_dir" >>"$Q/steps"
+    if (( must_pass && rc != 0 )); then
+        set_status failed "$gpu" "$i/$N"
+        echo "[$(date +%T)] шаг $i --must-pass упал (код $rc), очередь failed"
+        exit 1
+    fi
+    # карта только что была наша - следующий запуск пробует её с одной проверки, а не с трёх
+    [[ -n $MAX_MB ]] && OK_IN_ROW[$gpu]=$(( STABLE - 1 ))
+    if [[ -n $until_done && ! -f $GT_ROOT/ckpt/$until_done/DONE ]]; then
+        # упал или его стопнул run.sh (у соседа кончился процесс) - тот же шаг ещё раз, продолжит с бэкапа
+        crashes[$i]=$(( ${crashes[$i]:-0} + 1 ))
+        echo "[$(date +%T)] шаг $i без DONE (код $rc), перезапуск ${crashes[$i]} из $MAX_CRASHES"
+        if (( ${crashes[$i]} >= MAX_CRASHES )); then
+            echo "[$(date +%T)] шаг $i упал $MAX_CRASHES раз, бросаю его"
+        else
+            deadline=$(( $(date +%s) + WAIT_HOURS * 3600 ))
+            continue
+        fi
+    fi
     i=$(( i + 1 ))
+    deadline=$(( $(date +%s) + WAIT_HOURS * 3600 ))
 done
 set_status done
 echo "[$(date +%T)] всё"

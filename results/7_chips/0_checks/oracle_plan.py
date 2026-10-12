@@ -3,7 +3,7 @@
 моим планировщиком top_plan.py: лесенка, каждый сустав по очереди, паузы по 0.5 с, потом спуск, сжатие, подъём.
 Тетрапак и банку оставил для сравнения.
 
-    bash server/run.sh --timeout 60m results/6_rl/4_chips/oracle_plan.py <gpu> [--n 3] [--obj chips tetrapak can] [--video 2]
+    bash server/run.sh --timeout 60m results/7_chips/0_checks/oracle_plan.py <gpu> [--n 3] [--obj chips tetrapak can] [--video 2]
 """
 
 import argparse
