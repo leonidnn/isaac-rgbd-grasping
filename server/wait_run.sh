@@ -9,6 +9,7 @@
 # Ждёт не дольше GT_WAIT_HOURS (24 ч) на каждый шаг, опрос карт раз в 30 с. --allow-shared руками не пропускается.
 # --until-done <имя> в опциях шага: обучение с бэкапом, шаг перезапускается (снова ждёт карту), пока нет
 #   ckpt/<имя>/DONE, не больше GT_MAX_CRASHES (20) раз. Следующий шаг идёт сразу после DONE.
+# Шаг, снятый run.sh ради соседа (мало памяти у соседа или пропал его процесс), повторяется (до GT_MAX_NEIGH, 30 раз).
 # --must-pass в опциях шага: шаг-смоук, код не 0 - очередь failed, очереди с --after на неё отменяются (cancelled).
 # --max-mb N --max-util P (только вместе, 04.10.2026): ждём не пустую карту, а такую, где занято < N МиБ и загрузка < P %
 #   три проверки подряд (~1.5 мин, загрузка скачет). Тогда run.sh идёт с --allow-shared и GT_SHARED_MAX_MB=N.
@@ -118,7 +119,8 @@ runs_of() { ls -td "$GT_RUNS/${NAME}_${1}_"* 2>/dev/null || true; }
 
 deadline=$(( $(date +%s) + WAIT_HOURS * 3600 ))
 MAX_CRASHES=${GT_MAX_CRASHES:-20}
-declare -A crashes
+declare -A crashes neigh
+MAX_NEIGH=${GT_MAX_NEIGH:-30}
 i=1
 while (( i <= N )); do
     gpu=""
@@ -167,6 +169,18 @@ while (( i <= N )); do
         continue
     fi
     echo "$i $rc $run_dir" >>"$Q/steps"
+    # run.sh снял нас ради соседа (у него выросла память или пропал процесс) - это не наш баг, тот же шаг ещё раз.
+    # 12.10 смоук так и упал: карта 3 проверки была свободной, сели, сосед вырос, нас убили на 491 МиБ
+    if [[ -n $run_dir ]] && grep -qE 'СТОП: (на GPU [0-9]+ свободно|чужой процесс)' "$run_dir/run.log" 2>/dev/null; then
+        neigh[$i]=$(( ${neigh[$i]:-0} + 1 ))
+        if (( ${neigh[$i]} <= MAX_NEIGH )); then
+            echo "[$(date +%T)] шаг $i снят из-за соседа (${neigh[$i]} из $MAX_NEIGH), жду карту снова"
+            OK_IN_ROW[$gpu]=0
+            sleep "$POLL_SEC"
+            continue
+        fi
+        echo "[$(date +%T)] шаг $i снят из-за соседа уже $MAX_NEIGH раз, дальше считаю как обычное падение"
+    fi
     if (( must_pass && rc != 0 )); then
         set_status failed "$gpu" "$i/$N"
         echo "[$(date +%T)] шаг $i --must-pass упал (код $rc), очередь failed"
