@@ -4,9 +4,15 @@
     python agent/agent.py can 0.1 0.5                  # поставить банку в (0.1, 0.5) метра
     python agent/agent.py tetrapak-lying -0.1 0.45 30  # лежачий тетрапак, длинная сторона под 30 градусов
     python agent/agent.py can 0.1 0.5 + tetrapak 0 0.6 # несколько сцен через +
+    python agent/agent.py --old chips 0 0.5 20         # чипсы старой сетью, без дообучения
 
-Объекты: tetrapak (стоит), tetrapak-lying, can, chips. Координаты - в метрах по столу, база робота в нуле,
+Объекты: tetrapak (стоит), tetrapak-lying, can, chips (уменьшенные 6x8.7x2 см), chips-big (старые 15x22x5 см, их не берёт никто).
+Координаты - в метрах по столу, база робота в нуле,
 x вбок (от -0.3 до 0.3), y вперёд от робота (от 0.35 до 0.75 нормально). Угол - куда смотрит длинная сторона, градусы.
+
+Сетей две: qmap_depth.pt - основная (тетрапак и банка), qmap_chips.pt - училась с нуля только на уменьшенных чипсах.
+Какую звать, решаю по объекту: chips - вторая, остальное - первая. С --old всё берёт первая (так видно, что она
+и без дообучения что-то умеет на уменьшенных чипсах).
 Карту высот рисую сам по размерам объекта (как её видела бы камера сверху) и отдаю сети. Физики тут нет -
 возьмёт ли рука на самом деле, проверяется в sim.py.
 
@@ -29,6 +35,7 @@ IMG, N_YAW = 128, 8
 GRIP_DEPTH, MIN_Z = 0.03, 0.015  # хватаю на 3 см ниже верха, но не ниже 1.5 см над столом
 ARM_Y = 0.29  # ближе к роботу на снимке висит кисть - туда не хватаю
 RU = {"tetrapak": "тетрапак", "can": "банка", "chips": "чипсы"}
+CHIPS_PT = os.path.join(HERE, "qmap_chips.pt")
 
 
 # ---------------- сеть
@@ -66,6 +73,12 @@ def load(path=os.path.join(HERE, "qmap_depth.pt"), dev="cpu"):
     return net.to(dev).eval()
 
 
+def load_router(dev="cpu", old_only=False):
+    """обе сети: {"old": основная, "chips": для уменьшенных чипсов}. old_only - вторую не грузить"""
+    old = load(dev=dev)
+    return {"old": old, "chips": old if old_only else load(CHIPS_PT, dev)}
+
+
 def pix_to_xy(i, j):
     return WS_X[0] + (j + 0.5) / IMG * (WS_X[1] - WS_X[0]), WS_Y[1] - (i + 0.5) / IMG * (WS_Y[1] - WS_Y[0])
 
@@ -100,6 +113,15 @@ def choose(net, heights):
         z = max(float(heights[b, i, j]) - GRIP_DEPTH, MIN_Z)
         out.append((x, y, z, k * math.pi / N_YAW, float(prob[b, k, i, j]), prob[b].max(0).values.cpu()))
     return out
+
+
+def choose_router(nets, heights, objs):
+    """как choose, только на столах с чипсами отвечает сеть для чипсов, на остальных - основная (объект известен заранее)"""
+    old = choose(nets["old"], heights)
+    if nets["chips"] is nets["old"]:
+        return old
+    new = choose(nets["chips"], heights)
+    return [new[k] if objs[k] == "chips" else old[k] for k in range(len(objs))]
 
 
 # ---------------- картинки и цифры
@@ -157,10 +179,11 @@ SHAPES = {
     "tetrapak": ("box", 0.06, 0.06, 0.19),
     "tetrapak-lying": ("box", 0.19, 0.06, 0.06),
     "can": ("circle", 0.08, 0.08, 0.038),
-    "chips": ("box", 0.22, 0.15, 0.05),
+    "chips": ("box", 0.087, 0.06, 0.02),
+    "chips-big": ("box", 0.22, 0.15, 0.05),
 }
 PRESETS = [("can", 0.0, 0.5, 0), ("tetrapak", -0.12, 0.45, 20), ("tetrapak-lying", 0.1, 0.55, 30),
-           ("tetrapak-lying", -0.05, 0.6, 100), ("can", 0.2, 0.4, 0), ("chips", 0.0, 0.5, 15)]
+           ("tetrapak-lying", -0.05, 0.6, 100), ("chips", 0.15, 0.45, 60), ("chips", -0.1, 0.6, 0)]
 
 
 def fake_heights(obj, x, y, yaw_deg):
@@ -179,10 +202,10 @@ def fake_heights(obj, x, y, yaw_deg):
     return F.max_pool2d(hm[None, None], 5, stride=1, padding=2)[0, 0]  # как в среде
 
 
-def put(scenes):
-    net = load()
+def put(scenes, old_only=False):
+    nets = load_router(old_only=old_only)
     heights = torch.stack([fake_heights(*sc) for sc in scenes])
-    picks = choose(net, heights)
+    picks = choose_router(nets, heights, [sc[0] for sc in scenes])
     titles = []
     for sc, g in zip(scenes, picks):
         obj, x, y, yaw = sc
@@ -218,4 +241,5 @@ def parse(argv):
 if __name__ == "__main__":
     import sys
 
-    put(parse(sys.argv[1:]))
+    argv = sys.argv[1:]
+    put(parse([a for a in argv if a != "--old"]), old_only="--old" in argv)

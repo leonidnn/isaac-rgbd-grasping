@@ -4,7 +4,8 @@
     python agent/sim.py arm       # рука честно едет из домашней позы к объекту, один стол
 
 Опции: --obj tetrapak can chips, --n (fast: раундов по 8 попыток, по умолч. 10; arm: эпизодов на объект, по умолч. 5),
---seed, --video (gif в первых N раундах/эпизодах), --out (по умолч. agent/out/<режим>_<время>).
+--seed, --video (gif в первых N раундах/эпизодах), --out (по умолч. agent/out/<режим>_<время>),
+--old (всё берёт основная сеть, без второй для чипсов). Чипсы тут уменьшенные (assets/usd/chips_small).
 Кладёт log.txt (SR по объектам, 95% интервал Уилсона), scenes.png (куда целится, тепловая карта), gif сбоку.
 
 Тут собрано из моих файлов репозитория в один: сцена (grasp/common.py, grasp/env.py), кинематика UR10e (grasp/planner.py),
@@ -33,6 +34,7 @@ parser.add_argument("--n", type=int, default=None)
 parser.add_argument("--seed", type=int, default=1000)
 parser.add_argument("--video", type=int, default=1)
 parser.add_argument("--out", default=None)
+parser.add_argument("--old", action="store_true", help="чипсы тоже берёт основная сеть (как было без дообучения)")
 args = parser.parse_args()
 OUT = args.out or os.path.join(HERE, "out", f"{args.mode}_{time.strftime('%Y%m%d_%H%M%S')}")
 os.makedirs(OUT, exist_ok=True)
@@ -79,7 +81,8 @@ POSES = {
     "can": {"up": (UP, 0.002)},
     "chips": {"face_up": (SIDE, 0.03), "face_down": ((0.70710678, -0.70710678, 0.0, 0.0), 0.03)},
 }
-CENTER = {"tetrapak": (0.0, 0.0, 0.0945), "can": (0.0, 0.0, 0.019), "chips": (0.0, 0.0, 0.11)}  # середина в осях объекта
+CENTER = {"tetrapak": (0.0, 0.0, 0.0945), "can": (0.0, 0.0, 0.019), "chips": (0.0, 0.0, 0.0446)}  # середина в осях объекта
+USD_NAME = {"chips": "chips_small"}  # чипсы уменьшенные, старые assets/usd/chips не беру
 X_RANGE, Y_RANGE = (-0.2, 0.2), (0.35, 0.65)  # куда кидаю объект (его начало координат), метры
 PARK = {"tetrapak": (1.0, 0.0, -1.0), "can": (1.0, 0.4, -1.0), "chips": (1.0, 0.8, -1.0)}  # лишние - на пол между столами
 QUAT_TOP = (0.70710678, -0.70710678, 0.0, 0.0)  # кисть смотрит вниз; пальцы Hand-E торчат по y кисти, не по z
@@ -99,7 +102,8 @@ _box = lambda size, pos, color: sim_utils.CuboidCfg(size=size, collision_props=s
 
 
 def obj_cfg(name):
-    return RigidObjectCfg(prim_path="{ENV_REGEX_NS}/" + name, spawn=sim_utils.UsdFileCfg(usd_path=os.path.join(USD_DIR, name, f"{name}.usd")),
+    usd = USD_NAME.get(name, name)
+    return RigidObjectCfg(prim_path="{ENV_REGEX_NS}/" + name, spawn=sim_utils.UsdFileCfg(usd_path=os.path.join(USD_DIR, usd, f"{usd}.usd")),
                           init_state=RigidObjectCfg.InitialStateCfg(pos=PARK[name]))
 
 
@@ -365,7 +369,7 @@ def main():
 
     fast = args.mode == "fast"
     env = Env(num_envs=8 if fast else 1, seed=args.seed, video=args.video > 0)
-    net = A.load(dev=env.dev)
+    nets = A.load_router(dev=env.dev, old_only=args.old)
     n = args.n or (10 if fast else 5)
     rounds = n if fast else n * len(args.obj)
     say(f"режим {args.mode}, {rounds} раундов по {env.N} попыток, результаты в {OUT}")
@@ -374,7 +378,7 @@ def main():
         t = time.time()
         objs = [args.obj[(rnd * env.N + k) % len(args.obj)] for k in range(env.N)] if fast else [args.obj[rnd // n]]
         heights = env.reset(objs)
-        picks = A.choose(net, heights)
+        picks = A.choose_router(nets, heights, objs)
         env.rec = [] if (rnd if fast else rnd % n) < args.video else None
         ok, rise = env.grasp(picks, teleport=fast)
         if env.rec:

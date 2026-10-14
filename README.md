@@ -6,7 +6,7 @@
 
 ## Попробовать агента самому
 
-Обученный агент и всё для запуска лежит в `agent/`, подробно - в `agent/README.md`. Скачать только его (без остального репо):
+Обученный агент и всё для запуска лежит в `agent/`, подробно - в `agent/README.md`. Там две сети: основная (тетрапак и банка) и дообученная на уменьшенных чипсах, нужная выбирается по типу объекта. Скачать только его (без остального репо):
 
 ```bash
 git clone --filter=blob:none --no-checkout https://github.com/LeonidNN/isaac-rgbd-grasping.git grasp_agent
@@ -20,6 +20,8 @@ git checkout main
   ```bash
   python agent/agent.py                               # готовые сцены
   python agent/agent.py tetrapak-lying -0.1 0.45 30   # свой объект: тип, x, y (метры), угол
+  python agent/agent.py chips 0.1 0.5 45              # уменьшенные чипсы
+  python agent/agent.py --old chips 0.1 0.5 45        # те же чипсы основной сетью, без дообучения
   ```
   картинка будет в `agent/out/put.png`
 - в Isaac Sim 4.5 + Isaac Lab 2.0 на RTX-видюхе: `python agent/sim.py fast` (8 столов разом) или `python agent/sim.py arm` (рука едет к объекту), SR и гифки в `agent/out/`
