@@ -1,0 +1,4 @@
+name,obj,ok,n,sr,ci_lo,ci_hi,attempts,hours
+chips_router,chips,56,64,0.875,0.772,0.935,6400,5.10
+chips_router,tetrapak,61,64,0.953,0.871,0.984,6400,5.10
+chips_router,can,61,64,0.953,0.871,0.984,6400,5.10
