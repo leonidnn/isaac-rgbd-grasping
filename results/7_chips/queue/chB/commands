@@ -1,0 +1,5 @@
+--timeout 40m results/7_chips/common/eval_final.py --name chips_rp20 --video 
+--until-done chips_emb20 --timeout 6h results/7_chips/common/train.py --name chips_emb20 --init old --old-share 0.2 --film 
+--timeout 40m results/7_chips/common/eval_final.py --name chips_emb20 --film --video 
+--until-done chips_joint --timeout 6h results/7_chips/common/train.py --name chips_joint --init none --old-share 0.667 
+--timeout 40m results/7_chips/common/eval_final.py --name chips_joint --video 

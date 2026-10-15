@@ -1,0 +1,4 @@
+name,obj,ok,n,sr,ci_lo,ci_hi,attempts,hours
+smoke_emb,chips,2,8,0.250,0.071,0.591,64,0.10
+smoke_emb,tetrapak,5,8,0.625,0.306,0.863,64,0.10
+smoke_emb,can,0,8,0.000,0.000,0.324,64,0.10

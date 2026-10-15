@@ -1,0 +1,1321 @@
+[13:52:19] user=Invader17 gpu=5 vk_uuid=d9fc0582a134ded0909de88d902ecc0b cpus=44-45 timeout=6h stall=20m
+[13:52:19] cmd: /home/Invader17/grasp_task/code/results/7_chips/common/train.py --name chips_adapt --init old --old-share 0 --adapter
+[Warning] [simulation_app.simulation_app] Modules: ['omni.kit_app'] were loaded before SimulationApp was started and might not be loaded correctly.
+[Warning] [simulation_app.simulation_app] Please check to make sure no extra omniverse or pxr modules are imported before the call to SimulationApp(...)
+Starting kit application with the following args:  ['/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/apps/isaacsim.exp.base.python.kit', '--/app/tokens/exe-path=/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/omni', '--/persistent/app/viewport/displayOptions=3094', '--/rtx/materialDb/syncLoads=True', '--/rtx/hydra/materialSyncLoads=True', '--/omni.kit.plugin/syncUsdLoads=True', '--/app/renderer/resolution/width=640', '--/app/renderer/resolution/height=480', '--/app/window/width=1440', '--/app/window/height=900', '--/renderer/multiGpu/enabled=False', '--/app/fastShutdown=True', '--/app/installSignalHandlers=0', '--ext-folder', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/exts', '--ext-folder', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/apps', '--/renderer/multiGpu/enabled=false', '--/renderer/multiGpu/autoEnable=false', '--/renderer/multiGpu/maxGpuCount=1', '--/renderer/activeGpu=0', '--/plugins/carb.tasking.plugin/threadCount=4', '--/persistent/isaac/asset_root/default=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/persistent/isaac/asset_root/cloud=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/persistent/isaac/asset_root/nvidia=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/renderer/activeGpu=0', '--/physics/cudaDevice=0', '--portable', '--no-window', '--/app/window/hideUi=1']
+Passing the following args to the base kit application:  ['--name', 'chips_adapt', '--init', 'old', '--old-share', '0', '--adapter']
+[Info] [carb] Logging to file: /home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/omni/logs/Kit/Isaac-Sim Python/4.5/kit_20261014_105220.log
+2026-10-14 10:52:20 [0ms] [Warning] [omni.kit.app.plugin] No crash reporter present, dumps uploading isn't available.
+[0.299s] [ext: omni.kit.async_engine-0.0.1] startup
+[0.690s] [ext: omni.metrics.core-0.0.1] startup
+[0.691s] [ext: omni.client.lib-1.0.0] startup
+[0.733s] [ext: omni.blobkey-1.1.2] startup
+[0.734s] [ext: omni.stats-1.0.1] startup
+[0.735s] [ext: omni.datastore-0.0.0] startup
+[0.744s] [ext: omni.client-1.2.2] startup
+[0.753s] [ext: omni.ujitso.default-1.0.0] startup
+[0.757s] [ext: omni.hsscclient-1.1.1] startup
+2026-10-14 10:52:21 [721ms] [Warning] [omni.datastore] OmniHub is inaccessible
+[0.766s] [ext: omni.gpu_foundation.shadercache.vulkan-1.0.0] startup
+[0.773s] [ext: omni.assets.plugins-0.0.0] startup
+[0.775s] [ext: omni.gpu_foundation-0.0.0] startup
+[0.789s] [ext: carb.windowing.plugins-1.0.0] startup
+2026-10-14 10:52:21 [753ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:21 [753ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[0.792s] [ext: omni.kit.renderer.init-0.0.0] startup
+2026-10-14 10:52:21 [769ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+[13:52:22] на GPU 5 чужие процессы: 2825814; запас памяти 1536 MiB, наш потолок 7168 MiB
+2026-10-14 10:52:32 [12,163ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-10-14 10:52:32 [12,163ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-10-14 10:52:32 [12,163ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 575.57.08     | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 2080 Ti       | Yes: 0 |     | 11510   MB | 10de      | 0          |
+|     |                                  |        |     |            | 1e04      | d9fc0582.. |
+|     |                                  |        |     |            | 7         |            |
+|=============================================================================================|
+| OS: 20.04.6 LTS (Focal Fossa) ubuntu, Version: 20.04.6, Kernel: 5.15.0-139-generic
+| Processor: AMD EPYC 7552 48-Core Processor
+| Cores: 48 | Logical Cores: 48
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 515967 | Free Memory: 350188
+| Total Page/Swap (MB): 67583 | Free Page/Swap: 17592186044398
+|---------------------------------------------------------------------------------------------|
+[23.247s] [ext: omni.kit.pipapi-0.0.0] startup
+[23.583s] [ext: omni.materialx.libs-1.0.6] startup
+[23.598s] [ext: omni.kit.pip_archive-0.0.0] startup
+[23.599s] [ext: omni.usd.config-1.0.5] startup
+[23.608s] [ext: omni.gpucompute.plugins-0.0.0] startup
+[23.609s] [ext: omni.usd.libs-1.0.1] startup
+[23.733s] [ext: omni.mdl-55.0.1] startup
+[23.760s] [ext: omni.iray.libs-0.0.0] startup
+[23.770s] [ext: omni.mdl.neuraylib-0.2.10] startup
+[23.774s] [ext: omni.kit.usd.mdl-1.0.7] startup
+[23.911s] [ext: omni.kit.telemetry-0.5.1] startup
+[23.976s] [ext: omni.kit.loop-isaac-1.2.1] startup
+[23.987s] [ext: omni.kit.test-1.1.2] startup
+[24.122s] [ext: omni.appwindow-1.1.9] startup
+2026-10-14 10:52:44 [24,086ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:44 [24,086ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[24.127s] [ext: omni.kit.renderer.core-1.0.2] startup
+2026-10-14 10:52:45 [24,806ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:45 [24,806ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-10-14 10:52:45 [24,839ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:45 [24,839ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[24.879s] [ext: omni.kit.renderer.capture-0.0.0] startup
+[24.901s] [ext: omni.kit.renderer.imgui-1.0.2] startup
+2026-10-14 10:52:45 [24,877ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:45 [24,877ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-10-14 10:52:45 [24,879ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:45 [24,879ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-10-14 10:52:45 [24,881ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 10:52:45 [24,881ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[25.446s] [ext: omni.ui-2.26.5] startup
+[25.462s] [ext: omni.kit.mainwindow-1.0.3] startup
+[25.464s] [ext: carb.audio-0.1.0] startup
+[25.470s] [ext: omni.uiaudio-1.0.0] startup
+[25.472s] [ext: omni.kit.uiapp-0.0.0] startup
+[25.473s] [ext: omni.usd.schema.metrics.assembler-106.5.0] startup
+[25.486s] [ext: omni.usd.schema.anim-0.0.0] startup
+[25.517s] [ext: omni.usd.schema.audio-0.0.0] startup
+[25.523s] [ext: omni.usd.schema.isaac-3.0.2] startup
+[25.523s] [ext: omni.usd.schema.omnigraph-1.0.0] startup
+[25.532s] [ext: omni.usd.schema.forcefield-106.5.7] startup
+[25.547s] [ext: omni.usd.schema.semantics-0.0.0] startup
+[25.553s] [ext: omni.usd.schema.physx-106.5.7] startup
+[25.588s] [ext: omni.usd.schema.geospatial-0.0.0] startup
+[25.593s] [ext: omni.usd_resolver-1.0.0] startup
+[25.599s] [ext: omni.kit.window.popup_dialog-2.0.24] startup
+[25.605s] [ext: usdrt.scenegraph-7.5.1] startup
+[25.664s] [ext: omni.timeline-1.0.11] startup
+[25.667s] [ext: omni.usd.core-1.4.2] startup
+[25.671s] [ext: omni.resourcemonitor-107.0.0] startup
+[25.677s] [ext: omni.activity.core-1.0.1] startup
+[25.679s] [ext: omni.kit.widget.nucleus_connector-1.1.10] startup
+[25.684s] [ext: omni.hydra.usdrt_delegate-7.5.1] startup
+[25.708s] [ext: omni.kit.actions.core-1.0.0] startup
+[25.714s] [ext: omni.graph.exec-0.9.4] startup
+[25.717s] [ext: omni.kit.commands-1.4.9] startup
+[25.723s] [ext: omni.kit.usd_undo-0.1.8] startup
+[25.724s] [ext: omni.kit.exec.core-0.13.4] startup
+[25.731s] [ext: omni.kit.audiodeviceenum-1.0.1] startup
+[25.734s] [ext: omni.hydra.scene_delegate-0.3.3] startup
+[25.742s] [ext: omni.usd-1.12.4] startup
+[25.811s] [ext: omni.inspect-1.0.1] startup
+[25.814s] [ext: omni.kit.notification_manager-1.0.9] startup
+[25.817s] [ext: omni.graph.core-2.181.8] startup
+[25.825s] [ext: isaacsim.core.deprecation_manager-0.2.2] startup
+[25.827s] [ext: omni.usd.schema.omniscripting-1.0.0] startup
+[25.835s] [ext: isaacsim.robot.schema-3.1.2] startup
+[25.847s] [ext: omni.kit.asset_converter-2.8.3] startup
+[25.866s] [ext: omni.kit.menu.core-1.1.2] startup
+[25.867s] [ext: omni.kvdb-106.5.7] startup
+[25.872s] [ext: omni.kit.widget.context_menu-1.2.4] startup
+[25.874s] [ext: omni.kit.usd.layers-2.2.0] startup
+[25.891s] [ext: omni.kit.property.adapter.core-1.0.2] startup
+[25.897s] [ext: omni.localcache-106.5.7] startup
+[25.900s] [ext: omni.convexdecomposition-106.5.7] startup
+[25.909s] [ext: omni.warp.core-1.5.0] startup
+[26.248s] [ext: omni.kit.context_menu-1.8.3] startup
+[26.253s] [ext: omni.kit.hotkeys.core-1.3.10] startup
+[26.258s] [ext: omni.kit.property.adapter.fabric-1.0.3] startup
+[26.260s] [ext: omni.usdphysics-106.5.7] startup
+[26.267s] [ext: omni.kit.widget.path_field-2.0.11] startup
+[26.268s] [ext: omni.kit.widget.options_menu-1.1.6] startup
+[26.273s] [ext: omni.kit.helper.file_utils-0.1.9] startup
+[26.276s] [ext: omni.kit.widget.browser_bar-2.0.10] startup
+[26.277s] [ext: omni.kit.widget.options_button-1.0.3] startup
+[26.279s] [ext: omni.kit.widget.filebrowser-2.10.52] startup
+[26.297s] [ext: omni.kit.clipboard-1.0.5] startup
+[26.303s] [ext: omni.graph.tools-1.79.1] startup
+[26.338s] [ext: omni.ui.scene-1.11.2] startup
+[26.348s] [ext: omni.graph.image.core-0.6.0] startup
+[26.351s] [ext: omni.kit.window.filepicker-2.11.7] startup
+[26.371s] [ext: omni.kit.widget.searchfield-1.1.8] startup
+[26.373s] [ext: omni.graph.image.nodes-1.3.0] startup
+[26.382s] [ext: omni.graph-1.140.2] startup
+[26.438s] [ext: omni.kit.window.file_exporter-1.0.31] startup
+[26.444s] [ext: omni.kit.widget.filter-1.1.4] startup
+[26.450s] [ext: omni.physx.foundation-106.5.7] startup
+[26.454s] [ext: omni.graph.nodes-1.162.1] startup
+[26.472s] [ext: omni.kit.widget.stage-2.11.6] startup
+[26.499s] [ext: omni.hydra.rtx.shadercache.vulkan-1.0.0] startup
+[26.505s] [ext: omni.hydra.engine.stats-1.0.3] startup
+[26.510s] [ext: omni.graph.action_core-1.1.7] startup
+[26.520s] [ext: omni.kit.widget.highlight_label-1.0.3] startup
+[26.522s] [ext: omni.ujitso.processor.texture-1.0.0] startup
+[26.528s] [ext: omni.index.libs-380600.1777.0] startup
+[26.528s] [ext: omni.kit.window.file_importer-1.1.14] startup
+[26.531s] [ext: omni.kit.stage_template.core-1.1.22] startup
+[26.532s] [ext: omni.volume-0.5.0] startup
+[26.547s] [ext: omni.ujitso.client-0.0.0] startup
+[26.548s] [ext: omni.index-1.0.1] startup
+[26.552s] [ext: omni.kit.window.file-1.3.57] startup
+[26.559s] [ext: omni.hydra.rtx-1.0.0] startup
+2026-10-14 10:52:47 [26,531ms] [Warning] [omni.log] Source: omni.hydra was already registered.
+[26.595s] [ext: omni.kit.viewport.registry-104.0.6] startup
+[26.597s] [ext: omni.kit.viewport.legacy_gizmos-1.0.16] startup
+[26.607s] [ext: omni.kit.raycast.query-1.0.5] startup
+[26.617s] [ext: omni.kit.viewport.scene_camera_model-1.0.5] startup
+[26.629s] [ext: omni.kit.hydra_texture-1.4.0] startup
+[26.636s] [ext: omni.kit.menu.utils-1.7.7] startup
+[26.651s] [ext: omni.kit.window.drop_support-1.0.4] startup
+[26.652s] [ext: omni.kit.widget.viewport-107.0.7] startup
+[26.664s] [ext: omni.kit.material.library-1.5.15] startup
+[26.674s] [ext: omni.kit.window.content_browser_registry-0.0.6] startup
+[26.676s] [ext: omni.kit.viewport.window-107.0.8] startup
+[26.711s] [ext: omni.graph.action_nodes-1.40.1] startup
+[26.722s] [ext: omni.kit.window.property-1.11.5] startup
+[26.732s] [ext: omni.kit.window.content_browser-2.10.3] startup
+[26.809s] [ext: omni.kit.property.adapter.usd-1.0.2] startup
+[26.815s] [ext: omni.kit.viewport.utility-1.0.18] startup
+[26.840s] [ext: omni.graph.action-1.120.0] startup
+[26.841s] [ext: omni.kit.property.usd-4.2.16] startup
+[26.874s] [ext: omni.physx.cooking-106.5.7] startup
+[26.892s] [ext: omni.kit.widget.stage_icons-1.0.6] startup
+[26.897s] [ext: omni.kit.widget.zoombar-1.0.5] startup
+[26.899s] [ext: omni.physics.tensors-106.5.7] startup
+[26.911s] [ext: omni.kit.widget.prompt-1.0.7] startup
+[26.914s] [ext: omni.kit.usd.collect-2.2.22] startup
+[26.921s] [ext: omni.physx-106.5.7] startup
+[26.944s] [ext: omni.kit.window.stage-2.5.11] startup
+[26.952s] [ext: omni.kit.browser.core-2.3.11] startup
+[26.959s] [ext: omni.kit.widget.text_editor-1.0.2] startup
+[26.966s] [ext: omni.physx.tensors-106.5.7] startup
+[26.977s] [ext: omni.kit.tool.collect-2.2.16] startup
+[26.981s] [ext: omni.kit.menu.stage-1.2.5] startup
+[26.985s] [ext: omni.kit.browser.folder.core-1.10.1] startup
+[26.995s] [ext: omni.warp-1.5.0] startup
+[27.018s] [ext: isaacsim.examples.browser-0.1.8] startup
+[27.021s] [ext: omni.physx.stageupdate-106.5.7] startup
+[27.032s] [ext: omni.kit.numpy.common-0.1.2] startup
+[27.037s] [ext: isaacsim.core.version-2.0.2] startup
+[27.132s] [ext: omni.isaac.dynamic_control-1.3.15] startup
+2026-10-14 10:52:47 [27,103ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+[27.151s] [ext: isaacsim.storage.native-1.0.6] startup
+[27.158s] [ext: omni.kit.menu.create-1.0.17] startup
+[27.167s] [ext: isaacsim.core.utils-2.2.8] startup
+[27.174s] [ext: omni.kit.widget.searchable_combobox-1.0.6] startup
+[27.180s] [ext: omni.kit.primitive.mesh-1.0.17] startup
+[27.188s] [ext: isaacsim.core.simulation_manager-0.3.3] startup
+[29.171s] [ext: omni.kit.scripting-106.5.2] startup
+[29.181s] [ext: omni.kit.stage_templates-1.2.6] startup
+[29.184s] [ext: isaacsim.core.prims-0.3.7] startup
+[29.220s] [ext: isaacsim.replicator.behavior-1.0.8] startup
+[29.224s] [ext: isaacsim.core.api-4.2.16] startup
+[29.245s] [ext: omni.ui_query-1.1.7] startup
+[29.248s] [ext: omni.kit.manipulator.viewport-107.0.1] startup
+[29.250s] [ext: omni.kit.ui_test-1.3.3] startup
+[29.254s] [ext: omni.kit.window.extensions-1.4.25] startup
+[29.275s] [ext: omni.graph.visualization.nodes-2.1.1] startup
+[29.289s] [ext: omni.kit.tool.asset_importer-2.12.2] startup
+[29.319s] [ext: isaacsim.gui.components-1.0.9] startup
+[29.332s] [ext: omni.kit.widget.settings-1.2.2] startup
+[29.335s] [ext: omni.kit.widget.graph-1.12.17] startup
+[29.361s] [ext: omni.kit.window.preferences-1.7.0] startup
+[29.383s] [ext: omni.kit.graph.delegate.default-1.2.2] startup
+[29.385s] [ext: omni.kit.viewport.menubar.core-107.1.2] startup
+[29.417s] [ext: omni.kit.widget.material_preview-1.0.16] startup
+[29.427s] [ext: omni.kit.graph.usd.commands-1.3.1] startup
+[29.429s] [ext: omni.kit.graph.editor.core-1.5.3] startup
+[29.443s] [ext: omni.syntheticdata-0.6.10] startup
+[29.497s] [ext: omni.kit.window.material_graph-1.8.19] startup
+[29.540s] [ext: omni.graph.scriptnode-1.40.1] startup
+[29.547s] [ext: isaacsim.core.cloner-1.3.4] startup
+[29.549s] [ext: omni.replicator.core-1.11.35] startup
+Warp 1.5.0 initialized:
+   CUDA Toolkit 11.8, Driver 12.9
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 2080 Ti" (11 GiB, sm_75, mempool enabled)
+   Kernel cache:
+     /home/Invader17/grasp_task/.cache/warp
+2026-10-14 10:52:52 [31,502ms] [Warning] [omni.replicator.core.scripts.extension] No material configuration file, adding configuration to material settings directly.
+[31.552s] [ext: omni.isaac.cloner-1.0.2] startup
+2026-10-14 10:52:52 [31,515ms] [Warning] [omni.isaac.cloner] omni.isaac.cloner has been deprecated in favor of isaacsim.core.cloner. Please update your code accordingly.
+[31.553s] [ext: isaacsim.core.nodes-2.1.4] startup
+[31.689s] [ext: isaacsim.asset.importer.urdf-2.3.10] startup
+[32.230s] [ext: omni.isaac.core-4.0.3] startup
+2026-10-14 10:52:52 [32,240ms] [Warning] [omni.isaac.core.physics_context.physics_context] omni.isaac.core.physics_context.physics_context has been deprecated in favor of isaacsim.core.api.physics_context.physics_context. Please update your code accordingly.
+2026-10-14 10:52:52 [32,241ms] [Warning] [omni.isaac.core.simulation_context.simulation_context] omni.isaac.core.simulation_context.simulation_context has been deprecated in favor of isaacsim.core.api.simulation_context.simulation_context. Please update your code accordingly.
+2026-10-14 10:52:52 [32,241ms] [Warning] [omni.isaac.core.world.world] omni.isaac.core.world.world has been deprecated in favor of isaacsim.core.api.world.world. Please update your code accordingly.
+2026-10-14 10:52:52 [32,241ms] [Warning] [omni.isaac.core] omni.isaac.core has been deprecated in favor of isaacsim.core.api. Please update your code accordingly.
+[32.298s] [ext: omni.isaac.core_nodes-2.0.2] startup
+2026-10-14 10:52:52 [32,262ms] [Warning] [omni.isaac.core_nodes] omni.isaac.core_nodes has been deprecated in favor of isaacsim.core.nodes. Please update your code accordingly.
+[32.300s] [ext: omni.anim.curve.core-1.2.0] startup
+[32.363s] [ext: isaacsim.robot_motion.lula-4.0.4] startup
+[32.393s] [ext: isaacsim.asset.importer.mjcf-2.3.3] startup
+[32.425s] [ext: isaacsim.robot_motion.motion_generation-8.0.6] startup
+[32.473s] [ext: isaacsim.asset.browser-1.3.4] startup
+[32.535s] [ext: isaacsim.robot.surface_gripper-2.0.6] startup
+[32.541s] [ext: omni.kit.selection-0.1.5] startup
+[32.552s] [ext: isaacsim.robot_motion.lula_test_widget-1.0.5] startup
+[32.555s] [ext: omni.isaac.assets_check-0.3.9] startup
+2026-10-14 10:52:53 [32,518ms] [Warning] [omni.isaac.assets_check] omni.isaac.assets_check has been deprecated in favor of isaacsim.asset.browser. Please update your code accordingly.
+[32.556s] [ext: isaacsim.robot.manipulators-3.0.4] startup
+[32.561s] [ext: isaacsim.sensors.physics-0.3.5] startup
+[32.585s] [ext: isaacsim.gui.menu-2.0.9] startup
+[32.604s] [ext: omni.isaac.lula_test_widget-1.0.2] startup
+2026-10-14 10:52:53 [32,566ms] [Warning] [omni.isaac.lula_test_widget] omni.isaac.lula_test_widget has been deprecated in favor of isaacsim.robot_motion.lula_test_widget. Please update your code accordingly.
+[32.605s] [ext: omni.sensors.nv.common-2.5.0-coreapi] startup
+[32.637s] [ext: omni.isaac.manipulators-3.0.3] startup
+2026-10-14 10:52:53 [32,599ms] [Warning] [omni.isaac.manipulators] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,601ms] [Warning] [omni.isaac.manipulators.controllers] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,601ms] [Warning] [omni.isaac.manipulators.controllers.pick_place_controller] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,602ms] [Warning] [omni.isaac.manipulators.controllers.stacking_controller] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,603ms] [Warning] [omni.isaac.manipulators.grippers] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,603ms] [Warning] [omni.isaac.manipulators.grippers.gripper] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,603ms] [Warning] [omni.isaac.manipulators.grippers.parallel_gripper] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,603ms] [Warning] [omni.isaac.manipulators.grippers.surface_gripper] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,604ms] [Warning] [omni.isaac.manipulators.manipulators] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+2026-10-14 10:52:53 [32,604ms] [Warning] [omni.isaac.manipulators.manipulators.single_manipulator] omni.isaac.manipulators has been deprecated in favor of isaacsim.robot.manipulators. Please update your code accordingly.
+[32.643s] [ext: isaacsim.robot.policy.examples-4.0.3] startup
+[32.644s] [ext: omni.isaac.menu-1.0.2] startup
+2026-10-14 10:52:53 [32,607ms] [Warning] [omni.isaac.menu] omni.isaac.menu has been deprecated in favor of isaacsim.gui.menu. Please update your code accordingly.
+[32.655s] [ext: omni.isaac.motion_generation-8.0.2] startup
+2026-10-14 10:52:53 [32,659ms] [Warning] [omni.isaac.motion_generation] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,660ms] [Warning] [omni.isaac.motion_generation.articulation_kinematics_solver] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,660ms] [Warning] [omni.isaac.motion_generation.articulation_motion_policy] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,660ms] [Warning] [omni.isaac.motion_generation.articulation_trajectory] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,661ms] [Warning] [omni.isaac.motion_generation.kinematics_interface] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,661ms] [Warning] [omni.isaac.motion_generation.lula] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,661ms] [Warning] [omni.isaac.motion_generation.lula.kinematics] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,661ms] [Warning] [omni.isaac.motion_generation.lula.motion_policies] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,662ms] [Warning] [omni.isaac.motion_generation.lula.path_planners] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,662ms] [Warning] [omni.isaac.motion_generation.lula.trajectory_generator] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,662ms] [Warning] [omni.isaac.motion_generation.motion_policy_controller] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,663ms] [Warning] [omni.isaac.motion_generation.motion_policy_interface] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,663ms] [Warning] [omni.isaac.motion_generation.path_planner_visualizer] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,663ms] [Warning] [omni.isaac.motion_generation.path_planning_interface] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,663ms] [Warning] [omni.isaac.motion_generation.trajectory] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+2026-10-14 10:52:53 [32,667ms] [Warning] [omni.isaac.motion_generation.world_interface] omni.isaac.motion_generation has been deprecated in favor of isaacsim.robot_motion.motion_generation. Please update your code accordingly.
+[32.723s] [ext: omni.sensors.nv.materials-1.4.0-coreapi] startup
+[32.736s] [ext: omni.isaac.nucleus-1.0.3] startup
+2026-10-14 10:52:53 [32,699ms] [Warning] [omni.isaac.nucleus] omni.isaac.nucleus has been deprecated in favor of isaacsim.storage.native. Please update your code accordingly.
+2026-10-14 10:52:53 [32,699ms] [Warning] [omni.isaac.nucleus.nucleus] omni.isaac.nucleus.nucleus has been deprecated in favor of isaacsim.storage.native. Please update your code accordingly.
+[32.737s] [ext: omni.isaac.quadruped-3.0.2] startup
+2026-10-14 10:52:53 [32,700ms] [Warning] [omni.isaac.quadruped] omni.isaac.quadruped has been deprecated in favor of isaacsim.robot.policy.examples. Please update your code accordingly.
+[32.738s] [ext: omni.kit.manipulator.selector-1.1.1] startup
+[32.740s] [ext: omni.sensors.nv.wpm-2.4.0-coreapi] startup
+[32.756s] [ext: omni.sensors.nv.lidar-2.6.3-coreapi] startup
+[32.771s] [ext: omni.sensors.nv.ids-1.4.0-coreapi] startup
+[32.783s] [ext: isaacsim.robot.manipulators.examples-1.0.3] startup
+[32.784s] [ext: isaacsim.util.debug_draw-2.0.2] startup
+[32.803s] [ext: omni.sensors.tiled-0.0.6] startup
+[32.807s] [ext: omni.sensors.nv.radar-2.6.1-coreapi] startup
+[32.823s] [ext: omni.kit.widget.toolbar-1.7.3] startup
+[32.836s] [ext: omni.kit.manipulator.transform-106.0.1] startup
+[32.847s] [ext: isaacsim.sensors.physx-2.2.4] startup
+[32.859s] [ext: isaacsim.sensors.rtx-13.6.3] startup
+[32.878s] [ext: isaacsim.sensors.camera-0.2.9] startup
+[32.895s] [ext: isaacsim.cortex.framework-1.0.2] startup
+[32.901s] [ext: omni.kit.manipulator.tool.snap-1.5.12] startup
+[32.924s] [ext: omni.isaac.range_sensor-4.0.2] startup
+[32.934s] [ext: omni.isaac.surface_gripper-2.0.2] startup
+2026-10-14 10:52:53 [32,897ms] [Warning] [omni.isaac.surface_gripper] omni.isaac.surface_gripper has been deprecated in favor of isaacsim.robot.surface_gripper. Please update your code accordingly.
+[32.935s] [ext: omni.isaac.sensor-13.0.3] startup
+2026-10-14 10:52:53 [32,898ms] [Warning] [omni.isaac.sensor] omni.isaac.sensor has been deprecated in favor of isaacsim.sensors.camera, isaacsim.sensors.physics, isaacsim.sensors.physx, and isaacsim.sensors.rtx. Please update your code accordingly.
+2026-10-14 10:52:53 [32,898ms] [Warning] [omni.isaac.sensor.camera] omni.isaac.sensor.camera has been deprecated in favor of isaacsim.sensors.camera.camera. Please update your code accordingly.
+2026-10-14 10:52:53 [32,900ms] [Warning] [omni.isaac.sensor.camera_view] omni.isaac.sensor.camera_view has been deprecated in favor of isaacsim.sensors.camera.camera_view. Please update your code accordingly.
+2026-10-14 10:52:53 [32,905ms] [Warning] [omni.isaac.sensor.commands] omni.isaac.sensor.commands has been deprecated in favor of isaacsim.sensors.physics.commands, isaacsim.sensors.physx.commands, and isaacsim.sensors.rtx.commands. Please update your code accordingly.
+2026-10-14 10:52:53 [32,906ms] [Warning] [omni.isaac.sensor.contact_sensor] omni.isaac.sensor.contact_sensor has been deprecated in favor of isaacsim.sensors.physics.contact_sensor. Please update your code accordingly.
+2026-10-14 10:52:53 [32,907ms] [Warning] [omni.isaac.sensor.imu_sensor] omni.isaac.sensor.imu_sensor has been deprecated in favor of isaacsim.sensors.physics.imu_sensor. Please update your code accordingly.
+2026-10-14 10:52:53 [32,908ms] [Warning] [omni.isaac.sensor.lidar_rtx] omni.isaac.sensor.lidar_rtx has been deprecated in favor of isaacsim.sensors.rtx.lidar_rtx. Please update your code accordingly.
+2026-10-14 10:52:53 [32,908ms] [Warning] [omni.isaac.sensor.rotating_lidar_physX] omni.isaac.sensor.imu_sensor has been deprecated in favor of isaacsim.sensors.physix.rotating_lidar_physX. Please update your code accordingly.
+2026-10-14 10:52:53 [32,909ms] [Warning] [omni.isaac.sensor.scripts.samples.contact_sensor] omni.isaac.sensor.scripts.samples.contact_sensor has been deprecated in favor of isaacsim.sensors.physics.scripts.samples.contact_sensor. Please update your code accordingly.
+2026-10-14 10:52:53 [32,910ms] [Warning] [omni.isaac.sensor.scripts.samples.imu_sensor] omni.isaac.sensor.scripts.samples.imu_sensor has been deprecated in favor of isaacsim.sensors.physics.scripts.samples.imu_sensor. Please update your code accordingly.
+2026-10-14 10:52:53 [32,910ms] [Warning] [omni.isaac.sensor.scripts.samples.lightbeam_sensor] omni.isaac.sensor.scripts.samples.lightbeam_sensor has been deprecated in favor of isaacsim.sensors.physx.scripts.samples.lightbeam_sensor. Please update your code accordingly.
+[32.958s] [ext: omni.isaac.cortex-1.0.2] startup
+2026-10-14 10:52:53 [32,929ms] [Warning] [omni.isaac.cortex] omni.isaac.cortex has been deprecated in favor of isaacsim.cortex.framework. Please update your code accordingly.
+[32.967s] [ext: omni.kit.viewport.manipulator.transform-107.0.4] startup
+[32.973s] [ext: omni.debugdraw-0.1.3] startup
+[32.990s] [ext: omni.isaac.universal_robots-1.0.2] startup
+2026-10-14 10:52:53 [32,953ms] [Warning] [omni.isaac.universal_robots] omni.isaac.universal_robots has been deprecated in favor of isaacsim.robot.manipulators.examples.universal_robots. Please update your code accordingly.
+2026-10-14 10:52:53 [32,953ms] [Warning] [omni.isaac.universal_robots.kinematics_solver] omni.isaac.franka has been deprecated in favor of isaacsim.robot.manipulators.examples.universal_robots. Please update your code accordingly.
+2026-10-14 10:52:53 [32,954ms] [Warning] [omni.isaac.universal_robots.ur10] omni.isaac.franka has been deprecated in favor of isaacsim.robot.manipulators.examples.universal_robots. Please update your code accordingly.
+[32.992s] [ext: omni.isaac.utils-2.0.2] startup
+[33.000s] [ext: omni.kit.manipulator.prim.core-107.0.7] startup
+[33.012s] [ext: omni.fabric.commands-1.1.5] startup
+[33.021s] [ext: omni.kit.manipulator.selection-106.0.1] startup
+[33.023s] [ext: omni.kit.viewport.actions-107.0.0] startup
+[33.031s] [ext: omni.kit.manipulator.prim.usd-107.0.3] startup
+[33.042s] [ext: omni.kit.manipulator.prim.fabric-107.0.4] startup
+[33.045s] [ext: isaacsim.cortex.behaviors-2.0.3] startup
+[33.046s] [ext: omni.kit.widget.layers-1.8.2] startup
+[33.070s] [ext: omni.kit.viewport.menubar.display-107.0.3] startup
+[33.073s] [ext: omni.kit.manipulator.prim-107.0.0] startup
+[33.073s] [ext: omni.isaac.cortex.sample_behaviors-2.0.2] startup
+2026-10-14 10:52:53 [33,041ms] [Warning] [omni.isaac.cortex.sample_behaviors] omni.isaac.cortex.sample_behaviors has been deprecated in favor of isaacsim.cortex.behaviors. Please update your code accordingly.
+[33.085s] [ext: omni.graph.ui_nodes-1.40.1] startup
+[33.095s] [ext: omni.usdphysics.ui-106.5.7] startup
+[33.155s] [ext: omni.physx.commands-106.5.7] startup
+[33.161s] [ext: omni.kit.property.camera-1.0.9] startup
+[33.163s] [ext: omni.hydra.scene_api-0.1.2] startup
+[33.196s] [ext: omni.kit.property.geometry-1.3.3] startup
+[33.202s] [ext: omni.kit.property.light-1.0.11] startup
+[33.204s] [ext: omni.physx.ui-106.5.7] startup
+[33.258s] [ext: omni.kit.property.material-1.10.17] startup
+[33.271s] [ext: omni.kit.property.render-1.1.3] startup
+[33.274s] [ext: omni.kit.property.transform-1.5.10] startup
+[33.279s] [ext: omni.kit.property.audio-1.0.16] startup
+[33.288s] [ext: isaacsim.gui.property-1.0.4] startup
+[33.293s] [ext: omni.physx.demos-106.5.7] startup
+[33.324s] [ext: omni.kit.property.physx-106.5.7] startup
+[33.411s] [ext: omni.isaac.lula-4.0.2] startup
+2026-10-14 10:52:53 [33,374ms] [Warning] [omni.isaac.lula] omni.isaac.lula has been deprecated in favor of isaacsim.robot_motion.lula. Please update your code accordingly.
+[33.413s] [ext: omni.kit.property.bundle-1.3.2] startup
+[33.419s] [ext: omni.kit.property.isaac-1.0.2] startup
+2026-10-14 10:52:53 [33,384ms] [Warning] [omni.kit.property.isaac] omni.kit.property.isaac has been deprecated in favor of isaacsim.gui.property. Please update your code accordingly.
+2026-10-14 10:52:53 [33,384ms] [Warning] [omni.kit.property.isaac.widgets] omni.kit.property.isaac.widgets has been deprecated in favor of isaacsim.gui.property.widgets. Please update your code accordingly.
+[33.423s] [ext: omni.physx.vehicle-106.5.7] startup
+[33.456s] [ext: omni.kit.viewport.menubar.camera-107.0.2] startup
+[33.467s] [ext: omni.kit.viewport.menubar.lighting-106.0.2] startup
+[33.475s] [ext: omni.kit.viewport.menubar.render-107.0.8] startup
+[33.483s] [ext: omni.kit.viewport.menubar.settings-107.0.3] startup
+[33.496s] [ext: omni.kit.window.console-0.2.14] startup
+[33.511s] [ext: omni.physx.camera-106.5.7] startup
+[33.533s] [ext: omni.kit.window.toolbar-1.6.2] startup
+[33.542s] [ext: omni.isaac.version-2.0.2] startup
+2026-10-14 10:52:54 [33,506ms] [Warning] [omni.isaac.version] omni.isaac.version has been deprecated in favor of isaacsim.core.version. Please update your code accordingly.
+[33.546s] [ext: isaacsim.robot.wheeled_robots-4.0.3] startup
+[33.560s] [ext: omni.physx.cct-106.5.7] startup
+[33.596s] [ext: omni.physx.graph-106.5.7] startup
+[33.641s] [ext: isaacsim.replicator.writers-1.0.1] startup
+[33.690s] [ext: omni.physx.supportui-106.5.7] startup
+[33.728s] [ext: omni.physx.telemetry-106.5.7] startup
+[33.741s] [ext: omni.isaac.wheeled_robots-3.0.3] startup
+2026-10-14 10:52:54 [33,712ms] [Warning] [omni.isaac.wheeled_robots] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,712ms] [Warning] [omni.isaac.wheeled_robots.controllers] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,713ms] [Warning] [omni.isaac.wheeled_robots.controllers.ackermann_controller] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,713ms] [Warning] [omni.isaac.wheeled_robots.controllers.differential_controller] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,713ms] [Warning] [omni.isaac.wheeled_robots.controllers.holonomic_controller] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,714ms] [Warning] [omni.isaac.wheeled_robots.controllers.quintic_path_planner] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,714ms] [Warning] [omni.isaac.wheeled_robots.controllers.stanley_control] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,714ms] [Warning] [omni.isaac.wheeled_robots.controllers.wheel_base_pose_controller] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,714ms] [Warning] [omni.isaac.wheeled_robots.impl] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,715ms] [Warning] [omni.isaac.wheeled_robots.robots] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,715ms] [Warning] [omni.isaac.wheeled_robots.robots.holonomic_robot_usd_setup] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+2026-10-14 10:52:54 [33,715ms] [Warning] [omni.isaac.wheeled_robots.robots.wheeled_robot] omni.isaac.wheeled_robots has been deprecated in favor of isaacsim.robot.wheeled_robots. Please update your code accordingly.
+[33.764s] [ext: omni.isaac.franka-1.0.2] startup
+2026-10-14 10:52:54 [33,727ms] [Warning] [omni.isaac.franka] omni.isaac.franka has been deprecated in favor of isaacsim.robot.manipulators.examples.franka. Please update your code accordingly.
+2026-10-14 10:52:54 [33,727ms] [Warning] [omni.isaac.franka.franka] omni.isaac.franka has been deprecated in favor of isaacsim.robot.manipulators.examples.franka. Please update your code accordingly.
+2026-10-14 10:52:54 [33,729ms] [Warning] [omni.isaac.franka.kinematics_solver] omni.isaac.franka has been deprecated in favor of isaacsim.robot.manipulators.examples.franka. Please update your code accordingly.
+[33.772s] [ext: isaacsim.replicator.domain_randomization-1.0.2] startup
+[33.775s] [ext: isaacsim.replicator.examples-1.1.2] startup
+[33.776s] [ext: omni.kit.window.status_bar-0.1.7] startup
+[33.811s] [ext: omni.rtx.window.settings-0.6.17] startup
+[33.825s] [ext: omni.usd.metrics.assembler-106.5.0] startup
+[33.846s] [ext: omni.physx.bundle-106.5.7] startup
+[33.848s] [ext: isaacsim.app.about-2.0.7] startup
+[33.850s] [ext: omni.replicator.isaac-2.0.3] startup
+2026-10-14 10:52:54 [33,812ms] [Warning] [omni.replicator.isaac] omni.replicator.isaac has been deprecated in favor of isaacsim.replicator.domain_randomization, isaacsim.replicator.examples, isaacsim.replicator.writers. Please update your code accordingly.
+[33.851s] [ext: omni.replicator.replicator_yaml-2.0.10] startup
+[33.887s] [ext: omni.rtx.settings.core-0.6.3] startup
+[33.899s] [ext: omni.usd.metrics.assembler.ui-106.5.0] startup
+[33.910s] [ext: isaacsim.simulation_app-2.4.2] startup
+[33.920s] [ext: omni.isaac.window.about-2.0.2] startup
+2026-10-14 10:52:54 [33,885ms] [Warning] [omni.isaac.window.about] omni.isaac.window.about has been deprecated in favor of isaacsim.app.about. Please update your code accordingly.
+2026-10-14 10:52:54 [33,885ms] [Warning] [omni.isaac.window.about.about] omni.isaac.window.about.about has been deprecated in favor of isaacsim.app.about.about. Please update your code accordingly.
+[33.924s] [ext: semantics.schema.editor-0.3.10] startup
+[33.934s] [ext: omni.kit.ui.actions-1.0.2] startup
+[33.937s] [ext: semantics.schema.property-1.0.5] startup
+[33.939s] [ext: omni.kit.manipulator.camera-106.0.3] startup
+[33.954s] [ext: omni.isaac.kit-2.0.3] startup
+2026-10-14 10:52:54 [33,918ms] [Warning] [omni.isaac.kit] omni.isaac.kit has been deprecated in favor of isaacsim.simulation_app. Please update your code accordingly.
+[33.956s] [ext: omni.isaac.asset_browser-1.0.2] startup
+2026-10-14 10:52:54 [33,919ms] [Warning] [omni.isaac.asset_browser] omni.isaac.asset_browser has been deprecated in favor of isaacsim.asset.browser. Please update your code accordingly.
+[33.957s] [ext: isaacsim.core.throttling-2.0.2] startup
+[33.959s] [ext: omni.kit.menu.common-1.1.9] startup
+[33.961s] [ext: isaacsim.exp.base-4.5.0] startup
+[33.961s] [ext: isaacsim.exp.base.python-4.5.0] startup
+[33.970s] Simulation App Starting
+[34.312s] app ready
+2026-10-14 10:52:55 [34,899ms] [Warning] [rtx.scenedb.plugin] SceneDbContext : TLAS limit buffer size 2921508224
+2026-10-14 10:52:55 [34,899ms] [Warning] [rtx.scenedb.plugin] SceneDbContext : TLAS limit : valid true, within: false
+2026-10-14 10:52:58 [37,737ms] [Warning] [omni.usd-abi.plugin] No setting was found for '/rtx-defaults-transient/meshlights/forceDisable'
+2026-10-14 10:52:58 [38,091ms] [Warning] [omni.usd-abi.plugin] No setting was found for '/rtx-defaults/post/dlss/execMode'
+2026-10-14 10:53:05 [45,126ms] [Warning] [carb.tasking.plugin] carb.tasking is likely stuck. All threads are busy with same tasks for more than 1 seconds with waiting tasks. Starting an emergency helper thread.
+2026-10-14 10:53:06 [46,132ms] [Warning] [carb.tasking.plugin] carb.tasking is likely stuck. All threads are busy with same tasks for more than 1 seconds with waiting tasks. Starting an emergency helper thread.
+2026-10-14 10:53:19 [58,486ms] [Warning] [rtx.postprocessing.plugin] DLSS increasing input dimensions: Render resolution of (320, 240) is below minimal input resolution of 300.
+[60.020s] Simulation App Startup Complete
+[isaac_app] renderer activeGpu=0 (want 0), multiGpu=False
+[61.284s] [ext: omni.physx.fabric-106.5.7] startup
+2026-10-14 10:53:25 [65,268ms] [Warning] [omni.physicsschema.plugin] ScaleOrientation is not supported for rigid bodies, prim path: /World/envs/env_0/Robot/hande_left_finger. You may ignore this if the scale is close to uniform.
+2026-10-14 10:53:25 [65,269ms] [Warning] [omni.physicsschema.plugin] ScaleOrientation is not supported for rigid bodies, prim path: /World/envs/env_0/Robot/hande_right_finger. You may ignore this if the scale is close to uniform.
+2026-10-14 10:53:25 [65,315ms] [Warning] [omni.physx.plugin] Detected an articulation at /World/envs/env_0/Robot with more than 4 velocity iterations being added to a TGS scene.The related behavior changed recently, please consult the changelog. This warning will only print once.
+2026-10-14 10:53:26 [65,639ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,639ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,640ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,640ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,641ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,641ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,641ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:26 [65,641ms] [Warning] [omni.physx.tensors.plugin] Duplicate joint name 'FixedJoint' in articulation metatype
+2026-10-14 10:53:27 [67,123ms] [Warning] [carb] Client omni.hydratexture.plugin has acquired [carb::settings::ISettings v1.0] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)
+2026-10-14 10:53:28 [67,922ms] [Warning] [carb] Client omni.hydratexture.plugin has acquired [carb::dictionary::IDictionary v1.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)
+[planner] база повёрнута на 0: якобиан расходится на 1.9997
+[planner] база повёрнута на 180: якобиан расходится на 0.0000
+[planner] T_post = [[-0.99996, 0.0, 0.00939, 0.00068], [0.00939, 0.0, 0.99996, 0.00046], [0.0, 1.0, -0.0, 0.21432], [-0.0, 0.0, 0.0, 1.0]]
+[fly] затравка IK [1.21, -1.89, 2.21, -1.89, -1.57, 2.79], manip 0.131
+2026-10-14 10:53:56 [95,683ms] [Error] [omni.kit.app._impl] [py stderr]: /home/Invader17/grasp_task/code/results/7_chips/common/qmap.py:101: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  missing, unexpected = net.load_state_dict(torch.load(path, map_location="cpu")["net"], strict=False)
+[ckpt] бэкапа нет ни на диске, ни на HF (RemoteEntryNotFoundError), начинаю с нуля
+[init] веса старые, film False, adapter True, учится 22616 весов, буфер пустой
+gif /home/Invader17/grasp_task/ckpt/chips_adapt/viz/video_000000_chips_ok.gif, 30 кадров
+[eval] попытка 0, 0.06 ч: chips 19/64, tetrapak 32/32, can 31/32
+[13:57:48] ВНИМАНИЕ: чужой процесс 2825814 пропал с GPU 5 во время нашего запуска (не снимаюсь, решение 14.10)
+попытка      8  0.07 ч  eps 0.50  взял 1/8  старых 0  недостижимо 0  loss 0.369
+попытка     16  0.07 ч  eps 0.50  взял 4/8  старых 0  недостижимо 0  loss 0.561
+попытка     24  0.07 ч  eps 0.50  взял 3/8  старых 0  недостижимо 0  loss 0.675
+попытка     32  0.07 ч  eps 0.50  взял 5/8  старых 0  недостижимо 0  loss 0.959
+попытка     40  0.08 ч  eps 0.50  взял 2/8  старых 0  недостижимо 0  loss 0.796
+попытка     48  0.08 ч  eps 0.50  взял 3/8  старых 0  недостижимо 0  loss 0.801
+попытка     56  0.09 ч  eps 0.50  взял 3/8  старых 0  недостижимо 0  loss 0.812
+попытка     64  0.09 ч  eps 0.49  взял 5/8  старых 0  недостижимо 0  loss 0.793
+попытка     72  0.10 ч  eps 0.49  взял 4/8  старых 0  недостижимо 0  loss 0.790
+попытка     80  0.10 ч  eps 0.49  взял 2/8  старых 0  недостижимо 0  loss 0.748
+попытка     88  0.10 ч  eps 0.49  взял 2/8  старых 0  недостижимо 0  loss 0.679
+попытка     96  0.10 ч  eps 0.49  взял 3/8  старых 0  недостижимо 0  loss 0.683
+попытка    104  0.11 ч  eps 0.49  взял 3/8  старых 0  недостижимо 0  loss 0.696
+попытка    112  0.11 ч  eps 0.49  взял 3/8  старых 0  недостижимо 0  loss 0.714
+попытка    120  0.11 ч  eps 0.49  взял 2/8  старых 0  недостижимо 0  loss 0.674
+попытка    128  0.12 ч  eps 0.49  взял 0/8  старых 0  недостижимо 0  loss 0.647
+попытка    136  0.12 ч  eps 0.49  взял 5/8  старых 0  недостижимо 0  loss 0.689
+попытка    144  0.12 ч  eps 0.49  взял 1/8  старых 0  недостижимо 0  loss 0.663
+попытка    152  0.12 ч  eps 0.49  взял 2/8  старых 0  недостижимо 0  loss 0.676
+попытка    160  0.13 ч  eps 0.48  взял 2/8  старых 0  недостижимо 0  loss 0.645
+попытка    168  0.13 ч  eps 0.48  взял 2/8  старых 0  недостижимо 0  loss 0.666
+попытка    176  0.13 ч  eps 0.48  взял 4/8  старых 0  недостижимо 0  loss 0.603
+попытка    184  0.14 ч  eps 0.48  взял 1/8  старых 0  недостижимо 0  loss 0.667
+попытка    192  0.14 ч  eps 0.48  взял 4/8  старых 0  недостижимо 0  loss 0.644
+попытка    200  0.14 ч  eps 0.48  взял 2/8  старых 0  недостижимо 0  loss 0.641
+попытка    208  0.15 ч  eps 0.48  взял 1/8  старых 0  недостижимо 0  loss 0.591
+попытка    216  0.15 ч  eps 0.48  взял 4/8  старых 0  недостижимо 0  loss 0.595
+попытка    224  0.15 ч  eps 0.48  взял 1/8  старых 0  недостижимо 0  loss 0.599
+попытка    232  0.15 ч  eps 0.48  взял 3/8  старых 0  недостижимо 0  loss 0.601
+попытка    240  0.16 ч  eps 0.48  взял 2/8  старых 0  недостижимо 0  loss 0.633
+попытка    248  0.16 ч  eps 0.48  взял 2/8  старых 0  недостижимо 0  loss 0.614
+попытка    256  0.16 ч  eps 0.48  взял 4/8  старых 0  недостижимо 0  loss 0.608
+попытка    264  0.16 ч  eps 0.47  взял 2/8  старых 0  недостижимо 0  loss 0.635
+попытка    272  0.17 ч  eps 0.47  взял 2/8  старых 0  недостижимо 0  loss 0.640
+[ckpt] попытка 272, 0.17 ч, буфер да
+попытка    280  0.17 ч  eps 0.47  взял 3/8  старых 0  недостижимо 0  loss 0.597
+попытка    288  0.18 ч  eps 0.47  взял 4/8  старых 0  недостижимо 0  loss 0.563
+попытка    296  0.18 ч  eps 0.47  взял 1/8  старых 0  недостижимо 0  loss 0.601
+попытка    304  0.18 ч  eps 0.47  взял 1/8  старых 0  недостижимо 0  loss 0.622
+попытка    312  0.19 ч  eps 0.47  взял 3/8  старых 0  недостижимо 0  loss 0.603
+попытка    320  0.19 ч  eps 0.47  взял 6/8  старых 0  недостижимо 0  loss 0.612
+попытка    328  0.19 ч  eps 0.47  взял 3/8  старых 0  недостижимо 0  loss 0.589
+попытка    336  0.20 ч  eps 0.47  взял 3/8  старых 0  недостижимо 0  loss 0.644
+попытка    344  0.20 ч  eps 0.47  взял 5/8  старых 0  недостижимо 0  loss 0.615
+попытка    352  0.20 ч  eps 0.47  взял 3/8  старых 0  недостижимо 0  loss 0.635
+попытка    360  0.20 ч  eps 0.46  взял 1/8  старых 0  недостижимо 0  loss 0.622
+попытка    368  0.21 ч  eps 0.46  взял 0/8  старых 0  недостижимо 0  loss 0.609
+попытка    376  0.21 ч  eps 0.46  взял 2/8  старых 0  недостижимо 0  loss 0.638
+попытка    384  0.22 ч  eps 0.46  взял 5/8  старых 0  недостижимо 0  loss 0.582
+попытка    392  0.22 ч  eps 0.46  взял 3/8  старых 0  недостижимо 0  loss 0.602
+попытка    400  0.22 ч  eps 0.46  взял 1/8  старых 0  недостижимо 0  loss 0.595
+попытка    408  0.23 ч  eps 0.46  взял 2/8  старых 0  недостижимо 0  loss 0.573
+попытка    416  0.23 ч  eps 0.46  взял 3/8  старых 0  недостижимо 0  loss 0.619
+попытка    424  0.23 ч  eps 0.46  взял 6/8  старых 0  недостижимо 0  loss 0.611
+попытка    432  0.23 ч  eps 0.46  взял 3/8  старых 0  недостижимо 0  loss 0.607
+попытка    440  0.24 ч  eps 0.46  взял 4/8  старых 0  недостижимо 0  loss 0.601
+попытка    448  0.24 ч  eps 0.46  взял 0/8  старых 0  недостижимо 0  loss 0.621
+попытка    456  0.24 ч  eps 0.46  взял 3/8  старых 0  недостижимо 0  loss 0.560
+попытка    464  0.24 ч  eps 0.45  взял 4/8  старых 0  недостижимо 0  loss 0.576
+попытка    472  0.25 ч  eps 0.45  взял 3/8  старых 0  недостижимо 0  loss 0.620
+попытка    480  0.25 ч  eps 0.45  взял 2/8  старых 0  недостижимо 0  loss 0.583
+попытка    488  0.25 ч  eps 0.45  взял 2/8  старых 0  недостижимо 0  loss 0.591
+попытка    496  0.25 ч  eps 0.45  взял 5/8  старых 0  недостижимо 0  loss 0.586
+попытка    504  0.26 ч  eps 0.45  взял 4/8  старых 0  недостижимо 0  loss 0.608
+попытка    512  0.26 ч  eps 0.45  взял 4/8  старых 0  недостижимо 0  loss 0.635
+попытка    520  0.26 ч  eps 0.45  взял 1/8  старых 0  недостижимо 0  loss 0.582
+попытка    528  0.27 ч  eps 0.45  взял 3/8  старых 0  недостижимо 0  loss 0.567
+попытка    536  0.27 ч  eps 0.45  взял 4/8  старых 0  недостижимо 0  loss 0.569
+попытка    544  0.28 ч  eps 0.45  взял 6/8  старых 0  недостижимо 0  loss 0.606
+попытка    552  0.28 ч  eps 0.45  взял 4/8  старых 0  недостижимо 0  loss 0.592
+попытка    560  0.28 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.600
+попытка    568  0.29 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.605
+попытка    576  0.29 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.621
+попытка    584  0.29 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.584
+попытка    592  0.30 ч  eps 0.44  взял 5/8  старых 0  недостижимо 0  loss 0.580
+попытка    600  0.30 ч  eps 0.44  взял 1/8  старых 0  недостижимо 0  loss 0.614
+попытка    608  0.30 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.579
+попытка    616  0.31 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.567
+попытка    624  0.31 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.596
+попытка    632  0.32 ч  eps 0.44  взял 4/8  старых 0  недостижимо 0  loss 0.626
+попытка    640  0.32 ч  eps 0.44  взял 1/8  старых 0  недостижимо 0  loss 0.603
+попытка    648  0.33 ч  eps 0.44  взял 5/8  старых 0  недостижимо 0  loss 0.599
+попытка    656  0.33 ч  eps 0.44  взял 3/8  старых 0  недостижимо 0  loss 0.577
+попытка    664  0.33 ч  eps 0.43  взял 4/8  старых 0  недостижимо 0  loss 0.603
+попытка    672  0.34 ч  eps 0.43  взял 5/8  старых 0  недостижимо 0  loss 0.605
+[ckpt] попытка 672, 0.34 ч, буфер да
+попытка    680  0.34 ч  eps 0.43  взял 4/8  старых 0  недостижимо 0  loss 0.645
+попытка    688  0.35 ч  eps 0.43  взял 1/8  старых 0  недостижимо 0  loss 0.626
+попытка    696  0.35 ч  eps 0.43  взял 3/8  старых 0  недостижимо 0  loss 0.601
+попытка    704  0.36 ч  eps 0.43  взял 4/8  старых 0  недостижимо 0  loss 0.601
+попытка    712  0.36 ч  eps 0.43  взял 4/8  старых 0  недостижимо 0  loss 0.573
+попытка    720  0.36 ч  eps 0.43  взял 3/8  старых 0  недостижимо 0  loss 0.609
+попытка    728  0.37 ч  eps 0.43  взял 3/8  старых 0  недостижимо 0  loss 0.621
+попытка    736  0.37 ч  eps 0.43  взял 4/8  старых 0  недостижимо 0  loss 0.554
+попытка    744  0.37 ч  eps 0.43  взял 2/8  старых 0  недостижимо 0  loss 0.584
+попытка    752  0.37 ч  eps 0.43  взял 5/8  старых 0  недостижимо 0  loss 0.565
+попытка    760  0.38 ч  eps 0.42  взял 3/8  старых 0  недостижимо 0  loss 0.558
+попытка    768  0.38 ч  eps 0.42  взял 6/8  старых 0  недостижимо 0  loss 0.596
+попытка    776  0.38 ч  eps 0.42  взял 3/8  старых 0  недостижимо 0  loss 0.616
+попытка    784  0.39 ч  eps 0.42  взял 2/8  старых 0  недостижимо 0  loss 0.561
+попытка    792  0.39 ч  eps 0.42  взял 2/8  старых 0  недостижимо 0  loss 0.615
+попытка    800  0.39 ч  eps 0.42  взял 1/8  старых 0  недостижимо 0  loss 0.582
+[eval] попытка 800, 0.44 ч: chips 39/64, tetrapak 30/32, can 26/32
+попытка    808  0.44 ч  eps 0.42  взял 2/8  старых 0  недостижимо 0  loss 0.574
+попытка    816  0.45 ч  eps 0.42  взял 3/8  старых 0  недостижимо 0  loss 0.606
+попытка    824  0.45 ч  eps 0.42  взял 0/8  старых 0  недостижимо 0  loss 0.592
+попытка    832  0.45 ч  eps 0.42  взял 4/8  старых 0  недостижимо 0  loss 0.592
+попытка    840  0.46 ч  eps 0.42  взял 3/8  старых 0  недостижимо 0  loss 0.568
+попытка    848  0.46 ч  eps 0.42  взял 4/8  старых 0  недостижимо 0  loss 0.540
+попытка    856  0.46 ч  eps 0.42  взял 5/8  старых 0  недостижимо 0  loss 0.546
+попытка    864  0.47 ч  eps 0.41  взял 2/8  старых 0  недостижимо 0  loss 0.602
+попытка    872  0.47 ч  eps 0.41  взял 7/8  старых 0  недостижимо 0  loss 0.613
+попытка    880  0.48 ч  eps 0.41  взял 4/8  старых 0  недостижимо 0  loss 0.631
+попытка    888  0.48 ч  eps 0.41  взял 3/8  старых 0  недостижимо 0  loss 0.609
+попытка    896  0.49 ч  eps 0.41  взял 4/8  старых 0  недостижимо 0  loss 0.580
+попытка    904  0.49 ч  eps 0.41  взял 1/8  старых 0  недостижимо 0  loss 0.591
+попытка    912  0.50 ч  eps 0.41  взял 5/8  старых 0  недостижимо 0  loss 0.617
+попытка    920  0.50 ч  eps 0.41  взял 5/8  старых 0  недостижимо 0  loss 0.597
+попытка    928  0.50 ч  eps 0.41  взял 3/8  старых 0  недостижимо 0  loss 0.587
+[ckpt] попытка 928, 0.50 ч, буфер да
+попытка    936  0.51 ч  eps 0.41  взял 4/8  старых 0  недостижимо 0  loss 0.597
+попытка    944  0.51 ч  eps 0.41  взял 2/8  старых 0  недостижимо 0  loss 0.576
+попытка    952  0.52 ч  eps 0.41  взял 5/8  старых 0  недостижимо 0  loss 0.621
+попытка    960  0.52 ч  eps 0.40  взял 0/8  старых 0  недостижимо 0  loss 0.584
+попытка    968  0.52 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.579
+попытка    976  0.53 ч  eps 0.40  взял 4/8  старых 0  недостижимо 0  loss 0.559
+попытка    984  0.53 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.631
+попытка    992  0.53 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.578
+попытка   1000  0.54 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.557
+попытка   1008  0.54 ч  eps 0.40  взял 1/8  старых 0  недостижимо 0  loss 0.541
+попытка   1016  0.54 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.634
+попытка   1024  0.54 ч  eps 0.40  взял 4/8  старых 0  недостижимо 0  loss 0.567
+попытка   1032  0.55 ч  eps 0.40  взял 1/8  старых 0  недостижимо 0  loss 0.528
+попытка   1040  0.55 ч  eps 0.40  взял 5/8  старых 0  недостижимо 0  loss 0.603
+попытка   1048  0.55 ч  eps 0.40  взял 3/8  старых 0  недостижимо 0  loss 0.616
+попытка   1056  0.56 ч  eps 0.40  взял 4/8  старых 0  недостижимо 0  loss 0.556
+попытка   1064  0.56 ч  eps 0.39  взял 5/8  старых 0  недостижимо 0  loss 0.585
+попытка   1072  0.56 ч  eps 0.39  взял 3/8  старых 0  недостижимо 0  loss 0.555
+попытка   1080  0.56 ч  eps 0.39  взял 4/8  старых 0  недостижимо 0  loss 0.587
+попытка   1088  0.57 ч  eps 0.39  взял 6/8  старых 0  недостижимо 0  loss 0.572
+попытка   1096  0.57 ч  eps 0.39  взял 4/8  старых 0  недостижимо 0  loss 0.554
+попытка   1104  0.57 ч  eps 0.39  взял 3/8  старых 0  недостижимо 0  loss 0.572
+попытка   1112  0.58 ч  eps 0.39  взял 2/8  старых 0  недостижимо 0  loss 0.554
+попытка   1120  0.58 ч  eps 0.39  взял 4/8  старых 0  недостижимо 0  loss 0.586
+попытка   1128  0.59 ч  eps 0.39  взял 4/8  старых 0  недостижимо 0  loss 0.537
+попытка   1136  0.59 ч  eps 0.39  взял 2/8  старых 0  недостижимо 0  loss 0.555
+попытка   1144  0.59 ч  eps 0.39  взял 5/8  старых 0  недостижимо 0  loss 0.599
+попытка   1152  0.60 ч  eps 0.39  взял 4/8  старых 0  недостижимо 0  loss 0.563
+попытка   1160  0.60 ч  eps 0.38  взял 3/8  старых 0  недостижимо 0  loss 0.595
+попытка   1168  0.60 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.520
+попытка   1176  0.61 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.571
+попытка   1184  0.61 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.553
+попытка   1192  0.62 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.580
+попытка   1200  0.62 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.600
+попытка   1208  0.62 ч  eps 0.38  взял 5/8  старых 0  недостижимо 0  loss 0.548
+попытка   1216  0.63 ч  eps 0.38  взял 3/8  старых 0  недостижимо 0  loss 0.549
+попытка   1224  0.63 ч  eps 0.38  взял 6/8  старых 0  недостижимо 0  loss 0.559
+попытка   1232  0.64 ч  eps 0.38  взял 2/8  старых 0  недостижимо 0  loss 0.603
+попытка   1240  0.64 ч  eps 0.38  взял 3/8  старых 0  недостижимо 0  loss 0.528
+попытка   1248  0.64 ч  eps 0.38  взял 5/8  старых 0  недостижимо 0  loss 0.576
+попытка   1256  0.65 ч  eps 0.38  взял 6/8  старых 0  недостижимо 0  loss 0.533
+попытка   1264  0.66 ч  eps 0.37  взял 5/8  старых 0  недостижимо 0  loss 0.582
+попытка   1272  0.66 ч  eps 0.37  взял 4/8  старых 0  недостижимо 0  loss 0.597
+попытка   1280  0.66 ч  eps 0.37  взял 5/8  старых 0  недостижимо 0  loss 0.588
+попытка   1288  0.66 ч  eps 0.37  взял 3/8  старых 0  недостижимо 0  loss 0.568
+попытка   1296  0.67 ч  eps 0.37  взял 6/8  старых 0  недостижимо 0  loss 0.553
+попытка   1304  0.67 ч  eps 0.37  взял 5/8  старых 0  недостижимо 0  loss 0.572
+попытка   1312  0.68 ч  eps 0.37  взял 4/8  старых 0  недостижимо 0  loss 0.632
+[ckpt] попытка 1312, 0.68 ч, буфер да
+попытка   1320  0.68 ч  eps 0.37  взял 5/8  старых 0  недостижимо 0  loss 0.585
+попытка   1328  0.68 ч  eps 0.37  взял 6/8  старых 0  недостижимо 0  loss 0.587
+попытка   1336  0.68 ч  eps 0.37  взял 2/8  старых 0  недостижимо 0  loss 0.508
+попытка   1344  0.69 ч  eps 0.37  взял 4/8  старых 0  недостижимо 0  loss 0.594
+попытка   1352  0.69 ч  eps 0.37  взял 7/8  старых 0  недостижимо 0  loss 0.519
+попытка   1360  0.69 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.654
+попытка   1368  0.70 ч  eps 0.36  взял 3/8  старых 0  недостижимо 0  loss 0.571
+попытка   1376  0.70 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.588
+попытка   1384  0.70 ч  eps 0.36  взял 4/8  старых 0  недостижимо 0  loss 0.548
+попытка   1392  0.71 ч  eps 0.36  взял 3/8  старых 0  недостижимо 0  loss 0.537
+попытка   1400  0.71 ч  eps 0.36  взял 3/8  старых 0  недостижимо 0  loss 0.630
+попытка   1408  0.71 ч  eps 0.36  взял 3/8  старых 0  недостижимо 0  loss 0.570
+попытка   1416  0.72 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.545
+попытка   1424  0.72 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.588
+попытка   1432  0.73 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.523
+попытка   1440  0.73 ч  eps 0.36  взял 2/8  старых 0  недостижимо 0  loss 0.550
+попытка   1448  0.73 ч  eps 0.36  взял 5/8  старых 0  недостижимо 0  loss 0.569
+попытка   1456  0.74 ч  eps 0.36  взял 4/8  старых 0  недостижимо 0  loss 0.563
+попытка   1464  0.74 ч  eps 0.35  взял 7/8  старых 0  недостижимо 0  loss 0.570
+попытка   1472  0.75 ч  eps 0.35  взял 6/8  старых 0  недостижимо 0  loss 0.582
+попытка   1480  0.75 ч  eps 0.35  взял 3/8  старых 0  недостижимо 0  loss 0.522
+попытка   1488  0.76 ч  eps 0.35  взял 2/8  старых 0  недостижимо 0  loss 0.559
+попытка   1496  0.76 ч  eps 0.35  взял 4/8  старых 0  недостижимо 0  loss 0.572
+попытка   1504  0.76 ч  eps 0.35  взял 4/8  старых 0  недостижимо 0  loss 0.536
+попытка   1512  0.76 ч  eps 0.35  взял 4/8  старых 0  недостижимо 0  loss 0.502
+попытка   1520  0.77 ч  eps 0.35  взял 5/8  старых 0  недостижимо 0  loss 0.589
+попытка   1528  0.77 ч  eps 0.35  взял 2/8  старых 0  недостижимо 0  loss 0.569
+попытка   1536  0.77 ч  eps 0.35  взял 5/8  старых 0  недостижимо 0  loss 0.563
+попытка   1544  0.77 ч  eps 0.35  взял 6/8  старых 0  недостижимо 0  loss 0.564
+попытка   1552  0.78 ч  eps 0.35  взял 6/8  старых 0  недостижимо 0  loss 0.603
+попытка   1560  0.78 ч  eps 0.34  взял 2/8  старых 0  недостижимо 0  loss 0.527
+попытка   1568  0.78 ч  eps 0.34  взял 2/8  старых 0  недостижимо 0  loss 0.602
+попытка   1576  0.79 ч  eps 0.34  взял 3/8  старых 0  недостижимо 0  loss 0.513
+попытка   1584  0.80 ч  eps 0.34  взял 6/8  старых 0  недостижимо 0  loss 0.521
+попытка   1592  0.80 ч  eps 0.34  взял 3/8  старых 0  недостижимо 0  loss 0.558
+попытка   1600  0.80 ч  eps 0.34  взял 4/8  старых 0  недостижимо 0  loss 0.588
+gif /home/Invader17/grasp_task/ckpt/chips_adapt/viz/video_001600_chips_ok.gif, 30 кадров
+[eval] попытка 1600, 0.86 ч: chips 39/64, tetrapak 24/32, can 2/32
+попытка   1608  0.87 ч  eps 0.34  взял 4/8  старых 0  недостижимо 0  loss 0.573
+[ckpt] попытка 1608, 0.87 ч, буфер да
+попытка   1616  0.88 ч  eps 0.34  взял 4/8  старых 0  недостижимо 0  loss 0.593
+попытка   1624  0.88 ч  eps 0.34  взял 5/8  старых 0  недостижимо 0  loss 0.550
+попытка   1632  0.89 ч  eps 0.34  взял 2/8  старых 0  недостижимо 0  loss 0.522
+попытка   1640  0.89 ч  eps 0.34  взял 5/8  старых 0  недостижимо 0  loss 0.575
+попытка   1648  0.89 ч  eps 0.34  взял 6/8  старых 0  недостижимо 0  loss 0.554
+попытка   1656  0.90 ч  eps 0.34  взял 4/8  старых 0  недостижимо 0  loss 0.551
+попытка   1664  0.90 ч  eps 0.33  взял 5/8  старых 0  недостижимо 0  loss 0.573
+попытка   1672  0.90 ч  eps 0.33  взял 5/8  старых 0  недостижимо 0  loss 0.530
+попытка   1680  0.91 ч  eps 0.33  взял 5/8  старых 0  недостижимо 0  loss 0.569
+попытка   1688  0.91 ч  eps 0.33  взял 6/8  старых 0  недостижимо 0  loss 0.558
+попытка   1696  0.91 ч  eps 0.33  взял 3/8  старых 0  недостижимо 0  loss 0.582
+попытка   1704  0.92 ч  eps 0.33  взял 4/8  старых 0  недостижимо 0  loss 0.556
+попытка   1712  0.92 ч  eps 0.33  взял 5/8  старых 0  недостижимо 0  loss 0.589
+попытка   1720  0.92 ч  eps 0.33  взял 4/8  старых 0  недостижимо 0  loss 0.566
+попытка   1728  0.93 ч  eps 0.33  взял 5/8  старых 0  недостижимо 0  loss 0.553
+попытка   1736  0.93 ч  eps 0.33  взял 4/8  старых 0  недостижимо 0  loss 0.579
+попытка   1744  0.94 ч  eps 0.33  взял 4/8  старых 0  недостижимо 0  loss 0.527
+попытка   1752  0.94 ч  eps 0.33  взял 4/8  старых 0  недостижимо 0  loss 0.541
+попытка   1760  0.94 ч  eps 0.32  взял 4/8  старых 0  недостижимо 0  loss 0.532
+попытка   1768  0.94 ч  eps 0.32  взял 4/8  старых 0  недостижимо 0  loss 0.549
+попытка   1776  0.95 ч  eps 0.32  взял 2/8  старых 0  недостижимо 0  loss 0.581
+попытка   1784  0.95 ч  eps 0.32  взял 5/8  старых 0  недостижимо 0  loss 0.524
+попытка   1792  0.95 ч  eps 0.32  взял 3/8  старых 0  недостижимо 0  loss 0.500
+попытка   1800  0.96 ч  eps 0.32  взял 2/8  старых 0  недостижимо 0  loss 0.531
+попытка   1808  0.96 ч  eps 0.32  взял 4/8  старых 0  недостижимо 0  loss 0.544
+попытка   1816  0.96 ч  eps 0.32  взял 4/8  старых 0  недостижимо 0  loss 0.514
+попытка   1824  0.97 ч  eps 0.32  взял 4/8  старых 0  недостижимо 0  loss 0.571
+попытка   1832  0.97 ч  eps 0.32  взял 5/8  старых 0  недостижимо 0  loss 0.585
+попытка   1840  0.98 ч  eps 0.32  взял 5/8  старых 0  недостижимо 0  loss 0.548
+попытка   1848  0.98 ч  eps 0.32  взял 3/8  старых 0  недостижимо 0  loss 0.618
+попытка   1856  0.98 ч  eps 0.32  взял 3/8  старых 0  недостижимо 0  loss 0.520
+попытка   1864  0.98 ч  eps 0.31  взял 5/8  старых 0  недостижимо 0  loss 0.519
+попытка   1872  0.99 ч  eps 0.31  взял 4/8  старых 0  недостижимо 0  loss 0.513
+попытка   1880  0.99 ч  eps 0.31  взял 5/8  старых 0  недостижимо 0  loss 0.544
+попытка   1888  0.99 ч  eps 0.31  взял 6/8  старых 0  недостижимо 0  loss 0.576
+попытка   1896  1.00 ч  eps 0.31  взял 4/8  старых 0  недостижимо 0  loss 0.557
+попытка   1904  1.00 ч  eps 0.31  взял 5/8  старых 0  недостижимо 0  loss 0.566
+попытка   1912  1.01 ч  eps 0.31  взял 6/8  старых 0  недостижимо 0  loss 0.552
+попытка   1920  1.01 ч  eps 0.31  взял 7/8  старых 0  недостижимо 0  loss 0.570
+попытка   1928  1.01 ч  eps 0.31  взял 4/8  старых 0  недостижимо 0  loss 0.601
+попытка   1936  1.01 ч  eps 0.31  взял 4/8  старых 0  недостижимо 0  loss 0.494
+попытка   1944  1.02 ч  eps 0.31  взял 3/8  старых 0  недостижимо 0  loss 0.560
+попытка   1952  1.02 ч  eps 0.31  взял 7/8  старых 0  недостижимо 0  loss 0.601
+попытка   1960  1.02 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.525
+попытка   1968  1.03 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.577
+попытка   1976  1.03 ч  eps 0.30  взял 5/8  старых 0  недостижимо 0  loss 0.600
+попытка   1984  1.03 ч  eps 0.30  взял 7/8  старых 0  недостижимо 0  loss 0.551
+попытка   1992  1.04 ч  eps 0.30  взял 7/8  старых 0  недостижимо 0  loss 0.574
+попытка   2000  1.04 ч  eps 0.30  взял 3/8  старых 0  недостижимо 0  loss 0.523
+попытка   2008  1.04 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.560
+[ckpt] попытка 2008, 1.04 ч, буфер да
+попытка   2016  1.05 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.578
+попытка   2024  1.05 ч  eps 0.30  взял 3/8  старых 0  недостижимо 0  loss 0.525
+попытка   2032  1.06 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.500
+попытка   2040  1.06 ч  eps 0.30  взял 3/8  старых 0  недостижимо 0  loss 0.555
+попытка   2048  1.06 ч  eps 0.30  взял 3/8  старых 0  недостижимо 0  loss 0.576
+попытка   2056  1.06 ч  eps 0.30  взял 4/8  старых 0  недостижимо 0  loss 0.524
+попытка   2064  1.07 ч  eps 0.29  взял 5/8  старых 0  недостижимо 0  loss 0.562
+попытка   2072  1.07 ч  eps 0.29  взял 5/8  старых 0  недостижимо 0  loss 0.516
+попытка   2080  1.07 ч  eps 0.29  взял 5/8  старых 0  недостижимо 0  loss 0.540
+попытка   2088  1.07 ч  eps 0.29  взял 4/8  старых 0  недостижимо 0  loss 0.536
+попытка   2096  1.08 ч  eps 0.29  взял 4/8  старых 0  недостижимо 0  loss 0.514
+попытка   2104  1.08 ч  eps 0.29  взял 2/8  старых 0  недостижимо 0  loss 0.556
+попытка   2112  1.09 ч  eps 0.29  взял 2/8  старых 0  недостижимо 0  loss 0.540
+попытка   2120  1.09 ч  eps 0.29  взял 3/8  старых 0  недостижимо 0  loss 0.567
+попытка   2128  1.09 ч  eps 0.29  взял 2/8  старых 0  недостижимо 0  loss 0.507
+попытка   2136  1.10 ч  eps 0.29  взял 4/8  старых 0  недостижимо 0  loss 0.552
+попытка   2144  1.10 ч  eps 0.29  взял 5/8  старых 0  недостижимо 0  loss 0.565
+попытка   2152  1.10 ч  eps 0.29  взял 4/8  старых 0  недостижимо 0  loss 0.510
+попытка   2160  1.11 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.587
+попытка   2168  1.11 ч  eps 0.28  взял 5/8  старых 0  недостижимо 0  loss 0.556
+попытка   2176  1.12 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.543
+попытка   2184  1.13 ч  eps 0.28  взял 5/8  старых 0  недостижимо 0  loss 0.563
+попытка   2192  1.14 ч  eps 0.28  взял 8/8  старых 0  недостижимо 0  loss 0.581
+попытка   2200  1.14 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.571
+попытка   2208  1.14 ч  eps 0.28  взял 3/8  старых 0  недостижимо 0  loss 0.519
+попытка   2216  1.15 ч  eps 0.28  взял 5/8  старых 0  недостижимо 0  loss 0.573
+попытка   2224  1.15 ч  eps 0.28  взял 5/8  старых 0  недостижимо 0  loss 0.538
+попытка   2232  1.15 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.573
+попытка   2240  1.16 ч  eps 0.28  взял 4/8  старых 0  недостижимо 0  loss 0.535
+попытка   2248  1.16 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.541
+попытка   2256  1.16 ч  eps 0.28  взял 6/8  старых 0  недостижимо 0  loss 0.545
+попытка   2264  1.17 ч  eps 0.27  взял 3/8  старых 0  недостижимо 0  loss 0.501
+попытка   2272  1.17 ч  eps 0.27  взял 4/8  старых 0  недостижимо 0  loss 0.525
+попытка   2280  1.17 ч  eps 0.27  взял 5/8  старых 0  недостижимо 0  loss 0.597
+попытка   2288  1.18 ч  eps 0.27  взял 7/8  старых 0  недостижимо 0  loss 0.550
+попытка   2296  1.18 ч  eps 0.27  взял 5/8  старых 0  недостижимо 0  loss 0.522
+попытка   2304  1.19 ч  eps 0.27  взял 5/8  старых 0  недостижимо 0  loss 0.572
+попытка   2312  1.19 ч  eps 0.27  взял 5/8  старых 0  недостижимо 0  loss 0.552
+попытка   2320  1.19 ч  eps 0.27  взял 3/8  старых 0  недостижимо 0  loss 0.541
+попытка   2328  1.20 ч  eps 0.27  взял 4/8  старых 0  недостижимо 0  loss 0.526
+попытка   2336  1.20 ч  eps 0.27  взял 5/8  старых 0  недостижимо 0  loss 0.583
+попытка   2344  1.20 ч  eps 0.27  взял 4/8  старых 0  недостижимо 0  loss 0.560
+попытка   2352  1.21 ч  eps 0.27  взял 3/8  старых 0  недостижимо 0  loss 0.535
+попытка   2360  1.21 ч  eps 0.26  взял 3/8  старых 0  недостижимо 0  loss 0.566
+попытка   2368  1.21 ч  eps 0.26  взял 5/8  старых 0  недостижимо 0  loss 0.561
+попытка   2376  1.22 ч  eps 0.26  взял 4/8  старых 0  недостижимо 0  loss 0.508
+[ckpt] попытка 2376, 1.22 ч, буфер да
+попытка   2384  1.22 ч  eps 0.26  взял 3/8  старых 0  недостижимо 0  loss 0.536
+попытка   2392  1.22 ч  eps 0.26  взял 6/8  старых 0  недостижимо 0  loss 0.548
+попытка   2400  1.23 ч  eps 0.26  взял 4/8  старых 0  недостижимо 0  loss 0.565
+[eval] попытка 2400, 1.30 ч: chips 42/64, tetrapak 25/32, can 8/32
+попытка   2408  1.31 ч  eps 0.26  взял 4/8  старых 0  недостижимо 0  loss 0.586
+попытка   2416  1.31 ч  eps 0.26  взял 4/8  старых 0  недостижимо 0  loss 0.564
+попытка   2424  1.32 ч  eps 0.26  взял 7/8  старых 0  недостижимо 0  loss 0.575
+попытка   2432  1.32 ч  eps 0.26  взял 7/8  старых 0  недостижимо 0  loss 0.575
+попытка   2440  1.32 ч  eps 0.26  взял 6/8  старых 0  недостижимо 0  loss 0.525
+попытка   2448  1.33 ч  eps 0.26  взял 6/8  старых 0  недостижимо 0  loss 0.509
+попытка   2456  1.33 ч  eps 0.26  взял 7/8  старых 0  недостижимо 0  loss 0.557
+попытка   2464  1.34 ч  eps 0.25  взял 6/8  старых 0  недостижимо 0  loss 0.554
+попытка   2472  1.34 ч  eps 0.25  взял 4/8  старых 0  недостижимо 0  loss 0.535
+попытка   2480  1.34 ч  eps 0.25  взял 6/8  старых 0  недостижимо 0  loss 0.572
+попытка   2488  1.35 ч  eps 0.25  взял 4/8  старых 0  недостижимо 0  loss 0.553
+попытка   2496  1.35 ч  eps 0.25  взял 3/8  старых 0  недостижимо 0  loss 0.578
+попытка   2504  1.36 ч  eps 0.25  взял 3/8  старых 0  недостижимо 0  loss 0.547
+попытка   2512  1.36 ч  eps 0.25  взял 5/8  старых 0  недостижимо 0  loss 0.517
+попытка   2520  1.36 ч  eps 0.25  взял 5/8  старых 0  недостижимо 0  loss 0.548
+попытка   2528  1.37 ч  eps 0.25  взял 4/8  старых 0  недостижимо 0  loss 0.537
+попытка   2536  1.37 ч  eps 0.25  взял 4/8  старых 0  недостижимо 0  loss 0.546
+попытка   2544  1.37 ч  eps 0.25  взял 7/8  старых 0  недостижимо 0  loss 0.562
+попытка   2552  1.38 ч  eps 0.25  взял 1/8  старых 0  недостижимо 0  loss 0.530
+попытка   2560  1.38 ч  eps 0.24  взял 5/8  старых 0  недостижимо 0  loss 0.558
+попытка   2568  1.38 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.590
+[ckpt] попытка 2568, 1.38 ч, буфер да
+попытка   2576  1.39 ч  eps 0.24  взял 7/8  старых 0  недостижимо 0  loss 0.588
+попытка   2584  1.39 ч  eps 0.24  взял 4/8  старых 0  недостижимо 0  loss 0.524
+попытка   2592  1.40 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.531
+попытка   2600  1.40 ч  eps 0.24  взял 3/8  старых 0  недостижимо 0  loss 0.513
+попытка   2608  1.40 ч  eps 0.24  взял 5/8  старых 0  недостижимо 0  loss 0.585
+попытка   2616  1.41 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.557
+попытка   2624  1.41 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.532
+попытка   2632  1.41 ч  eps 0.24  взял 5/8  старых 0  недостижимо 0  loss 0.502
+попытка   2640  1.42 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.623
+попытка   2648  1.42 ч  eps 0.24  взял 6/8  старых 0  недостижимо 0  loss 0.525
+попытка   2656  1.43 ч  eps 0.24  взял 4/8  старых 0  недостижимо 0  loss 0.502
+попытка   2664  1.43 ч  eps 0.23  взял 4/8  старых 0  недостижимо 0  loss 0.566
+попытка   2672  1.43 ч  eps 0.23  взял 4/8  старых 0  недостижимо 0  loss 0.526
+попытка   2680  1.44 ч  eps 0.23  взял 5/8  старых 0  недостижимо 0  loss 0.538
+попытка   2688  1.44 ч  eps 0.23  взял 3/8  старых 0  недостижимо 0  loss 0.527
+попытка   2696  1.44 ч  eps 0.23  взял 5/8  старых 0  недостижимо 0  loss 0.540
+попытка   2704  1.45 ч  eps 0.23  взял 7/8  старых 0  недостижимо 0  loss 0.552
+попытка   2712  1.45 ч  eps 0.23  взял 4/8  старых 0  недостижимо 0  loss 0.543
+попытка   2720  1.46 ч  eps 0.23  взял 4/8  старых 0  недостижимо 0  loss 0.539
+попытка   2728  1.46 ч  eps 0.23  взял 5/8  старых 0  недостижимо 0  loss 0.513
+попытка   2736  1.46 ч  eps 0.23  взял 4/8  старых 0  недостижимо 0  loss 0.549
+попытка   2744  1.47 ч  eps 0.23  взял 5/8  старых 0  недостижимо 0  loss 0.564
+попытка   2752  1.47 ч  eps 0.23  взял 6/8  старых 0  недостижимо 0  loss 0.570
+попытка   2760  1.48 ч  eps 0.22  взял 5/8  старых 0  недостижимо 0  loss 0.500
+попытка   2768  1.48 ч  eps 0.22  взял 5/8  старых 0  недостижимо 0  loss 0.520
+попытка   2776  1.49 ч  eps 0.22  взял 3/8  старых 0  недостижимо 0  loss 0.488
+попытка   2784  1.50 ч  eps 0.22  взял 5/8  старых 0  недостижимо 0  loss 0.567
+попытка   2792  1.50 ч  eps 0.22  взял 6/8  старых 0  недостижимо 0  loss 0.523
+попытка   2800  1.51 ч  eps 0.22  взял 6/8  старых 0  недостижимо 0  loss 0.510
+попытка   2808  1.51 ч  eps 0.22  взял 6/8  старых 0  недостижимо 0  loss 0.553
+попытка   2816  1.52 ч  eps 0.22  взял 7/8  старых 0  недостижимо 0  loss 0.598
+попытка   2824  1.52 ч  eps 0.22  взял 6/8  старых 0  недостижимо 0  loss 0.526
+попытка   2832  1.52 ч  eps 0.22  взял 3/8  старых 0  недостижимо 0  loss 0.545
+попытка   2840  1.53 ч  eps 0.22  взял 7/8  старых 0  недостижимо 0  loss 0.463
+попытка   2848  1.54 ч  eps 0.22  взял 4/8  старых 0  недостижимо 0  loss 0.559
+попытка   2856  1.54 ч  eps 0.22  взял 3/8  старых 0  недостижимо 0  loss 0.550
+попытка   2864  1.55 ч  eps 0.21  взял 6/8  старых 0  недостижимо 0  loss 0.559
+попытка   2872  1.55 ч  eps 0.21  взял 5/8  старых 0  недостижимо 0  loss 0.589
+попытка   2880  1.56 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.534
+[ckpt] попытка 2880, 1.56 ч, буфер да
+попытка   2888  1.57 ч  eps 0.21  взял 7/8  старых 0  недостижимо 0  loss 0.510
+попытка   2896  1.57 ч  eps 0.21  взял 5/8  старых 0  недостижимо 0  loss 0.519
+попытка   2904  1.57 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.527
+попытка   2912  1.58 ч  eps 0.21  взял 6/8  старых 0  недостижимо 0  loss 0.591
+попытка   2920  1.58 ч  eps 0.21  взял 5/8  старых 0  недостижимо 0  loss 0.493
+попытка   2928  1.59 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.513
+попытка   2936  1.59 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.548
+попытка   2944  1.60 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.582
+попытка   2952  1.60 ч  eps 0.21  взял 4/8  старых 0  недостижимо 0  loss 0.555
+попытка   2960  1.61 ч  eps 0.20  взял 4/8  старых 0  недостижимо 0  loss 0.587
+попытка   2968  1.61 ч  eps 0.20  взял 3/8  старых 0  недостижимо 0  loss 0.542
+попытка   2976  1.62 ч  eps 0.20  взял 3/8  старых 0  недостижимо 0  loss 0.596
+попытка   2984  1.62 ч  eps 0.20  взял 5/8  старых 0  недостижимо 0  loss 0.557
+попытка   2992  1.63 ч  eps 0.20  взял 8/8  старых 0  недостижимо 0  loss 0.564
+попытка   3000  1.63 ч  eps 0.20  взял 5/8  старых 0  недостижимо 0  loss 0.524
+попытка   3008  1.64 ч  eps 0.20  взял 6/8  старых 0  недостижимо 0  loss 0.541
+попытка   3016  1.64 ч  eps 0.20  взял 5/8  старых 0  недостижимо 0  loss 0.475
+попытка   3024  1.64 ч  eps 0.20  взял 5/8  старых 0  недостижимо 0  loss 0.543
+попытка   3032  1.65 ч  eps 0.20  взял 4/8  старых 0  недостижимо 0  loss 0.513
+попытка   3040  1.65 ч  eps 0.20  взял 7/8  старых 0  недостижимо 0  loss 0.543
+попытка   3048  1.66 ч  eps 0.20  взял 7/8  старых 0  недостижимо 0  loss 0.477
+попытка   3056  1.66 ч  eps 0.20  взял 4/8  старых 0  недостижимо 0  loss 0.539
+попытка   3064  1.66 ч  eps 0.19  взял 5/8  старых 0  недостижимо 0  loss 0.543
+попытка   3072  1.67 ч  eps 0.19  взял 7/8  старых 0  недостижимо 0  loss 0.514
+попытка   3080  1.67 ч  eps 0.19  взял 7/8  старых 0  недостижимо 0  loss 0.568
+попытка   3088  1.68 ч  eps 0.19  взял 4/8  старых 0  недостижимо 0  loss 0.563
+попытка   3096  1.68 ч  eps 0.19  взял 4/8  старых 0  недостижимо 0  loss 0.548
+попытка   3104  1.68 ч  eps 0.19  взял 5/8  старых 0  недостижимо 0  loss 0.537
+попытка   3112  1.69 ч  eps 0.19  взял 5/8  старых 0  недостижимо 0  loss 0.515
+попытка   3120  1.69 ч  eps 0.19  взял 6/8  старых 0  недостижимо 0  loss 0.546
+попытка   3128  1.70 ч  eps 0.19  взял 7/8  старых 0  недостижимо 0  loss 0.576
+попытка   3136  1.70 ч  eps 0.19  взял 4/8  старых 0  недостижимо 0  loss 0.512
+попытка   3144  1.70 ч  eps 0.19  взял 4/8  старых 0  недостижимо 0  loss 0.483
+попытка   3152  1.71 ч  eps 0.19  взял 5/8  старых 0  недостижимо 0  loss 0.530
+попытка   3160  1.71 ч  eps 0.18  взял 8/8  старых 0  недостижимо 0  loss 0.523
+попытка   3168  1.72 ч  eps 0.18  взял 6/8  старых 0  недостижимо 0  loss 0.532
+попытка   3176  1.73 ч  eps 0.18  взял 4/8  старых 0  недостижимо 0  loss 0.504
+попытка   3184  1.73 ч  eps 0.18  взял 4/8  старых 0  недостижимо 0  loss 0.528
+[ckpt] попытка 3184, 1.73 ч, буфер да
+попытка   3192  1.74 ч  eps 0.18  взял 2/8  старых 0  недостижимо 0  loss 0.563
+попытка   3200  1.75 ч  eps 0.18  взял 7/8  старых 0  недостижимо 0  loss 0.575
+gif /home/Invader17/grasp_task/ckpt/chips_adapt/viz/video_003200_chips_ok.gif, 30 кадров
+[eval] попытка 3200, 1.81 ч: chips 54/64, tetrapak 23/32, can 16/32
+попытка   3208  1.81 ч  eps 0.18  взял 4/8  старых 0  недостижимо 0  loss 0.504
+попытка   3216  1.82 ч  eps 0.18  взял 8/8  старых 0  недостижимо 0  loss 0.527
+попытка   3224  1.82 ч  eps 0.18  взял 4/8  старых 0  недостижимо 0  loss 0.475
+попытка   3232  1.82 ч  eps 0.18  взял 4/8  старых 0  недостижимо 0  loss 0.509
+попытка   3240  1.82 ч  eps 0.18  взял 5/8  старых 0  недостижимо 0  loss 0.588
+попытка   3248  1.83 ч  eps 0.18  взял 5/8  старых 0  недостижимо 0  loss 0.482
+попытка   3256  1.83 ч  eps 0.18  взял 7/8  старых 0  недостижимо 0  loss 0.541
+попытка   3264  1.83 ч  eps 0.17  взял 5/8  старых 0  недостижимо 0  loss 0.485
+попытка   3272  1.83 ч  eps 0.17  взял 5/8  старых 0  недостижимо 0  loss 0.506
+попытка   3280  1.84 ч  eps 0.17  взял 7/8  старых 0  недостижимо 0  loss 0.551
+попытка   3288  1.84 ч  eps 0.17  взял 6/8  старых 0  недостижимо 0  loss 0.484
+попытка   3296  1.84 ч  eps 0.17  взял 6/8  старых 0  недостижимо 0  loss 0.598
+попытка   3304  1.85 ч  eps 0.17  взял 3/8  старых 0  недостижимо 0  loss 0.486
+попытка   3312  1.85 ч  eps 0.17  взял 6/8  старых 0  недостижимо 0  loss 0.529
+попытка   3320  1.85 ч  eps 0.17  взял 5/8  старых 0  недостижимо 0  loss 0.529
+попытка   3328  1.86 ч  eps 0.17  взял 6/8  старых 0  недостижимо 0  loss 0.567
+попытка   3336  1.86 ч  eps 0.17  взял 5/8  старых 0  недостижимо 0  loss 0.533
+попытка   3344  1.86 ч  eps 0.17  взял 8/8  старых 0  недостижимо 0  loss 0.553
+попытка   3352  1.86 ч  eps 0.17  взял 5/8  старых 0  недостижимо 0  loss 0.507
+попытка   3360  1.87 ч  eps 0.16  взял 7/8  старых 0  недостижимо 0  loss 0.572
+попытка   3368  1.87 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.532
+попытка   3376  1.87 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.481
+попытка   3384  1.87 ч  eps 0.16  взял 7/8  старых 0  недостижимо 0  loss 0.531
+попытка   3392  1.88 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.486
+попытка   3400  1.88 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.517
+попытка   3408  1.88 ч  eps 0.16  взял 5/8  старых 0  недостижимо 0  loss 0.485
+попытка   3416  1.89 ч  eps 0.16  взял 5/8  старых 0  недостижимо 0  loss 0.476
+попытка   3424  1.89 ч  eps 0.16  взял 3/8  старых 0  недостижимо 0  loss 0.548
+попытка   3432  1.89 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.571
+попытка   3440  1.89 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.527
+попытка   3448  1.90 ч  eps 0.16  взял 6/8  старых 0  недостижимо 0  loss 0.481
+попытка   3456  1.90 ч  eps 0.16  взял 5/8  старых 0  недостижимо 0  loss 0.573
+попытка   3464  1.91 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.499
+[ckpt] попытка 3464, 1.91 ч, буфер да
+попытка   3472  1.92 ч  eps 0.15  взял 7/8  старых 0  недостижимо 0  loss 0.527
+попытка   3480  1.92 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.564
+попытка   3488  1.92 ч  eps 0.15  взял 5/8  старых 0  недостижимо 0  loss 0.550
+попытка   3496  1.93 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.525
+попытка   3504  1.93 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.502
+попытка   3512  1.93 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.548
+попытка   3520  1.93 ч  eps 0.15  взял 4/8  старых 0  недостижимо 0  loss 0.564
+попытка   3528  1.94 ч  eps 0.15  взял 7/8  старых 0  недостижимо 0  loss 0.562
+попытка   3536  1.94 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.577
+попытка   3544  1.94 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.577
+попытка   3552  1.94 ч  eps 0.15  взял 6/8  старых 0  недостижимо 0  loss 0.508
+попытка   3560  1.95 ч  eps 0.14  взял 8/8  старых 0  недостижимо 0  loss 0.493
+попытка   3568  1.95 ч  eps 0.14  взял 2/8  старых 0  недостижимо 0  loss 0.530
+попытка   3576  1.95 ч  eps 0.14  взял 2/8  старых 0  недостижимо 0  loss 0.548
+попытка   3584  1.96 ч  eps 0.14  взял 5/8  старых 0  недостижимо 0  loss 0.502
+попытка   3592  1.96 ч  eps 0.14  взял 6/8  старых 0  недостижимо 0  loss 0.542
+попытка   3600  1.96 ч  eps 0.14  взял 6/8  старых 0  недостижимо 0  loss 0.484
+попытка   3608  1.96 ч  eps 0.14  взял 5/8  старых 0  недостижимо 0  loss 0.499
+попытка   3616  1.97 ч  eps 0.14  взял 6/8  старых 0  недостижимо 0  loss 0.499
+попытка   3624  1.97 ч  eps 0.14  взял 7/8  старых 0  недостижимо 0  loss 0.534
+попытка   3632  1.97 ч  eps 0.14  взял 4/8  старых 0  недостижимо 0  loss 0.596
+попытка   3640  1.98 ч  eps 0.14  взял 3/8  старых 0  недостижимо 0  loss 0.518
+попытка   3648  1.98 ч  eps 0.14  взял 6/8  старых 0  недостижимо 0  loss 0.556
+попытка   3656  1.98 ч  eps 0.14  взял 8/8  старых 0  недостижимо 0  loss 0.554
+попытка   3664  1.99 ч  eps 0.13  взял 5/8  старых 0  недостижимо 0  loss 0.543
+попытка   3672  1.99 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.529
+попытка   3680  1.99 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.600
+попытка   3688  1.99 ч  eps 0.13  взял 5/8  старых 0  недостижимо 0  loss 0.503
+попытка   3696  2.00 ч  eps 0.13  взял 8/8  старых 0  недостижимо 0  loss 0.489
+попытка   3704  2.00 ч  eps 0.13  взял 4/8  старых 0  недостижимо 0  loss 0.512
+попытка   3712  2.01 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.551
+попытка   3720  2.01 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.505
+попытка   3728  2.02 ч  eps 0.13  взял 8/8  старых 0  недостижимо 0  loss 0.536
+попытка   3736  2.02 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.511
+попытка   3744  2.03 ч  eps 0.13  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   3752  2.03 ч  eps 0.13  взял 5/8  старых 0  недостижимо 0  loss 0.563
+попытка   3760  2.03 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.492
+попытка   3768  2.04 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.500
+попытка   3776  2.04 ч  eps 0.12  взял 6/8  старых 0  недостижимо 0  loss 0.532
+попытка   3784  2.04 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.572
+попытка   3792  2.05 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.569
+попытка   3800  2.05 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.531
+попытка   3808  2.06 ч  eps 0.12  взял 6/8  старых 0  недостижимо 0  loss 0.481
+попытка   3816  2.06 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.526
+попытка   3824  2.06 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.480
+попытка   3832  2.07 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.516
+попытка   3840  2.07 ч  eps 0.12  взял 8/8  старых 0  недостижимо 0  loss 0.525
+попытка   3848  2.08 ч  eps 0.12  взял 4/8  старых 0  недостижимо 0  loss 0.558
+попытка   3856  2.08 ч  eps 0.12  взял 5/8  старых 0  недостижимо 0  loss 0.514
+[ckpt] попытка 3856, 2.08 ч, буфер да
+попытка   3864  2.09 ч  eps 0.11  взял 6/8  старых 0  недостижимо 0  loss 0.514
+попытка   3872  2.09 ч  eps 0.11  взял 8/8  старых 0  недостижимо 0  loss 0.518
+попытка   3880  2.10 ч  eps 0.11  взял 5/8  старых 0  недостижимо 0  loss 0.534
+попытка   3888  2.10 ч  eps 0.11  взял 8/8  старых 0  недостижимо 0  loss 0.459
+попытка   3896  2.11 ч  eps 0.11  взял 6/8  старых 0  недостижимо 0  loss 0.491
+попытка   3904  2.11 ч  eps 0.11  взял 7/8  старых 0  недостижимо 0  loss 0.568
+попытка   3912  2.11 ч  eps 0.11  взял 5/8  старых 0  недостижимо 0  loss 0.544
+попытка   3920  2.12 ч  eps 0.11  взял 6/8  старых 0  недостижимо 0  loss 0.493
+попытка   3928  2.13 ч  eps 0.11  взял 7/8  старых 0  недостижимо 0  loss 0.454
+попытка   3936  2.13 ч  eps 0.11  взял 6/8  старых 0  недостижимо 0  loss 0.569
+попытка   3944  2.14 ч  eps 0.11  взял 7/8  старых 0  недостижимо 0  loss 0.498
+попытка   3952  2.14 ч  eps 0.11  взял 5/8  старых 0  недостижимо 0  loss 0.530
+попытка   3960  2.14 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.507
+попытка   3968  2.15 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.475
+попытка   3976  2.16 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.523
+попытка   3984  2.16 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.473
+попытка   3992  2.17 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.523
+попытка   4000  2.17 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.533
+[eval] попытка 4000, 2.24 ч: chips 52/64, tetrapak 26/32, can 20/32
+попытка   4008  2.24 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.532
+попытка   4016  2.24 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.484
+попытка   4024  2.25 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.554
+[ckpt] попытка 4024, 2.25 ч, буфер да
+попытка   4032  2.26 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.549
+попытка   4040  2.26 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.525
+попытка   4048  2.26 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.479
+попытка   4056  2.27 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.513
+попытка   4064  2.27 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.529
+попытка   4072  2.28 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.566
+попытка   4080  2.28 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.509
+попытка   4088  2.29 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.521
+попытка   4096  2.29 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.556
+попытка   4104  2.29 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.502
+попытка   4112  2.30 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.558
+попытка   4120  2.30 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.539
+попытка   4128  2.31 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.525
+попытка   4136  2.31 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.522
+попытка   4144  2.32 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.587
+попытка   4152  2.32 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.538
+попытка   4160  2.32 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.538
+попытка   4168  2.33 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.518
+попытка   4176  2.33 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.558
+попытка   4184  2.34 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.571
+попытка   4192  2.34 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.475
+попытка   4200  2.35 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.540
+попытка   4208  2.35 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.521
+попытка   4216  2.36 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.476
+попытка   4224  2.36 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.554
+попытка   4232  2.36 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   4240  2.37 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.539
+попытка   4248  2.37 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.503
+попытка   4256  2.37 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.517
+попытка   4264  2.38 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.590
+попытка   4272  2.38 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.506
+попытка   4280  2.39 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.548
+попытка   4288  2.39 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.549
+попытка   4296  2.40 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.544
+попытка   4304  2.40 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.477
+попытка   4312  2.40 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.457
+попытка   4320  2.41 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.577
+попытка   4328  2.41 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.535
+попытка   4336  2.42 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.546
+попытка   4344  2.42 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.495
+[ckpt] попытка 4344, 2.42 ч, буфер да
+попытка   4352  2.43 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.529
+попытка   4360  2.43 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.542
+попытка   4368  2.44 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.526
+попытка   4376  2.44 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.470
+попытка   4384  2.44 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.507
+попытка   4392  2.45 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.529
+попытка   4400  2.45 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.549
+попытка   4408  2.46 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.491
+попытка   4416  2.46 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.536
+попытка   4424  2.47 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.544
+попытка   4432  2.47 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.558
+попытка   4440  2.47 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.562
+попытка   4448  2.48 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.495
+попытка   4456  2.48 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.549
+попытка   4464  2.49 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.567
+попытка   4472  2.49 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.540
+попытка   4480  2.50 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.499
+попытка   4488  2.50 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.515
+попытка   4496  2.51 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.503
+попытка   4504  2.51 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.474
+попытка   4512  2.51 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.536
+попытка   4520  2.52 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.496
+попытка   4528  2.52 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.541
+попытка   4536  2.53 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.527
+попытка   4544  2.53 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.526
+попытка   4552  2.54 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.545
+попытка   4560  2.54 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.547
+попытка   4568  2.54 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.528
+попытка   4576  2.55 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.516
+попытка   4584  2.55 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.544
+попытка   4592  2.56 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.505
+попытка   4600  2.56 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.500
+попытка   4608  2.56 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.587
+попытка   4616  2.57 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.551
+попытка   4624  2.57 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.547
+попытка   4632  2.57 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.514
+попытка   4640  2.58 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.559
+попытка   4648  2.58 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.533
+попытка   4656  2.59 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.486
+попытка   4664  2.59 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.509
+[ckpt] попытка 4664, 2.59 ч, буфер да
+попытка   4672  2.60 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.518
+попытка   4680  2.60 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.449
+попытка   4688  2.61 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.506
+попытка   4696  2.61 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.510
+попытка   4704  2.62 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.514
+попытка   4712  2.62 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.511
+попытка   4720  2.63 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.466
+попытка   4728  2.63 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.481
+попытка   4736  2.63 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.506
+попытка   4744  2.63 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.504
+попытка   4752  2.64 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.518
+попытка   4760  2.64 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.469
+попытка   4768  2.64 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.530
+попытка   4776  2.65 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.498
+попытка   4784  2.65 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.496
+попытка   4792  2.66 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.504
+попытка   4800  2.66 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.555
+gif /home/Invader17/grasp_task/ckpt/chips_adapt/viz/video_004800_chips_ok.gif, 30 кадров
+[eval] попытка 4800, 2.74 ч: chips 52/64, tetrapak 24/32, can 11/32
+попытка   4808  2.75 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.507
+попытка   4816  2.75 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.538
+попытка   4824  2.76 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.556
+попытка   4832  2.76 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.503
+[ckpt] попытка 4832, 2.76 ч, буфер да
+попытка   4840  2.77 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.483
+попытка   4848  2.77 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.539
+попытка   4856  2.78 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.514
+попытка   4864  2.79 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.541
+попытка   4872  2.79 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.548
+попытка   4880  2.80 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.547
+попытка   4888  2.81 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.508
+попытка   4896  2.81 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.538
+попытка   4904  2.82 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.565
+попытка   4912  2.82 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.540
+попытка   4920  2.82 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.507
+попытка   4928  2.83 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.537
+попытка   4936  2.83 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.529
+попытка   4944  2.84 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.509
+попытка   4952  2.85 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.530
+попытка   4960  2.85 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.472
+попытка   4968  2.86 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.540
+попытка   4976  2.86 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.530
+попытка   4984  2.87 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.534
+попытка   4992  2.87 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.503
+попытка   5000  2.88 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.523
+попытка   5008  2.88 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.548
+попытка   5016  2.89 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.531
+попытка   5024  2.90 ч  eps 0.10  взял 2/8  старых 0  недостижимо 0  loss 0.505
+попытка   5032  2.90 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.507
+попытка   5040  2.91 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.590
+попытка   5048  2.91 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.527
+попытка   5056  2.91 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.541
+попытка   5064  2.92 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.536
+попытка   5072  2.93 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.553
+попытка   5080  2.93 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.495
+попытка   5088  2.93 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.514
+[ckpt] попытка 5088, 2.93 ч, буфер да
+попытка   5096  2.95 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.520
+попытка   5104  2.95 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.538
+попытка   5112  2.96 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.527
+попытка   5120  2.96 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.568
+попытка   5128  2.97 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.550
+попытка   5136  2.97 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.527
+попытка   5144  2.97 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.492
+попытка   5152  2.98 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.514
+попытка   5160  2.98 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.529
+попытка   5168  2.99 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.513
+попытка   5176  2.99 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.519
+попытка   5184  3.00 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.559
+попытка   5192  3.00 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   5200  3.01 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.531
+попытка   5208  3.01 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.514
+попытка   5216  3.02 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.512
+попытка   5224  3.03 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.550
+попытка   5232  3.03 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.505
+попытка   5240  3.04 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.523
+попытка   5248  3.05 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.536
+попытка   5256  3.05 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.534
+попытка   5264  3.06 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.567
+попытка   5272  3.06 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.552
+попытка   5280  3.07 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.521
+попытка   5288  3.07 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.497
+попытка   5296  3.08 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.499
+попытка   5304  3.08 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.491
+попытка   5312  3.09 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.531
+попытка   5320  3.09 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.498
+попытка   5328  3.10 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.501
+попытка   5336  3.10 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.498
+попытка   5344  3.11 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.484
+[ckpt] попытка 5344, 3.11 ч, буфер да
+попытка   5352  3.17 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.501
+попытка   5360  3.17 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.538
+попытка   5368  3.18 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.493
+попытка   5376  3.18 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.498
+попытка   5384  3.19 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.505
+попытка   5392  3.19 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.543
+попытка   5400  3.20 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.461
+попытка   5408  3.20 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.528
+попытка   5416  3.21 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.542
+попытка   5424  3.21 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.462
+попытка   5432  3.22 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.494
+попытка   5440  3.22 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.506
+попытка   5448  3.23 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.545
+попытка   5456  3.23 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.509
+попытка   5464  3.24 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.512
+попытка   5472  3.24 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.522
+попытка   5480  3.25 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.507
+попытка   5488  3.25 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.509
+попытка   5496  3.26 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.552
+попытка   5504  3.26 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.524
+попытка   5512  3.27 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.502
+попытка   5520  3.27 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.509
+попытка   5528  3.28 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.561
+попытка   5536  3.28 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.526
+попытка   5544  3.29 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.522
+попытка   5552  3.30 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.503
+попытка   5560  3.30 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.531
+попытка   5568  3.30 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.545
+попытка   5576  3.31 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.495
+попытка   5584  3.31 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.563
+попытка   5592  3.32 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.466
+попытка   5600  3.32 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.505
+[eval] попытка 5600, 3.40 ч: chips 48/64, tetrapak 23/32, can 18/32
+попытка   5608  3.40 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.463
+[ckpt] попытка 5608, 3.40 ч, буфер да
+попытка   5616  3.41 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.516
+попытка   5624  3.41 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.520
+попытка   5632  3.42 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.457
+попытка   5640  3.42 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.466
+попытка   5648  3.43 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.507
+попытка   5656  3.43 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.531
+попытка   5664  3.44 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.517
+попытка   5672  3.44 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.483
+попытка   5680  3.45 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.529
+попытка   5688  3.45 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.523
+попытка   5696  3.46 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.480
+попытка   5704  3.47 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.502
+попытка   5712  3.48 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.502
+попытка   5720  3.48 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.500
+попытка   5728  3.49 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.499
+попытка   5736  3.49 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.570
+попытка   5744  3.50 ч  eps 0.10  взял 2/8  старых 0  недостижимо 0  loss 0.514
+попытка   5752  3.50 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.521
+попытка   5760  3.51 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.538
+попытка   5768  3.51 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.531
+попытка   5776  3.52 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.492
+попытка   5784  3.52 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.502
+попытка   5792  3.52 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.544
+попытка   5800  3.53 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.501
+попытка   5808  3.53 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.548
+попытка   5816  3.53 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.500
+попытка   5824  3.54 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.518
+попытка   5832  3.54 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.505
+попытка   5840  3.55 ч  eps 0.10  взял 2/8  старых 0  недостижимо 0  loss 0.491
+попытка   5848  3.55 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.507
+попытка   5856  3.56 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.519
+попытка   5864  3.56 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.564
+попытка   5872  3.56 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.520
+попытка   5880  3.57 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.536
+попытка   5888  3.57 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.483
+[ckpt] попытка 5888, 3.57 ч, буфер да
+попытка   5896  3.59 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.454
+попытка   5904  3.59 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.511
+попытка   5912  3.60 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.508
+попытка   5920  3.60 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.492
+попытка   5928  3.60 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.523
+попытка   5936  3.61 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.503
+попытка   5944  3.61 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.509
+попытка   5952  3.62 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.551
+попытка   5960  3.62 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.556
+попытка   5968  3.63 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.519
+попытка   5976  3.63 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.514
+попытка   5984  3.63 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   5992  3.64 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.509
+попытка   6000  3.64 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.496
+попытка   6008  3.65 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.495
+попытка   6016  3.65 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.543
+попытка   6024  3.66 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.469
+попытка   6032  3.67 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.506
+попытка   6040  3.67 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.535
+попытка   6048  3.68 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.495
+попытка   6056  3.68 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.553
+попытка   6064  3.69 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.491
+попытка   6072  3.69 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.526
+попытка   6080  3.70 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.474
+попытка   6088  3.70 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.501
+попытка   6096  3.71 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.538
+попытка   6104  3.71 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.520
+попытка   6112  3.72 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.549
+попытка   6120  3.72 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.542
+попытка   6128  3.73 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.503
+попытка   6136  3.73 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.500
+попытка   6144  3.74 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.475
+попытка   6152  3.74 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.497
+попытка   6160  3.75 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.512
+попытка   6168  3.75 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.531
+[ckpt] попытка 6168, 3.75 ч, буфер да
+попытка   6176  3.77 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   6184  3.77 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.465
+попытка   6192  3.78 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.530
+попытка   6200  3.78 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.475
+попытка   6208  3.78 ч  eps 0.10  взял 8/8  старых 0  недостижимо 0  loss 0.524
+попытка   6216  3.79 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.556
+попытка   6224  3.79 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.535
+попытка   6232  3.80 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.506
+попытка   6240  3.80 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.593
+попытка   6248  3.81 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.500
+попытка   6256  3.81 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.489
+попытка   6264  3.82 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.520
+попытка   6272  3.82 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.507
+попытка   6280  3.83 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.507
+попытка   6288  3.84 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.493
+попытка   6296  3.84 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.463
+попытка   6304  3.84 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.588
+попытка   6312  3.85 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.523
+попытка   6320  3.85 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.499
+попытка   6328  3.86 ч  eps 0.10  взял 6/8  старых 0  недостижимо 0  loss 0.509
+попытка   6336  3.86 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.527
+попытка   6344  3.87 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.537
+попытка   6352  3.88 ч  eps 0.10  взял 3/8  старых 0  недостижимо 0  loss 0.490
+попытка   6360  3.88 ч  eps 0.10  взял 2/8  старых 0  недостижимо 0  loss 0.436
+попытка   6368  3.88 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.494
+попытка   6376  3.89 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.496
+попытка   6384  3.90 ч  eps 0.10  взял 7/8  старых 0  недостижимо 0  loss 0.510
+попытка   6392  3.90 ч  eps 0.10  взял 5/8  старых 0  недостижимо 0  loss 0.535
+попытка   6400  3.91 ч  eps 0.10  взял 4/8  старых 0  недостижимо 0  loss 0.582
+gif /home/Invader17/grasp_task/ckpt/chips_adapt/viz/video_006400_chips_ok.gif, 30 кадров
+[eval] попытка 6400, 4.00 ч: chips 46/64, tetrapak 23/32, can 13/32
+[ckpt] попытка 6400, 4.00 ч, буфер да
+DONE: 6400 попыток, 4.00 ч
+2026-10-14 14:53:49 [14,489,142ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-14 14:53:49 [14,489,142ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-10-14 14:54:16 [14,515,727ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,727ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,727ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,728ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,728ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,728ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,730ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+2026-10-14 14:54:16 [14,515,730ms] [Warning] [carb] Plugin interface for a client: omni.hydratexture.plugin was already released.
+[INFO]: Simulation is stopped. Shutting down the app.
+[17:54:33] код выхода 0, время 14531 с, пик памяти на GPU 5 5774 MiB, клиент драйвера на GPU 0 6 MiB
+[17:54:41] наших процессов на GPU нет
+[17:54:41] результаты: /home/Invader17/grasp_task/runs/chA_3_20261014_135219

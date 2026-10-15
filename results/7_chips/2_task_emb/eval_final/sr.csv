@@ -1,0 +1,4 @@
+name,obj,ok,n,sr,ci_lo,ci_hi,attempts,hours
+chips_emb20,chips,60,64,0.938,0.850,0.975,6400,6.93
+chips_emb20,tetrapak,60,64,0.938,0.850,0.975,6400,6.93
+chips_emb20,can,57,64,0.891,0.791,0.946,6400,6.93

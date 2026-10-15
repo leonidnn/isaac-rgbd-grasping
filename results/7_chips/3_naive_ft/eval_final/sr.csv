@@ -1,0 +1,4 @@
+name,obj,ok,n,sr,ci_lo,ci_hi,attempts,hours
+chips_ft,chips,61,64,0.953,0.871,0.984,6400,4.59
+chips_ft,tetrapak,25,64,0.391,0.281,0.513,6400,4.59
+chips_ft,can,36,64,0.562,0.441,0.677,6400,4.59

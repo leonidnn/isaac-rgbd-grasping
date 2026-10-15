@@ -1,0 +1,34 @@
+[01:27:02] user=Invader17 gpu=5 vk_uuid=d9fc0582a134ded0909de88d902ecc0b cpus=46-47 timeout=40m stall=20m
+[01:27:02] cmd: /home/Invader17/grasp_task/code/results/7_chips/common/eval_final.py --name chips_rp20 --video
+[Warning] [simulation_app.simulation_app] Modules: ['omni.kit_app'] were loaded before SimulationApp was started and might not be loaded correctly.
+[Warning] [simulation_app.simulation_app] Please check to make sure no extra omniverse or pxr modules are imported before the call to SimulationApp(...)
+Starting kit application with the following args:  ['/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/apps/isaacsim.exp.base.python.kit', '--/app/tokens/exe-path=/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/omni', '--/persistent/app/viewport/displayOptions=3094', '--/rtx/materialDb/syncLoads=True', '--/rtx/hydra/materialSyncLoads=True', '--/omni.kit.plugin/syncUsdLoads=True', '--/app/renderer/resolution/width=640', '--/app/renderer/resolution/height=480', '--/app/window/width=1440', '--/app/window/height=900', '--/renderer/multiGpu/enabled=False', '--/app/fastShutdown=True', '--/app/installSignalHandlers=0', '--ext-folder', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/exts', '--ext-folder', '/home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/isaacsim/apps', '--/renderer/multiGpu/enabled=false', '--/renderer/multiGpu/autoEnable=false', '--/renderer/multiGpu/maxGpuCount=1', '--/renderer/activeGpu=0', '--/plugins/carb.tasking.plugin/threadCount=4', '--/persistent/isaac/asset_root/default=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/persistent/isaac/asset_root/cloud=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/persistent/isaac/asset_root/nvidia=http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5', '--/renderer/activeGpu=0', '--/physics/cudaDevice=0', '--portable', '--no-window', '--/app/window/hideUi=1']
+Passing the following args to the base kit application:  ['--name', 'chips_rp20', '--video']
+[Info] [carb] Logging to file: /home/Invader17/grasp_task/envs/isaac/lib/python3.10/site-packages/omni/logs/Kit/Isaac-Sim Python/4.5/kit_20261013_222703.log
+2026-10-13 22:27:03 [0ms] [Warning] [omni.kit.app.plugin] No crash reporter present, dumps uploading isn't available.
+[1.361s] [ext: omni.kit.async_engine-0.0.1] startup
+[1.963s] [ext: omni.metrics.core-0.0.1] startup
+[1.964s] [ext: omni.client.lib-1.0.0] startup
+[2.003s] [ext: omni.blobkey-1.1.2] startup
+[2.004s] [ext: omni.stats-1.0.1] startup
+[2.006s] [ext: omni.datastore-0.0.0] startup
+[2.016s] [ext: omni.client-1.2.2] startup
+[2.024s] [ext: omni.ujitso.default-1.0.0] startup
+[2.028s] [ext: omni.hsscclient-1.1.1] startup
+2026-10-13 22:27:05 [1,891ms] [Warning] [omni.datastore] OmniHub is inaccessible
+[2.039s] [ext: omni.gpu_foundation.shadercache.vulkan-1.0.0] startup
+[2.045s] [ext: omni.assets.plugins-0.0.0] startup
+[2.048s] [ext: omni.gpu_foundation-0.0.0] startup
+[2.061s] [ext: carb.windowing.plugins-1.0.0] startup
+2026-10-13 22:27:05 [1,923ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-10-13 22:27:05 [1,923ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[2.064s] [ext: omni.kit.renderer.init-0.0.0] startup
+2026-10-13 22:27:05 [1,940ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+[01:27:05] на GPU 5 чужие процессы: 2296628; запас памяти 1536 MiB, наш потолок 7168 MiB
+2026-10-13 22:27:13 [9,767ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-10-13 22:27:13 [9,767ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-10-13 22:27:13 [9,767ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+[01:27:19] СТОП: чужой процесс 2296628 пропал с GPU 5 во время нашего запуска — проверить, не мы ли причина
+[01:27:20] код выхода 137, время 15 с, пик памяти на GPU 5 0 MiB, клиент драйвера на GPU 0 0 MiB
+[01:27:26] наших процессов на GPU нет
+[01:27:26] результаты: /home/Invader17/grasp_task/runs/chB_2_20261014_012702

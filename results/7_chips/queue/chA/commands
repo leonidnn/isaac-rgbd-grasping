@@ -1,0 +1,4 @@
+--until-done chips_ft --timeout 6h results/7_chips/common/train.py --name chips_ft --init old --old-share 0 
+--timeout 40m results/7_chips/common/eval_final.py --name chips_ft --video 
+--until-done chips_adapt --timeout 6h results/7_chips/common/train.py --name chips_adapt --init old --old-share 0 --adapter 
+--timeout 40m results/7_chips/common/eval_final.py --name chips_adapt --adapter --video 

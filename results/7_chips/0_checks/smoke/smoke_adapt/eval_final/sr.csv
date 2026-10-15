@@ -1,0 +1,4 @@
+name,obj,ok,n,sr,ci_lo,ci_hi,attempts,hours
+smoke_adapt,chips,2,8,0.250,0.071,0.591,64,0.09
+smoke_adapt,tetrapak,7,8,0.875,0.529,0.978,64,0.09
+smoke_adapt,can,6,8,0.750,0.409,0.929,64,0.09
