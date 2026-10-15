@@ -47,7 +47,7 @@ case $state in
             sub="$DEST/$(basename "$dir")"
             mkdir -p "$sub"
             # только то, что нужно в results: кадры, гифки, лог (без .npy)
-            "${SSH[@]}" "cd $dir && tar -cf - \$(ls *.png *.gif run.log 2>/dev/null)" | tar -xf - -C "$sub"
+            "${SSH[@]}" "cd $dir && tar -cf - \$(ls *.png *.gif run.log 2>/dev/null)" </dev/null | tar -xf - -C "$sub"
             echo "код $rc -> $sub: $(ls "$sub" | tr '\n' ' ')"
             grep -E 'PASS|FAIL|object rise|СТОП' "$sub/run.log" | sed 's/^/    /' || true
         done <<<"$steps"

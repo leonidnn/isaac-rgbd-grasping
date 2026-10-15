@@ -9,6 +9,9 @@
 # Ждёт не дольше GT_WAIT_HOURS (24 ч) на каждый шаг, опрос карт раз в 30 с. --allow-shared руками не пропускается.
 # --until-done <имя> в опциях шага: обучение с бэкапом, шаг перезапускается (снова ждёт карту), пока нет
 #   ckpt/<имя>/DONE, не больше GT_MAX_CRASHES (20) раз. Следующий шаг идёт сразу после DONE.
+# Карту держим: шаг кончился сам (не сняли ради соседа) - следующий сразу на ту же карту, без ожидания порогов
+#   (13.10: соседи на 2080 Ti всё время под 100 %, по порогам карту назад не дождаться). run.sh всё равно
+#   проверяет память перед стартом, откажет - ждём как обычно.
 # Шаг, снятый run.sh ради соседа (мало памяти у соседа или пропал его процесс), повторяется (до GT_MAX_NEIGH, 30 раз).
 # --must-pass в опциях шага: шаг-смоук, код не 0 - очередь failed, очереди с --after на неё отменяются (cancelled).
 # --max-mb N --max-util P (только вместе, 04.10.2026): ждём не пустую карту, а такую, где занято < N МиБ и загрузка < P %
@@ -120,11 +123,17 @@ runs_of() { ls -td "$GT_RUNS/${NAME}_${1}_"* 2>/dev/null || true; }
 deadline=$(( $(date +%s) + WAIT_HOURS * 3600 ))
 MAX_CRASHES=${GT_MAX_CRASHES:-20}
 declare -A crashes neigh
+KEEP_GPU=${GT_KEEP_GPU:-}  # можно задать при перезапуске очереди, чтобы сразу сесть на свою карту
 MAX_NEIGH=${GT_MAX_NEIGH:-30}
 i=1
 while (( i <= N )); do
     gpu=""
     set_status waiting "" "$i/$N"
+    if [[ -n $KEEP_GPU ]] && ( flock -n 9 ) 9>"$GT_ROOT/locks/run_gpu$KEEP_GPU.lock"; then
+        gpu=$KEEP_GPU
+        echo "[$(date +%T)] держу GPU $gpu, следующий шаг сразу"
+    fi
+    KEEP_GPU=""
     while [[ -z $gpu ]]; do
         if after_done; then
             for g in $GPUS; do
@@ -165,6 +174,7 @@ while (( i <= N )); do
     if [[ $(runs_of "$i" | wc -l) -eq $before ]]; then
         # run.sh отказал до запуска (карту успели занять) — ждём дальше этот же шаг
         echo "[$(date +%T)] шаг $i не стартовал (код $rc), жду снова"
+        OK_IN_ROW[$gpu]=0
         sleep "$POLL_SEC"
         continue
     fi
@@ -186,8 +196,8 @@ while (( i <= N )); do
         echo "[$(date +%T)] шаг $i --must-pass упал (код $rc), очередь failed"
         exit 1
     fi
-    # карта только что была наша - следующий запуск пробует её с одной проверки, а не с трёх
-    [[ -n $MAX_MB ]] && OK_IN_ROW[$gpu]=$(( STABLE - 1 ))
+    # карта только что была наша и сосед нас не снимал - следующий шаг (или перезапуск) сразу на неё
+    KEEP_GPU=$gpu
     if [[ -n $until_done && ! -f $GT_ROOT/ckpt/$until_done/DONE ]]; then
         # упал или его стопнул run.sh (у соседа кончился процесс) - тот же шаг ещё раз, продолжит с бэкапа
         crashes[$i]=$(( ${crashes[$i]:-0} + 1 ))
